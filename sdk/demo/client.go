@@ -2,6 +2,7 @@ package demo
 
 import (
 	"fmt"
+	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/demo/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"go.uber.org/zap"
@@ -45,7 +46,7 @@ func (c *Client) InitDao(daoHost string) *Client {
 
 func (c *Client) ApiRequestDemo(request *idl.ApiDemoRequest) (*idl.ApiDemoResponse, error) {
 	disUrl := c.DisHost + "/v1/api/userJobExperience"
-	method := "POST"
+	method := constants.POST
 
 	payload := strings.NewReader(converter.ToString(request))
 
@@ -56,9 +57,8 @@ func (c *Client) ApiRequestDemo(request *idl.ApiDemoRequest) (*idl.ApiDemoRespon
 		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
 		return nil, err
 	}
-	req.Header.Add("Authorization", "<Authorization>")
-	req.Header.Add("User-Agent", "Apifox/1.0.0 (https://www.apifox.cn)")
-	req.Header.Add("Content-Type", "<Content-Type>")
+	req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
 
 	res, err := client.Do(req)
 	if err != nil {
