@@ -9,6 +9,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+func ToString(obj interface{}) string {
+	res, err := json.Marshal(obj)
+	if err != nil {
+		return ""
+	}
+	return string(res)
+}
+
 func StructToMap(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
 	v := reflect.ValueOf(obj)
