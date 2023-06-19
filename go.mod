@@ -3,6 +3,7 @@ module github.com/fuxi-inc/dip-common-lib
 go 1.18
 
 require (
+	github.com/hashicorp/go-version v1.6.0
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.24.0
 )
