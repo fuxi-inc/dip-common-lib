@@ -2,8 +2,8 @@ package idl
 
 // 通用响应（无返回data）。在没有特别定义时，用这种响应格式
 type ApiDisResponse struct {
-	Errno  int64  `json:"errno"`
-	Errmsg string `json:"errmsg"`
+	Errno  DisRespErrno `json:"errno"`
+	Errmsg string       `json:"errmsg"`
 }
 
 // 权址登记
