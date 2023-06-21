@@ -8,11 +8,11 @@ type ApiDisResponse struct {
 
 // 权址登记（创建）
 type ApiDOCreateRequest struct {
-	Doi    string `json:"doi,omitempty"`
-	DwDoi  string `json:"dw_doi,omitempty"`
-	PubKey string `json:"pub_key,omitempty"`
-	Type   uint8  `json:"type,omitempty"` // 权属类型。0开头表示所有者，1开头表示使用者
-	Sign   string `json:"sign,omitempty"` // 使用DW私钥对其自身的DOI签名
+	Doi    string            `json:"doi,omitempty"`
+	DwDoi  string            `json:"dw_doi,omitempty"`
+	PubKey string            `json:"pub_key,omitempty"`
+	Type   AuthorizationType `json:"type,omitempty"` // 权属类型。0开头表示所有者，1开头表示使用者
+	Sign   string            `json:"sign,omitempty"` // 使用DW私钥对其自身的DOI签名
 }
 
 // 权址登记（更新）
@@ -22,7 +22,7 @@ type ApiDOUpdateRequest struct {
 	PubKey                   string                       `json:"pub_key,omitempty"`
 	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
 	Digest                   *ApiDigest                   `json:"digest,omitempty"`                 // 数据内容摘要
-	Type                     uint8                        `json:"type,omitempty"`                   // 权属类型。0开头表示所有者，1开头表示使用者
+	Type                     AuthorizationType            `json:"type,omitempty"`                   // 权属类型。0开头表示所有者，1开头表示使用者
 	Confirmation             string                       `json:"confirmation,omitempty"`           // 确权信息。DW私钥对数据摘要的签名
 	Description              *ApiDescription              `json:"description,omitempty"`            // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
 	ClassificationAndGrading *ApiClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
@@ -32,22 +32,22 @@ type ApiDOUpdateRequest struct {
 
 // 授权发起
 type ApiAuthInitRequest struct {
-	DataDoi      string `json:"data_doi,omitempty"`
-	DuDoi        string `json:"du_doi,omitempty"`       // 被授权的数据使用者身份标识
-	Type         uint8  `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
-	Confirmation string `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
-	Description  string `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
-	Sign         string `json:"sign,omitempty"`         // 所有者DW或授权发起者私钥对其自身的DOI签名
+	DataDoi      string            `json:"data_doi,omitempty"`
+	DuDoi        string            `json:"du_doi,omitempty"`       // 被授权的数据使用者身份标识
+	Type         AuthorizationType `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
+	Confirmation string            `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
+	Description  string            `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Sign         string            `json:"sign,omitempty"`         // 所有者DW或授权发起者私钥对其自身的DOI签名
 }
 
 // 授权确认
 type ApiAuthConfRequest struct {
-	DataDoi      string `json:"data_doi,omitempty"`
-	DuDoi        string `json:"du_doi,omitempty"`       // 被授权的数据使用者身份标识
-	Type         uint8  `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
-	Confirmation string `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
-	Description  string `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
-	Sign         string `json:"sign,omitempty"`         // 使用DU私钥对其自身的DOI签名
+	DataDoi      string            `json:"data_doi,omitempty"`
+	DuDoi        string            `json:"du_doi,omitempty"`       // 被授权的数据使用者身份标识
+	Type         AuthorizationType `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
+	Confirmation string            `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
+	Description  string            `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Sign         string            `json:"sign,omitempty"`         // 使用DU私钥对其自身的DOI签名
 }
 
 // 权址查询
