@@ -68,7 +68,7 @@ type ApiDOQueryRequest struct {
 
 // 权地址查询响应
 type ApiDOQueryResponse struct {
-	Errno  int64                   `json:"errno"`
+	Errno  DisRespErrno            `json:"errno"`
 	Errmsg string                  `json:"errmsg"`
 	Data   *ApiDOQueryResponseData `json:"data,omitempty"`
 }
