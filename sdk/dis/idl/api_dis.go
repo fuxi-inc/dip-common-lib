@@ -30,6 +30,8 @@ type ApiDOUpdateRequest struct {
 	Sign                     string                       `json:"sign,omitempty"`                   // 使用DW私钥对其自身的DOI签名
 }
 
+
+
 // 授权发起
 type ApiAuthInitRequest struct {
 	DataDoi      string            `json:"data_doi,omitempty"`
