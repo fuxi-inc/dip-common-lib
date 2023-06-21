@@ -6,8 +6,17 @@ type ApiDisResponse struct {
 	Errmsg string       `json:"errmsg"`
 }
 
-// 权址登记
-type ApiDORequest struct {
+// 权址登记（创建）
+type ApiDOCreateRequest struct {
+	Doi    string `json:"doi,omitempty"`
+	DwDoi  string `json:"dw_doi,omitempty"`
+	PubKey string `json:"pub_key,omitempty"`
+	Type   uint8  `json:"type,omitempty"` // 权属类型。0开头表示所有者，1开头表示使用者
+	Sign   string `json:"sign,omitempty"` // 使用DW私钥对其自身的DOI签名
+}
+
+// 权址登记（更新）
+type ApiDOUpdateRequest struct {
 	Doi                      string                       `json:"doi,omitempty"`
 	DwDoi                    string                       `json:"dw_doi,omitempty"`
 	PubKey                   string                       `json:"pub_key,omitempty"`

@@ -40,12 +40,12 @@ func (c *Client) InitDao(daoHost string) *Client {
 }
 
 // 权址登记（创建）
-func (c *Client) ApiDORegistry(ctx *gin.Context, request *idl.ApiDORequest) (*idl.ApiDisResponse, error) {
+func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) (*idl.ApiDisResponse, error) {
 	return nil, nil
 }
 
 // 权址登记（更新）
-func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDORequest) (*idl.ApiDisResponse, error) {
+func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) (*idl.ApiDisResponse, error) {
 	return nil, nil
 }
 
