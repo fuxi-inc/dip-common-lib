@@ -7,7 +7,7 @@ type ApiDisResponse struct {
 }
 
 // 权址登记
-type ApiDORegistryRequest struct {
+type ApiDORequest struct {
 	Doi                      string                       `json:"doi,omitempty"`
 	DwDoi                    string                       `json:"dw_doi,omitempty"`
 	PubKey                   string                       `json:"pub_key,omitempty"`
@@ -15,11 +15,13 @@ type ApiDORegistryRequest struct {
 	Digest                   *ApiDigest                   `json:"digest,omitempty"`                 // 数据内容摘要
 	Type                     uint8                        `json:"type,omitempty"`                   // 权属类型。0开头表示所有者，1开头表示使用者
 	Confirmation             string                       `json:"confirmation,omitempty"`           // 确权信息。DW私钥对数据摘要的签名
-	Description              string                       `json:"description,omitempty"`            // json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Description              *ApiDescription              `json:"description,omitempty"`            // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
 	ClassificationAndGrading *ApiClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *ApiWhoisData                `json:"whois_data,omitempty"`             // WHOIS注册数据
 	Sign                     string                       `json:"sign,omitempty"`                   // 使用DW私钥对其自身的DOI签名
 }
+
+
 
 // 授权发起
 type ApiAuthInitRequest struct {
@@ -94,4 +96,10 @@ type ApiAuthorization struct {
 	Type         AuthorizationType `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
 	Confirmation string            `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
 	Description  string            `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+}
+
+type ApiDescription struct {
+	PermissionDoi string `json:"permission_doi,omitempty"` // 权限定义DOI
+	CreatorDoi    string `json:"creator_doi,omitempty"`    // 权限创建者DOI
+	Key           string `json:"key,omitempty"`            // 解密密钥
 }

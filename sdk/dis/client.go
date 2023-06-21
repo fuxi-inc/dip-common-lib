@@ -39,8 +39,13 @@ func (c *Client) InitDao(daoHost string) *Client {
 	return c
 }
 
-// 权址登记
-func (c *Client) ApiDORegistry(ctx *gin.Context, request *idl.ApiDORegistryRequest) (*idl.ApiDisResponse, error) {
+// 权址登记（创建）
+func (c *Client) ApiDORegistry(ctx *gin.Context, request *idl.ApiDORequest) (*idl.ApiDisResponse, error) {
+	return nil, nil
+}
+
+// 权址登记（更新）
+func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDORequest) (*idl.ApiDisResponse, error) {
 	return nil, nil
 }
 
