@@ -6,18 +6,20 @@ type ApiDisResponse struct {
 	Errmsg string       `json:"errmsg"`
 }
 
-// 权址登记（创建）
+// 数据对象属性注册
 type ApiDOCreateRequest struct {
-	Doi    string            `json:"doi,omitempty"`
-	DwDoi  string            `json:"dw_doi,omitempty"`
-	PubKey string            `json:"pub_key,omitempty"`
-	Type   AuthorizationType `json:"type,omitempty"` // 权属类型。0开头表示所有者，1开头表示使用者
-	Sign   string            `json:"sign,omitempty"` // 使用DW私钥对其自身的DOI签名
+	Doi       string            `json:"doi,omitempty"`
+	DwDoi     string            `json:"dw_doi,omitempty"`
+	PubKey    string            `json:"pub_key,omitempty"`
+	Type      AuthorizationType `json:"type,omitempty"`       // 权属类型。0开头表示所有者，1开头表示使用者
+	WhoisData *ApiWhoisData     `json:"whois_data,omitempty"` // WHOIS注册数据
+	Sign      string            `json:"sign,omitempty"`       // 使用DW私钥对其自身的DOI签名
 }
 
-// 权址登记（更新）
+// 数据对象属性更新
 type ApiDOUpdateRequest struct {
 	Doi                      string                       `json:"doi,omitempty"`
+	NewDoi                   string                       `json:"new_doi,omitempty"` // 更新后的DO标识
 	DwDoi                    string                       `json:"dw_doi,omitempty"`
 	PubKey                   string                       `json:"pub_key,omitempty"`
 	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
@@ -28,6 +30,12 @@ type ApiDOUpdateRequest struct {
 	ClassificationAndGrading *ApiClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *ApiWhoisData                `json:"whois_data,omitempty"`             // WHOIS注册数据
 	Sign                     string                       `json:"sign,omitempty"`                   // 使用DW私钥对其自身的DOI签名
+}
+
+// 数据对象属性删除
+type ApiDODeleteRequest struct {
+	Doi   string `json:"doi,omitempty"`
+	DwDoi string `json:"dw_doi,omitempty"` // 更新后的DO标识
 }
 
 // 授权发起
@@ -50,7 +58,15 @@ type ApiAuthConfRequest struct {
 	Sign         string            `json:"sign,omitempty"`         // 使用DU私钥对其自身的DOI签名
 }
 
-// 权址查询
+// 注册数据查询
+
+type ApiRegDataQueryResponse struct {
+	Errno  DisRespErrno  `json:"errno"`
+	Errmsg string        `json:"errmsg"`
+	Data   *ApiWhoisData `json:"data,omitempty"`
+}
+
+// 数据对象属性查询
 type SearchType string
 
 const (
@@ -93,6 +109,7 @@ type ApiClassificationAndGrading struct {
 }
 
 type ApiWhoisData struct {
+	Doi          string   `json:"doi,omitempty"`
 	Organization []string `json:"organization,omitempty"` // 组织
 	Contact      []string `json:"contact,omitempty"`      // 联系方式
 	IP           []string `json:"ip,omitempty"`           // IP地址
@@ -108,5 +125,4 @@ type ApiAuthorization struct {
 type ApiDescription struct {
 	PermissionDoi string `json:"permission_doi,omitempty"` // 权限定义DOI
 	CreatorDoi    string `json:"creator_doi,omitempty"`    // 权限创建者DOI
-	Key           string `json:"key,omitempty"`            // 解密密钥
 }
