@@ -39,13 +39,18 @@ func (c *Client) InitDao(daoHost string) *Client {
 	return c
 }
 
-// 权址登记（创建）
+// 数据对象属性注册
 func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) (*idl.ApiDisResponse, error) {
 	return nil, nil
 }
 
-// 权址登记（更新）
+// 数据对象属性更新
 func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) (*idl.ApiDisResponse, error) {
+	return nil, nil
+}
+
+// 数据对象属性删除
+func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) (*idl.ApiDisResponse, error) {
 	return nil, nil
 }
 
@@ -59,7 +64,12 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 	return nil, nil
 }
 
-// 权址查询
+// 注册数据查询
+func (c *Client) ApiRegDataQuery(ctx *gin.Context, request_doi string) (*idl.ApiRegDataQueryResponse, error) {
+	return nil, nil
+}
+
+// 数据对象属性查询
 func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
 	return nil, nil
 }
