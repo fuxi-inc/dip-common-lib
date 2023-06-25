@@ -24,9 +24,7 @@ type ApiDOUpdateRequest struct {
 	PubKey                   string                       `json:"pub_key,omitempty"`
 	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
 	Digest                   *ApiDigest                   `json:"digest,omitempty"`                 // 数据内容摘要
-	Type                     AuthorizationType            `json:"type,omitempty"`                   // 权属类型。0开头表示所有者，1开头表示使用者
-	Confirmation             string                       `json:"confirmation,omitempty"`           // 确权信息。DW私钥对数据摘要的签名
-	Description              *ApiDescription              `json:"description,omitempty"`            // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Authorization            *[]ApiAuthorization          `json:"authorization,omitempty"`          // 授权信息数组
 	ClassificationAndGrading *ApiClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *ApiWhoisData                `json:"whois_data,omitempty"`             // WHOIS注册数据
 	Sign                     string                       `json:"sign,omitempty"`                   // 使用DW私钥对其自身的DOI签名
@@ -92,7 +90,7 @@ type ApiDOQueryResponse struct {
 type ApiDOQueryResponseData struct {
 	PubKey                   string                       `json:"pub_key,omitempty"`
 	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
-	Authorization            *ApiAuthorization            `json:"authorization,omitempty"`          // 权属
+	Authorization            *[]ApiAuthorization          `json:"authorization,omitempty"`          // 权属
 	Digest                   *ApiDigest                   `json:"digest,omitempty"`                 // 数据内容摘要
 	ClassificationAndGrading *ApiClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 }
