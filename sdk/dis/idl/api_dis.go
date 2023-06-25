@@ -117,7 +117,7 @@ type ApiWhoisData struct {
 type ApiAuthorization struct {
 	Type         AuthorizationType `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
 	Confirmation string            `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
-	Description  string            `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Description  *ApiDescription   `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
 }
 
 type ApiDescription struct {

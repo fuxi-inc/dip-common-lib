@@ -53,12 +53,16 @@ func Test_DOUpdate(t *testing.T) {
 		Grade: 2048,
 	}
 
+	auth := &idl.ApiAuthorization{
+		Confirmation: "XXX",
+	}
+
 	request = &idl.ApiDOUpdateRequest{
 		Doi:                      "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
 		Dar:                      "resource.example.com/path",
 		Digest:                   digest,
 		DwDoi:                    "usera.viv.cn",
-		Confirmation:             "XXX",
+		Authorization:            &[]idl.ApiAuthorization{*auth}, // 更新其中的Conformation确权信息
 		ClassificationAndGrading: classgrade,
 		Sign:                     "XXX",
 	}
@@ -70,11 +74,15 @@ func Test_DOUpdate(t *testing.T) {
 		CreatorDoi:    "yyy.viv.cn",
 	}
 
-	request = &idl.ApiDOUpdateRequest{
-		Doi:         "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+	auth = &idl.ApiAuthorization{
 		Type:        0,
 		Description: desc,
-		Sign:        "XXX",
+	}
+
+	request = &idl.ApiDOUpdateRequest{
+		Doi:           "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+		Authorization: &[]idl.ApiAuthorization{*auth}, // 更新其中的Type和Description
+		Sign:          "XXX",
 	}
 
 	// 更新联系方式
