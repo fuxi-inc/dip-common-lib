@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/hashicorp/go-version v1.6.0
+	github.com/imroc/biu v0.0.0-20170329141542-0376ce6761c0
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.24.0
 )
