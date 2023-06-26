@@ -28,7 +28,7 @@ PermissionOperation, 基本的操作权限
 */
 type PermissionOperation uint16
 
-func NewPolicyOperation(num uint16) *PermissionOperation {
+func NewPermissionOperation(num uint16) *PermissionOperation {
 	p := PermissionOperation(num)
 	return &p
 }
@@ -41,14 +41,14 @@ func (p *PermissionOperation) AddParentAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("100000000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 func (p *PermissionOperation) RemoveParentAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("011111111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 //8-5位，对数据属性的CRUD权限 的操作
@@ -57,50 +57,50 @@ func (p *PermissionOperation) AddAttributeCreateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("010000000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddAttributeReadAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("001000000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddAttributeUpdateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000100000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddAttributeDeleteAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000010000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 func (p *PermissionOperation) RemoveAttributeCreateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("101111111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveAttributeReadAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("110111111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveAttributeUpdateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111011111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveAttributeDeleteAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111101111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 //4-1位，分别代表对数据内容的CRUD权限；
@@ -109,50 +109,50 @@ func (p *PermissionOperation) AddContentCreateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000001000", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddContentReadAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000000100", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddContentUpdateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000000010", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) AddContentDeleteAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("000000001", &op)
 	num := p.ToUInt16() | op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 func (p *PermissionOperation) RemoveContentCreateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111110111", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveContentReadAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111111011", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveContentUpdateAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111111101", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 func (p *PermissionOperation) RemoveContentDeleteAbility() *PermissionOperation {
 	var op uint16
 	biu.ReadBinaryString("111111110", &op)
 	num := p.ToUInt16() & op
-	return NewPolicyOperation(num)
+	return NewPermissionOperation(num)
 }
 
 /*
