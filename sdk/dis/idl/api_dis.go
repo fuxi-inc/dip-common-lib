@@ -80,6 +80,13 @@ type ApiDOQueryRequest struct {
 	Type []SearchType `json:"type,omitempty"` // 查询类型
 }
 
+// 数据对象权属查询
+type ApiDOAuthQueryRequest struct {
+	Doi   string       `json:"doi,omitempty"`
+	DuDoi string       `json:"dudoi,omitempty"`
+	Type  []SearchType `json:"type,omitempty"` // 查询类型
+}
+
 // 权地址查询响应
 type ApiDOQueryResponse struct {
 	Errno  DisRespErrno            `json:"errno"`
@@ -115,6 +122,7 @@ type ApiWhoisData struct {
 }
 
 type ApiAuthorization struct {
+	Doi          string            `json:"doi,omitempty"`
 	Type         AuthorizationType `json:"type,omitempty"`         // 权属类型。0开头表示所有者，1开头表示使用者
 	Confirmation string            `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
 	Description  *ApiDescription   `json:"description,omitempty"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
