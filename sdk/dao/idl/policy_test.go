@@ -1,6 +1,10 @@
 package idl
 
-import "testing"
+import (
+	"fmt"
+	"github.com/imroc/biu"
+	"testing"
+)
 
 func TestPolicyOperation_ToBinaryString(t *testing.T) {
 	tests := []struct {
@@ -19,6 +23,9 @@ func TestPolicyOperation_ToBinaryString(t *testing.T) {
 			if got := tt.p.ToBinaryString(); got != tt.want {
 				t.Errorf("ToBinaryString() = %v, want %v", got, tt.want)
 			}
+			var b int16
+			biu.ReadBinaryString("100000000", &b)
+			fmt.Println("ToBinaryString:", b)
 		})
 	}
 }
