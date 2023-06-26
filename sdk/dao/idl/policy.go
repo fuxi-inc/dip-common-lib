@@ -19,6 +19,13 @@ type Policy struct {
 	Condition    *PolicyCondition `json:"condition,omitempty"`
 }
 
+/**
+PolicyOperation, 基本的操作权限
+目前已经在定义中的有效作用位由低位到高位共有9位：
+	4-1位，分别代表对数据内容的CRUD权限;
+	8-5位，分别代表对数据属性的CRUD权限；
+	9位, 代表是否复用数据owner的权限，当此位置为1时，其他低位均失效，即 100000000和111111111 代表的权限相同
+*/
 type PolicyOperation uint16
 
 func NewPolicyOperation(num uint16) *PolicyOperation {
@@ -30,102 +37,120 @@ func (p *PolicyOperation) ToBinaryString() string {
 	return biu.ToBinaryString(p.ToUInt16())
 }
 
+func (p *PolicyOperation) AddParentAbility() *PolicyOperation {
+	var op uint16
+	biu.ReadBinaryString("100000000", &op)
+	num := p.ToUInt16() | op
+	return NewPolicyOperation(num)
+}
+
+func (p *PolicyOperation) RemoveParentAbility() *PolicyOperation {
+	var op uint16
+	biu.ReadBinaryString("011111111", &op)
+	num := p.ToUInt16() & op
+	return NewPolicyOperation(num)
+}
+
+//8-5位，对数据属性的CRUD权限 的操作
+
 func (p *PolicyOperation) AddAttributeCreateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("10000000", &op)
+	biu.ReadBinaryString("010000000", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddAttributeReadAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("01000000", &op)
+	biu.ReadBinaryString("001000000", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddAttributeUpdateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00100000", &op)
+	biu.ReadBinaryString("000100000", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddAttributeDeleteAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00010000", &op)
+	biu.ReadBinaryString("000010000", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 
 func (p *PolicyOperation) RemoveAttributeCreateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("01111111", &op)
+	biu.ReadBinaryString("101111111", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveAttributeReadAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("10111111", &op)
+	biu.ReadBinaryString("110111111", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveAttributeUpdateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11011111", &op)
+	biu.ReadBinaryString("111011111", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveAttributeDeleteAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11101111", &op)
+	biu.ReadBinaryString("111101111", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 
+//4-1位，分别代表对数据内容的CRUD权限；
+
 func (p *PolicyOperation) AddContentCreateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00001000", &op)
+	biu.ReadBinaryString("000001000", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddContentReadAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00000100", &op)
+	biu.ReadBinaryString("000000100", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddContentUpdateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00000010", &op)
+	biu.ReadBinaryString("000000010", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) AddContentDeleteAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("00000001", &op)
+	biu.ReadBinaryString("000000001", &op)
 	num := p.ToUInt16() | op
 	return NewPolicyOperation(num)
 }
 
 func (p *PolicyOperation) RemoveContentCreateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11110111", &op)
+	biu.ReadBinaryString("111110111", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveContentReadAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11111011", &op)
+	biu.ReadBinaryString("111111011", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveContentUpdateAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11111101", &op)
+	biu.ReadBinaryString("111111101", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
 func (p *PolicyOperation) RemoveContentDeleteAbility() *PolicyOperation {
 	var op uint16
-	biu.ReadBinaryString("11111110", &op)
+	biu.ReadBinaryString("111111110", &op)
 	num := p.ToUInt16() & op
 	return NewPolicyOperation(num)
 }
@@ -136,50 +161,56 @@ func (p *PolicyOperation) RemoveContentDeleteAbility() *PolicyOperation {
 
 func (p *PolicyOperation) HasAttributeCreateAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("10000000", &op)
+	biu.ReadBinaryString("010000000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasAttributeReadAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("01000000", &op)
+	biu.ReadBinaryString("001000000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasAttributeUpdateAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00100000", &op)
+	biu.ReadBinaryString("000100000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasAttributeDeleteAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00010000", &op)
+	biu.ReadBinaryString("000010000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 
 func (p *PolicyOperation) HasContentCreateAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00001000", &op)
+	biu.ReadBinaryString("000001000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasContentReadAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00000100", &op)
+	biu.ReadBinaryString("000000100", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasContentUpdateAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00000010", &op)
+	biu.ReadBinaryString("000000010", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
 func (p *PolicyOperation) HasContentDeleteAbility() bool {
 	var op uint16
-	biu.ReadBinaryString("00000001", &op)
+	biu.ReadBinaryString("000000001", &op)
+	num := p.ToUInt16() & op
+	return num > 0
+}
+func (p *PolicyOperation) HasParentAbility() bool {
+	var op uint16
+	biu.ReadBinaryString("100000000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
