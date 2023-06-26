@@ -2,19 +2,20 @@ package idl
 
 import (
 	"fmt"
-	"github.com/imroc/biu"
 	"testing"
+
+	"github.com/imroc/biu"
 )
 
 func TestPolicyOperation_ToBinaryString(t *testing.T) {
 	tests := []struct {
 		name string
-		p    PolicyOperation
+		p    PermissionOperation
 		want string
 	}{
 		{
 			name: "Case Normal",
-			p:    PolicyOperation(123),
+			p:    PermissionOperation(123),
 			want: "01111011",
 		},
 	}
