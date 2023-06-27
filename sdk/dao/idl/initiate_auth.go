@@ -12,6 +12,6 @@ type InitiateAuthRequest struct {
 
 // 授权发起Response
 type InitiateAuthResponse struct {
-	Errno  int64  `json:"errno"`
-	Errmsg string `json:"errmsg"`
+	Code    int64  `json:"code"`
+	Message string `json:"message"`
 }
