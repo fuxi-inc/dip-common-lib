@@ -12,7 +12,6 @@ func Test_DOCreate(t *testing.T) {
 		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
 		DwDoi:     "usera.viv.cn",
 		PubKey:    "XXX",
-		Type:      0, // 0表示所有者，1表示使用者
 		WhoisData: nil,
 		Sign:      "XXX",
 	}
@@ -43,17 +42,17 @@ func Test_DOUpdate(t *testing.T) {
 
 	// 更新数据地址及摘要
 
-	digest := &idl.ApiDigest{
+	digest := &idl.DataDigest{
 		Algorithm: "SHA256",
 		Result:    "XXX",
 	}
 
-	classgrade := &idl.ApiClassificationAndGrading{
+	classgrade := &idl.ClassificationAndGrading{
 		Class: 1024,
 		Grade: 2048,
 	}
 
-	auth := &idl.ApiAuthorization{
+	auth := &idl.DataAuthorization{
 		Confirmation: "XXX",
 	}
 
@@ -62,32 +61,32 @@ func Test_DOUpdate(t *testing.T) {
 		Dar:                      "resource.example.com/path",
 		Digest:                   digest,
 		DwDoi:                    "usera.viv.cn",
-		Authorization:            &[]idl.ApiAuthorization{*auth}, // 更新其中的Conformation确权信息
+		Authorization:            &[]idl.DataAuthorization{*auth}, // 更新其中的Conformation确权信息
 		ClassificationAndGrading: classgrade,
 		Sign:                     "XXX",
 	}
 
 	// 数据所有者更新自己的权益
 
-	desc := &idl.ApiDescription{
+	desc := &idl.PermissionDescription{
 		PermissionDoi: "XXX.viv.cn",
 		CreatorDoi:    "yyy.viv.cn",
 	}
 
-	auth = &idl.ApiAuthorization{
+	auth = &idl.DataAuthorization{
 		Type:        0,
 		Description: desc,
 	}
 
 	request = &idl.ApiDOUpdateRequest{
 		Doi:           "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		Authorization: &[]idl.ApiAuthorization{*auth}, // 更新其中的Type和Description
+		Authorization: &[]idl.DataAuthorization{*auth}, // 更新其中的Type和Description
 		Sign:          "XXX",
 	}
 
 	// 更新联系方式
 
-	whois := &idl.ApiWhoisData{
+	whois := &idl.RegistrationData{
 		Doi:     "xxx.viv.cn",
 		Contact: []string{"xxx", "yyy"},
 	}
