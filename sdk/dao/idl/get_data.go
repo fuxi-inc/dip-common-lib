@@ -3,15 +3,16 @@ package idl
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
 type GetDataRequest struct {
 	DuDoi        string `json:"du_doi" binding:"required"`        //数据所有者身份标识
-	Signature    string `json:"signature" binding:"required"`     //DW的私钥签名
 	DataDoi      string `json:"data_doi" binding:"required"`      //数据对象标识
 	PermisionDoi string `json:"permision_doi" binding:"required"` //权限
+	idl.SignatureData
 }
 
 // type GetDataResponseData struct {
