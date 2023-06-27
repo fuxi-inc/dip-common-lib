@@ -65,7 +65,7 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 }
 
 // 注册数据查询
-func (c *Client) ApiRegDataQuery(ctx *gin.Context, request_doi string) (*idl.ApiRegDataQueryResponse, error) {
+func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataRequest) (*idl.ApiRegDataQueryResponse, error) {
 	return nil, nil
 }
 

@@ -8,11 +8,11 @@ type ApiDisResponse struct {
 
 // 数据对象属性注册
 type ApiDOCreateRequest struct {
-	Doi       string            `json:"doi,omitempty"`
-	DwDoi     string            `json:"dw_doi,omitempty"`
-	PubKey    string            `json:"pub_key,omitempty"`
-	WhoisData *RegistrationData `json:"registration_data,omitempty"` // 类WHOIS注册数据
-	Sign      string            `json:"sign,omitempty"`              // 使用DW私钥对其自身的DOI签名
+	Doi           string            `json:"doi,omitempty"`
+	DwDoi         string            `json:"dw_doi,omitempty"`
+	PubKey        string            `json:"pub_key,omitempty"`
+	WhoisData     *RegistrationData `json:"registration_data,omitempty"` // 类WHOIS注册数据
+	SignatureData                                                        //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象属性更新
@@ -26,30 +26,33 @@ type ApiDOUpdateRequest struct {
 	Authorization            *[]DataAuthorization      `json:"authorization,omitempty"`          // 授权信息数组
 	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *RegistrationData         `json:"whois_data,omitempty"`             // WHOIS注册数据
-	Sign                     string                    `json:"sign,omitempty"`                   // 使用DW私钥对其自身的DOI签名
+	SignatureData                                                                                //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象属性删除
 type ApiDODeleteRequest struct {
-	Doi   string `json:"doi,omitempty"`
-	DwDoi string `json:"dw_doi,omitempty"` // 更新后的DO标识
-	Sign  string `json:"sign,omitempty"`   // 使用DW私钥对其自身的DOI签名
+	Doi           string `json:"doi,omitempty"`
+	DwDoi         string `json:"dw_doi,omitempty"` // 更新后的DO标识
+	SignatureData                                  //统一共用的加签验签结构，字段均为必填项
 }
 
 // 授权发起
 type ApiAuthInitRequest struct {
 	DataDoi       string            `json:"data_doi,omitempty"`
 	Authorization DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
-	InitiatorDOI  string            `json:"initiator_doi,omitempty"` //发起者DW或DU的DOI
-	Sign          string            `json:"sign,omitempty"`          // 发起者私钥对其自身的DOI签名
+	SignatureData                                                    //统一共用的加签验签结构，字段均为必填项
 }
 
 // 授权确认
 type ApiAuthConfRequest struct {
 	DataDoi       string            `json:"data_doi,omitempty"`
 	Authorization DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
-	ConfirmerDOI  string            `json:"confirmer_doi,omitempty"` //确认者DW或DU的DOI
-	Sign          string            `json:"sign,omitempty"`          // 使用确认这私钥对其自身的DOI签名
+	SignatureData                                                    //统一共用的加签验签结构，字段均为必填项
+}
+
+type ApiRegDataRequest struct {
+	DataDoi       string `json:"data_doi,omitempty"`
+	SignatureData        //统一共用的加签验签结构，字段均为必填项
 }
 
 // 注册数据查询
@@ -72,8 +75,9 @@ const (
 )
 
 type ApiDOQueryRequest struct {
-	Doi  string       `json:"doi,omitempty"`
-	Type []SearchType `json:"type,omitempty"` // 查询类型
+	Doi           string       `json:"doi,omitempty"`
+	Type          []SearchType `json:"type,omitempty"` // 查询类型
+	SignatureData                                      //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象权属查询
