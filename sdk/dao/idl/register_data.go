@@ -1,6 +1,9 @@
 package idl
 
-import "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+import (
+	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+)
 
 type RegisterDataRequest struct {
 	Doi                      string                        `json:"doi,omitempty" binding:"required"`
@@ -12,7 +15,7 @@ type RegisterDataRequest struct {
 	Confirmation             string                        `json:"confirmation,omitempty" binding:"required"` // 确权信息。DW私钥对数据摘要的签名
 	SecretKey                string                        `json:"secret_key"`                                //文件内容的加密秘钥，当为空时，代表文件内容没有加密
 	ClassificationAndGrading *idl.ClassificationAndGrading `json:"classification_grading,omitempty"`          // 数据分类分级信息
-	idl.SignatureData
+	IDL.SignatureData
 }
 
 type RegisterDataResponseData struct{}

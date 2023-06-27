@@ -1,4 +1,4 @@
-package idl
+package IDL
 
 import (
 	"crypto"
