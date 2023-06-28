@@ -3,6 +3,7 @@ package idl
 import (
 	"bytes"
 	"encoding/json"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
@@ -19,9 +20,10 @@ type GetDataRequest struct {
 // }
 
 type GetDataResponse struct {
-	Errno       int64  `json:"errno"`
-	Errmsg      string ` son:"errmsg"`
-	DataContent string `json:"data_content" binding:"required"`
+	Errno        int64  `json:"errno"`
+	Errmsg       string ` json:"errmsg"`
+	DataContent  string `json:"data_content" binding:"required"`
+	Encryptedkey string `json:"encryptedkey" binding:"required"`
 }
 
 func (r GetDataRequest) ToString() string {
