@@ -28,10 +28,11 @@ type DataAuthorization struct {
 type PermissionDescription struct {
 	PermissionDoi string `json:"permission_doi,omitempty"` // 权限定义DOI
 	CreatorDoi    string `json:"creator_doi,omitempty"`    // 权限创建者DOI
+	Key           string `json:"key,omitempty"`            //权限密钥，权属对象公钥加密的数据内容加密对称密钥的16进制表示（长度为256）
 }
 
 // 分类分级
 type ClassificationAndGrading struct {
 	Class uint16 `json:"class,omitempty"` // 数据分类
-	Grade uint16 `json:"grade,omitempty"` // 数据分级
+	Grade uint16 `json:"grade,omitempty"` // 数据分级。如果是加密数据，第1位是1。
 }
