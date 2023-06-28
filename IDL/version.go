@@ -11,11 +11,6 @@ import (
 //注意：初始化不合法的版本号字符串，会报错。比如传递：空字符串:"",错误字符串:"2.s.3xx"
 type VersionString string
 
-//func (v VersionString) UnmarshalJSON(bytes []byte) error {
-//	//TODO implement me
-//	panic("implement me")
-//}
-
 // GreaterThan 当前版本号是否"大于"输入版本号
 func (v VersionString) GreaterThan(v2Str VersionString) (bool, error) {
 	v1, err := version.NewVersion(v.String())
