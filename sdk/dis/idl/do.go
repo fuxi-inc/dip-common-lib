@@ -6,7 +6,7 @@ type DO struct {
 	PubKey                   string                    `json:"pub_key,omitempty"`                //公钥
 	Dar                      string                    `json:"dar,omitempty"`                    // 数据在DAO中的存储地址
 	Digest                   *DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
-	Authorization            *[]DataAuthorization      `json:"authorization,omitempty"`          // 权属信息
+	Authorization            []*DataAuthorization      `json:"authorization,omitempty"`          // 权属信息
 	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 }
 
