@@ -13,7 +13,7 @@ import (
 )
 
 //GetData 调用DAO service 获取服务
-func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) ([]byte, error) {
+func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.GetDataResponse, error) {
 	daoUrl := c.DaoHost + "/dip/data/get"
 	method := constants.GET
 	payload := strings.NewReader(converter.ToString(request))
@@ -43,13 +43,14 @@ func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) ([]byte,
 
 	response := &idl.GetDataResponse{}
 	err = response.Unmarshal(body)
-	if err!=nil{
+	if err != nil {
 		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
 		return nil, err
 	}
-	if response.Errno!=0{
+	if response.Errno != 0 {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
 		return nil, err
 	}
-	return response.DataContent, nil 
+	//如果成功并且加密密钥不为空 则需要解密
+	return response, nil
 }
