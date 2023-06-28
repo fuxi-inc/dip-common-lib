@@ -21,7 +21,7 @@ func (r *CallbackData) ToString() string {
 	return converter.ToString(r)
 }
 
-func (r *CallbackData) Send(url string) (*IDL.CommonResponse, error) {
+func (r *CallbackData) Send(url string) (*ApiDisResponse, error) {
 	method := "POST"
 	payload := strings.NewReader(r.ToString())
 
@@ -44,7 +44,7 @@ func (r *CallbackData) Send(url string) (*IDL.CommonResponse, error) {
 		return nil, err
 	}
 
-	resp := &IDL.CommonResponse{}
+	resp := &ApiDisResponse{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
