@@ -13,7 +13,7 @@ import (
 )
 
 //GetData 调用DAO service 获取服务
-func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.GetDataResponse, error) {
+func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) ([]byte, error) {
 	daoUrl := c.DaoHost + "/dip/data/get"
 	method := constants.GET
 	payload := strings.NewReader(converter.ToString(request))
@@ -43,5 +43,13 @@ func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.Ge
 
 	response := &idl.GetDataResponse{}
 	err = response.Unmarshal(body)
-	return response, err
+	if err!=nil{
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno!=0{
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, err
+	}
+	return response.DataContent, nil 
 }
