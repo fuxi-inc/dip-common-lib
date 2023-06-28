@@ -40,7 +40,7 @@ func (c *Client) GetPublicKey(identifier string) string {
 	}
 	identifier = dns.Fqdn(identifier)
 
-	c.Logger.Info("[GetPublicKey]receive query user key", zap.String("identifier", identifier))
+	c.Logger.Info("[GetPublicKey] receive query user key", zap.String("identifier", identifier))
 
 	qtype := dns.TypeCERT
 	req := new(dns.Msg)
@@ -53,12 +53,12 @@ func (c *Client) GetPublicKey(identifier string) string {
 	}
 	if msg == nil {
 		// 失败：DNS解析无结果
-		c.Logger.Error("[GetPublicKey]failed to handle the request", zap.String("req", converter.ToString(req)))
+		c.Logger.Error("[GetPublicKey] failed to handle the request", zap.String("req", converter.ToString(req)))
 		return ""
 	}
 
 	if len(msg.Answer) == 0 {
-		c.Logger.Error("[GetPublicKey]failed to find the public-key", zap.String("identity_identifier", identifier))
+		c.Logger.Error("[GetPublicKey] failed to find the public-key", zap.String("identity_identifier", identifier))
 		return ""
 	}
 	a := msg.Answer[0]
@@ -72,4 +72,47 @@ func (c *Client) GetPublicKey(identifier string) string {
 	}
 
 	return slice[3]
+}
+
+func (c *Client) GetDataOwner(identifier string) string {
+	if identifier == "" {
+		return ""
+	}
+	identifier = dns.Fqdn(identifier)
+	c.Logger.Info("[GetDataOwner] receive query data", zap.String("identifier", identifier))
+
+	qtype := dns.TypeRP
+
+	req := new(dns.Msg)
+	req.SetQuestion(identifier, qtype)
+	req.SetEdns0(4096, false)
+
+	msg, err := dns.Exchange(req, c.DnsHost)
+	if err != nil {
+		c.Logger.Error("[GetDataOwner] dns.Exchange error", zap.String("error", err.Error()))
+		return ""
+	}
+
+	if len(msg.Answer) == 0 {
+		c.Logger.Error("[GetDataOwner] failed to find the ownerID", zap.String("identity_identifier", identifier))
+		return ""
+	}
+	a := msg.Answer[0]
+
+	tmp := strings.TrimPrefix(a.String(), a.Header().String())
+	slice := strings.Split(tmp, " ")
+	if len(slice) != 2 {
+		c.Logger.Error("[GetDataOwner] failed to split the ownerID from the answer RR", zap.String("answer", tmp))
+		return ""
+	}
+
+	tmp = strings.Trim(slice[0], "\"")
+
+	tmp2 := strings.Split(tmp, "data")
+	if len(tmp2) > 2 {
+		c.Logger.Error("[GetDataOwner] failed to split the ownerID from the whole name", zap.String("answer", tmp))
+		return ""
+	}
+
+	return tmp2[0]
 }
