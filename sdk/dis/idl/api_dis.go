@@ -40,6 +40,7 @@ type ApiDODeleteRequest struct {
 
 // 授权发起
 type ApiAuthInitRequest struct {
+	DuDoi             string            `json:"du_doi,omitempty"`
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	IDL.SignatureData                                                    //统一共用的加签验签结构，字段均为必填项
