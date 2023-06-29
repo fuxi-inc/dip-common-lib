@@ -101,6 +101,7 @@ type ApiDOQueryResponse struct {
 
 type ApiDOQueryResponseData struct {
 	PubKey                   string                    `json:"pub_key,omitempty"`
+	Owner                    string                    `json:"owner,omitempty"`
 	Dar                      string                    `json:"dar,omitempty"`                    // DOI地址
 	Auth                     []DataAuthorization       `json:"authorization,omitempty"`          // 权属
 	Digest                   *DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
