@@ -9,9 +9,9 @@ import (
 )
 
 type GetDataRequest struct {
-	DuDoi        string `json:"du_doi" binding:"required"`        //数据所有者身份标识
-	DataDoi      string `json:"data_doi" binding:"required"`      //数据对象标识
-	PermisionDoi string `json:"permision_doi" binding:"required"` //权限
+	DuDoi   string `json:"du_doi" binding:"required"`   //数据所有者身份标识
+	DataDoi string `json:"data_doi" binding:"required"` //数据对象标识
+	//PermissionDoi string `json:"permission_doi" binding:"required"` //权限
 	IDL.SignatureData
 }
 
@@ -22,8 +22,8 @@ type GetDataRequest struct {
 type GetDataResponse struct {
 	Errno        int64  `json:"errno"`
 	Errmsg       string `json:"errmsg"`
-	DataContent  []byte `json:"data_content" binding:"required"`
-	Encryptedkey string `json:"encryptedkey" binding:"required"`
+	DataContent  []byte `json:"data_content"`
+	EncryptedKey string `json:"encrypted_key"`
 }
 
 func (r GetDataRequest) ToString() string {
