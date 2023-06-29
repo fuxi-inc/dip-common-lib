@@ -21,7 +21,6 @@ type ApiDOCreateRequest struct {
 type ApiDOUpdateRequest struct {
 	Doi                      string                    `json:"doi,omitempty"`
 	NewDoi                   string                    `json:"new_doi,omitempty"` // 更新后的DO标识
-	DwDoi                    string                    `json:"dw_doi,omitempty"`
 	PubKey                   string                    `json:"pub_key,omitempty"`
 	Dar                      string                    `json:"dar,omitempty"`                    // DOI地址
 	Digest                   *DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
