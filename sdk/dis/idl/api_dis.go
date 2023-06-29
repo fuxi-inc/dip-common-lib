@@ -102,7 +102,7 @@ type ApiDOQueryResponse struct {
 type ApiDOQueryResponseData struct {
 	PubKey                   string                    `json:"pub_key,omitempty"`
 	Dar                      string                    `json:"dar,omitempty"`                    // DOI地址
-	Auth                     *[]DataAuthorization      `json:"authorization,omitempty"`          // 权属
+	Auth                     []DataAuthorization       `json:"authorization,omitempty"`          // 权属
 	Digest                   *DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
 	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 }
