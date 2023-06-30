@@ -98,10 +98,10 @@ type ApiDOQueryResponse struct {
 }
 
 type ApiDOQueryResponseData struct {
-	PubKey                   string                    `json:"pub_key,omitempty"`
-	Owner                    string                    `json:"owner,omitempty"`
-	Dar                      string                    `json:"dar,omitempty"`                    // DOI地址
-	Auth                     []DataAuthorization       `json:"authorization,omitempty"`          // 权属
-	Digest                   *DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
-	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
+	PubKey                   string                       `json:"pub_key,omitempty"`
+	Owner                    string                       `json:"owner,omitempty"`
+	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
+	Auth                     map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属
+	Digest                   *DataDigest                  `json:"digest,omitempty"`                 // 数据内容摘要
+	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading,omitempty"` // 数据分类分级信息
 }
