@@ -3,6 +3,7 @@ package idl
 import (
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
 type RegisterDataRequest struct {
@@ -16,6 +17,10 @@ type RegisterDataRequest struct {
 	SecretKey                string                        `json:"secret_key"`                                //文件内容的加密秘钥，当为空时，代表文件内容没有加密
 	ClassificationAndGrading *idl.ClassificationAndGrading `json:"classification_grading,omitempty"`          // 数据分类分级信息
 	IDL.SignatureData
+}
+
+func (s *RegisterDataRequest) ToString() string {
+	return converter.ToString(s)
 }
 
 type RegisterDataResponseData struct{}

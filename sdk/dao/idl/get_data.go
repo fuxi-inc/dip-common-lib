@@ -3,9 +3,9 @@ package idl
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
 type GetDataRequest struct {
@@ -15,18 +15,26 @@ type GetDataRequest struct {
 	IDL.SignatureData
 }
 
+func (r *GetDataRequest) ToString() string {
+	return converter.ToString(r)
+}
+
 // type GetDataResponseData struct {
 // 	DataContent string `json:"data_content" binding:"required"`
 // }
 
 type GetDataResponse struct {
-	Errno        int64  `json:"errno"`
-	Errmsg       string `json:"errmsg"`
+	Code    int64                `json:"code"`
+	Data    *GetDataResponseData `json:"data"`
+	Message string               `json:"message"`
+}
+
+type GetDataResponseData struct {
 	DataContent  []byte `json:"data_content"`
 	EncryptedKey string `json:"encrypted_key"`
 }
 
-func (r GetDataRequest) ToString() string {
+func (r *GetDataResponse) ToString() string {
 	return converter.ToString(r)
 }
 

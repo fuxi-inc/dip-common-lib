@@ -3,6 +3,7 @@ package idl
 import (
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
 // 授权发起Request
@@ -12,8 +13,10 @@ type InitiateAuthRequest struct {
 	IDL.SignatureData
 }
 
+func (s *InitiateAuthRequest) ToString() string {
+	return converter.ToString(s)
+}
+
 // 授权发起Response
-type InitiateAuthResponse struct {
-	Code    int64  `json:"code"`
-	Message string `json:"message"`
+type InitiateAuthResponseData struct {
 }

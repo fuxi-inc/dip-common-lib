@@ -25,7 +25,7 @@ func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.Ge
 		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
 		return nil, err
 	}
-	req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
 	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
 
 	res, err := client.Do(req)
@@ -47,10 +47,9 @@ func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.Ge
 		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
 		return nil, err
 	}
-	if response.Errno != 0 {
-		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+	if response.Code != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.ToString()))
 		return nil, err
 	}
-	//如果成功并且加密密钥不为空 则需要解密
 	return response, nil
 }
