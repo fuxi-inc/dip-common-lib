@@ -74,10 +74,10 @@ type SearchType string
 const (
 	Dar        SearchType = "dar"         // 存储地址
 	Owner      SearchType = "owner"       // 所有者DO
-	PubKey     SearchType = "pub_key"     // 公钥
+	PubKey     SearchType = "pubkey"     // 公钥
 	Auth       SearchType = "auth"        // 权属
 	Digest     SearchType = "digest"      // 数据内容摘要
-	ClassGrade SearchType = "class_grade" // 数据分类分级
+	ClassGrade SearchType = "classgrade" // 数据分类分级
 )
 
 type ApiDOQueryRequest struct {
