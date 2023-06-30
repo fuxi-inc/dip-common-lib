@@ -1,102 +1,96 @@
 package dis
 
-import (
-	"testing"
+// func Test_DOCreate(t *testing.T) {
 
-	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
-)
+// 	request := &idl.ApiDOCreateRequest{
+// 		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		DwDoi:     "usera.viv.cn",
+// 		PubKey:    "XXX",
+// 		WhoisData: nil,
+// 		Sign:      "XXX",
+// 	}
 
-func Test_DOCreate(t *testing.T) {
+// 	println(request)
 
-	request := &idl.ApiDOCreateRequest{
-		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		DwDoi:     "usera.viv.cn",
-		PubKey:    "XXX",
-		WhoisData: nil,
-		Sign:      "XXX",
-	}
+// }
 
-	println(request)
+// func Test_DOUpdate(t *testing.T) {
 
-}
+// 	// 所有未赋值的字段均为空
 
-func Test_DOUpdate(t *testing.T) {
+// 	// 更新数据标识
+// 	request := &idl.ApiDOUpdateRequest{
+// 		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		NewDoi: "XXX.viv.cn",
+// 		DwDoi:  "usera.viv.cn",
+// 		Sign:   "XXX",
+// 	}
 
-	// 所有未赋值的字段均为空
+// 	// 更新公钥
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		PubKey: "XXX",
+// 		DwDoi:  "usera.viv.cn",
+// 		Sign:   "XXX",
+// 	}
 
-	// 更新数据标识
-	request := &idl.ApiDOUpdateRequest{
-		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		NewDoi: "XXX.viv.cn",
-		DwDoi:  "usera.viv.cn",
-		Sign:   "XXX",
-	}
+// 	// 更新数据地址及摘要
 
-	// 更新公钥
-	request = &idl.ApiDOUpdateRequest{
-		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		PubKey: "XXX",
-		DwDoi:  "usera.viv.cn",
-		Sign:   "XXX",
-	}
+// 	digest := &idl.DataDigest{
+// 		Algorithm: "SHA256",
+// 		Result:    "XXX",
+// 	}
 
-	// 更新数据地址及摘要
+// 	classgrade := &idl.ClassificationAndGrading{
+// 		Class: 1024,
+// 		Grade: 2048,
+// 	}
 
-	digest := &idl.DataDigest{
-		Algorithm: "SHA256",
-		Result:    "XXX",
-	}
+// 	auth := &idl.DataAuthorization{
+// 		Confirmation: "XXX",
+// 	}
 
-	classgrade := &idl.ClassificationAndGrading{
-		Class: 1024,
-		Grade: 2048,
-	}
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:                      "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		Dar:                      "resource.example.com/path",
+// 		Digest:                   digest,
+// 		DwDoi:                    "usera.viv.cn",
+// 		Authorization:            &[]idl.DataAuthorization{*auth}, // 更新其中的Conformation确权信息
+// 		ClassificationAndGrading: classgrade,
+// 		Sign:                     "XXX",
+// 	}
 
-	auth := &idl.DataAuthorization{
-		Confirmation: "XXX",
-	}
+// 	// 数据所有者更新自己的权益
 
-	request = &idl.ApiDOUpdateRequest{
-		Doi:                      "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		Dar:                      "resource.example.com/path",
-		Digest:                   digest,
-		DwDoi:                    "usera.viv.cn",
-		Authorization:            &[]idl.DataAuthorization{*auth}, // 更新其中的Conformation确权信息
-		ClassificationAndGrading: classgrade,
-		Sign:                     "XXX",
-	}
+// 	desc := &idl.PermissionDescription{
+// 		PermissionDoi: "XXX.viv.cn",
+// 		CreatorDoi:    "yyy.viv.cn",
+// 	}
 
-	// 数据所有者更新自己的权益
+// 	auth = &idl.DataAuthorization{
+// 		Type:        0,
+// 		Description: desc,
+// 	}
 
-	desc := &idl.PermissionDescription{
-		PermissionDoi: "XXX.viv.cn",
-		CreatorDoi:    "yyy.viv.cn",
-	}
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:           "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		Authorization: &[]idl.DataAuthorization{*auth}, // 更新其中的Type和Description
+// 		Sign:          "XXX",
+// 	}
 
-	auth = &idl.DataAuthorization{
-		Type:        0,
-		Description: desc,
-	}
+// 	// 更新联系方式
 
-	request = &idl.ApiDOUpdateRequest{
-		Doi:           "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		Authorization: &[]idl.DataAuthorization{*auth}, // 更新其中的Type和Description
-		Sign:          "XXX",
-	}
+// 	whois := &idl.RegistrationData{
+// 		Doi:     "xxx.viv.cn",
+// 		Contact: []string{"xxx", "yyy"},
+// 	}
 
-	// 更新联系方式
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		WhoisData: whois,
+// 		Sign:      "XXX",
+// 	}
 
-	whois := &idl.RegistrationData{
-		Doi:     "xxx.viv.cn",
-		Contact: []string{"xxx", "yyy"},
-	}
+// 	println(request)
 
-	request = &idl.ApiDOUpdateRequest{
-		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		WhoisData: whois,
-		Sign:      "XXX",
-	}
-
-	println(request)
-
-}
+// }

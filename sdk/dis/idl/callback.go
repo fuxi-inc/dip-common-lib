@@ -2,11 +2,12 @@ package idl
 
 import (
 	"encoding/json"
-	"github.com/fuxi-inc/dip-common-lib/IDL"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
 type CallbackData struct {
