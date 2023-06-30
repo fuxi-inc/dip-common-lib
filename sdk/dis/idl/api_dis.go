@@ -39,7 +39,6 @@ type ApiDODeleteRequest struct {
 
 // 授权发起
 type ApiAuthInitRequest struct {
-	DuDoi             string            `json:"du_doi,omitempty"`
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
@@ -48,7 +47,6 @@ type ApiAuthInitRequest struct {
 
 // 授权确认
 type ApiAuthConfRequest struct {
-	DuDoi             string            `json:"du_doi,omitempty"`
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	Fields            map[string]string `json:"fields,omitempty"`        //扩展字段，用于发送通知
