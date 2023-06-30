@@ -42,7 +42,7 @@ type ApiAuthInitRequest struct {
 	DuDoi             string            `json:"du_doi,omitempty"`
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
-	Fields            map[string]string `json:"fields,omitempty"`        //扩展字段，用于发送通知
+	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
 
@@ -72,11 +72,11 @@ type ApiRegDataQueryResponse struct {
 type SearchType string
 
 const (
-	Dar        SearchType = "dar"         // 存储地址
-	Owner      SearchType = "owner"       // 所有者DO
+	Dar        SearchType = "dar"        // 存储地址
+	Owner      SearchType = "owner"      // 所有者DO
 	PubKey     SearchType = "pubkey"     // 公钥
-	Auth       SearchType = "auth"        // 权属
-	Digest     SearchType = "digest"      // 数据内容摘要
+	Auth       SearchType = "auth"       // 权属
+	Digest     SearchType = "digest"     // 数据内容摘要
 	ClassGrade SearchType = "classgrade" // 数据分类分级
 )
 
