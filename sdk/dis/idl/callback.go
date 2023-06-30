@@ -14,6 +14,7 @@ type CallbackData struct {
 	FromDoi    string            `json:"from_doi,omitempty"`    //消息发起者
 	ToDoi      string            `json:"to_doi,omitempty"`      //消息通知者
 	DataDoi    string            `json:"data_doi,omitempty"`    //数据对象
+	DataOwner  string            `json:"data_owner,omitempty"`  //数据所有者
 	NotifyType IDL.NotifyType    `json:"notify_type,omitempty"` //消息类型
 	Params     interface{}       `json:"params,omitempty"`      //消息参数
 	Fields     map[string]string `json:"fields,omitempty"`      //扩展字段
