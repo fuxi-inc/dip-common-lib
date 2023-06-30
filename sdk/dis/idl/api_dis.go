@@ -101,7 +101,7 @@ type ApiDOQueryResponseData struct {
 	PubKey                   string                       `json:"pub_key,omitempty"`
 	Owner                    string                       `json:"owner,omitempty"`
 	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
-	Auth                     map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属
+	Auth                     map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属，key的内容也为权属对象
 	Digest                   *DataDigest                  `json:"digest,omitempty"`                 // 数据内容摘要
 	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading,omitempty"` // 数据分类分级信息
 }
