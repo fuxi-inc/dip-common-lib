@@ -33,7 +33,6 @@ type ApiDOUpdateRequest struct {
 // 数据对象属性删除
 type ApiDODeleteRequest struct {
 	Doi               string `json:"doi,omitempty"`
-	DwDoi             string `json:"dw_doi,omitempty"` // 更新后的DO标识
 	IDL.SignatureData        //统一共用的加签验签结构，字段均为必填项
 }
 
