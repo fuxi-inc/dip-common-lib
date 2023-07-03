@@ -1,16 +1,16 @@
 package idl
 
 // name_server api
-type DomainResponse struct {
-	Domains []string `json:"all_zone"`
+type AllZonesResponse struct {
+	Zones []string `json:"zones"`
 }
 
 type SOAResponse struct {
 	SOARR ResourceRecord `json:"soa"`
 }
 
-type GetZoneResponse struct {
-	ZoneDatas []*ZoneData `json:"zone_data"`
+type ZoneResponse struct {
+	ZoneDatas []*ZoneData `json:"zone_datas"`
 }
 
 type ZoneData struct {
