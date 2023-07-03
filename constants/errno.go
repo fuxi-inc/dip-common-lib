@@ -10,4 +10,7 @@ const (
 	ErrnoAuthValidError            int64 = 40002 //auth验证异常
 	ErrnoConfirmationCanNotBeEmpty int64 = 40003 //Confirmation不可为空
 	ErrnoNotFoundError             int64 = 40004 //DO无效（找不到DO）
+
+	ErrnoDomainResolutionError int64 = 30000 // DNS解析错误
+
 )
