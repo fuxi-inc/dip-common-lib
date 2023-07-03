@@ -18,7 +18,7 @@ type SignatureData struct {
 	Signature      string `json:"signature" binding:"required"`       //对请求进行秘钥签名
 }
 
-// CreateSignature 签名：采用sha1算法进行签名并输出为hex格式（私钥PKCS8格式）
+// CreateSignature 签名：采用sha256算法进行签名并输出为hex格式（私钥PKCS8格式）
 func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 	if s.OperatorDoi == "" || s.SignatureNonce == "" {
 		return "", errors.New("invalid signature params")
@@ -36,7 +36,7 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 	h := sha1.New()
 	h.Write([]byte(s.genSignOriginData()))
 	hash := h.Sum(nil)
-	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA1, hash[:])
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash[:])
 	if err != nil {
 		fmt.Printf("Error from signing: %s\n", err)
 		return "", err
@@ -45,7 +45,7 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 	return out, nil
 }
 
-// VerifySignature 验签：对采用sha1算法进行签名后转base64格式的数据进行验签
+// VerifySignature 验签：对采用sha256算法进行签名后转base64格式的数据进行验签
 func (s *SignatureData) VerifySignature(pubKey string) error {
 	sign, err := base64.StdEncoding.DecodeString(s.Signature)
 	if err != nil {
@@ -58,7 +58,7 @@ func (s *SignatureData) VerifySignature(pubKey string) error {
 	}
 	hash := sha1.New()
 	hash.Write([]byte(s.genSignOriginData()))
-	return rsa.VerifyPKCS1v15(pub.(*rsa.PublicKey), crypto.SHA1, hash.Sum(nil), sign)
+	return rsa.VerifyPKCS1v15(pub.(*rsa.PublicKey), crypto.SHA256, hash.Sum(nil), sign)
 }
 
 func (s *SignatureData) genSignOriginData() string {
