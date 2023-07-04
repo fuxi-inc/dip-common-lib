@@ -1,7 +1,9 @@
 package dis
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -75,6 +77,13 @@ func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataReques
 	return nil, nil
 }
 
+// 数据对象属性查询API返回（对内）
+type doqueryresponse struct {
+	Code int64                  `json:"code"` // 业务编码
+	Data map[string]interface{} `json:"data"` // 成功时返回的数据
+	Msg  string                 `json:"msg"`  // 错误描述
+}
+
 // 数据对象属性查询
 func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
 
@@ -98,15 +107,32 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	// 发送 GET 请求
 	resp, err := http.Get(url)
 	if err != nil {
+		// TODO: 错误返回格式统一
 		fmt.Println("请求发送失败:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	// 读取响应的 Body 内容
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("读取响应内容失败:", err)
+		return nil, err
+	}
+
+	// TODO: 需要测试返回是否在成功
+	var m doqueryresponse
+	err = json.Unmarshal(body, &m)
+	if err != nil {
+		fmt.Println("返回内容unmarshal失败:", err)
+		return nil, err
+	}
 
 	return nil, nil
 }
 
 // 数据对象权属查询
 func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryRequest) (*idl.ApiDOQueryResponse, error) {
+
 	return nil, nil
 }
