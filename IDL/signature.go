@@ -4,7 +4,6 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
-	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
@@ -34,7 +33,7 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 		fmt.Println("ParsePKCS8PrivateKey err", err)
 		return "", err
 	}
-	h := sha1.New()
+	h := sha256.New()
 	h.Write([]byte(s.genSignOriginData()))
 	hash := h.Sum(nil)
 	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash[:])
