@@ -139,8 +139,6 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	response_digest := &idl.DataDigest{}
 	response_classgrade := &idl.ClassificationAndGrading{}
 
-	response.Errno = IDL.RespCodeType(m.Code)
-
 	// 遍历返回结果
 	for key, value := range m.Data {
 		// TODO: 测试用，可以删掉
@@ -209,6 +207,8 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	}
 
 	response.Data = response_data
+	response.Errno = IDL.RespCodeType(m.Code)
+	response.Errmsg = m.Msg
 
 	return response, nil
 }
@@ -216,47 +216,66 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 // 数据对象权属查询
 func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryRequest) (*idl.ApiDOQueryResponse, error) {
 
-	// baseurl := c.DisQHost + "/DataObject"
+	baseurl := c.DisQHost + "/DataObject"
 
-	// // 构建查询参数
-	// queryParams := url.Values{}
-	// queryParams.Set("doi", request.Doi)
-	// queryParams.Set("dudoi", request.DuDoi)
+	// 构建查询参数
+	queryParams := url.Values{}
+	queryParams.Set("doi", request.Doi)
+	queryParams.Set("dudoi", request.DuDoi)
 
-	// // 将查询参数附加到URL
-	// url := baseurl + "?" + queryParams.Encode()
+	// 将查询参数附加到URL
+	url := baseurl + "?" + queryParams.Encode()
 
-	// // 发送 GET 请求
-	// resp, err := http.Get(url)
-	// if err != nil {
-	// 	// TODO: 错误返回格式统一
-	// 	log.Println("请求发送失败:", err)
-	// 	return nil, err
-	// }
-	// defer resp.Body.Close()
+	// 发送 GET 请求
+	resp, err := http.Get(url)
+	if err != nil {
+		// TODO: 错误返回格式统一
+		log.Println("请求发送失败:", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
 
-	// // 读取响应的 Body 内容
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Println("读取响应内容失败:", err)
-	// 	return nil, err
-	// }
+	// 读取响应的 Body 内容
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("读取响应内容失败:", err)
+		return nil, err
+	}
 
-	// // TODO: 需要测试返回是否在成功
-	// var m doqueryresponse
-	// err = json.Unmarshal(body, &m)
-	// if err != nil {
-	// 	log.Println("返回内容unmarshal失败:", err)
-	// 	return nil, err
-	// }
+	// TODO: 需要测试返回是否在成功
+	var m doqueryresponse
+	err = json.Unmarshal(body, &m)
+	if err != nil {
+		log.Println("返回内容unmarshal失败:", err)
+		return nil, err
+	}
 
-	// // TODO: 测试响应，后面删掉
-	// log.Println("Response msg: ", m.Msg)
+	// TODO: 测试响应，后面删掉
+	log.Println("Response msg: ", m.Msg)
 
-	// response := &idl.ApiDOQueryResponse{}
+	response := &idl.ApiDOQueryResponse{}
 
-	// response_data := &idl.ApiDOQueryResponseData{}
-	// response_auth := &idl.Auth
+	response_data := &idl.ApiDOQueryResponseData{}
+	response_auth := make(map[string]idl.DataAuthorization)
 
-	return nil, nil
+	value := m.Data["auth"]
+
+	if str, ok := value.(string); ok {
+		var au idl.DataAuthorization
+		err = json.Unmarshal([]byte(str), &au)
+		if err != nil {
+			log.Println("authorization unmarshal失败:", err)
+			return nil, err
+		}
+
+		response_auth[request.DuDoi] = au
+		response_data.Auth = response_auth
+
+	}
+
+	response.Data = response_data
+	response.Errno = IDL.RespCodeType(m.Code)
+	response.Errmsg = m.Msg
+
+	return response, nil
 }
