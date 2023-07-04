@@ -4,8 +4,8 @@ import "github.com/fuxi-inc/dip-common-lib/IDL"
 
 // 通用响应（无返回data）。在没有特别定义时，用这种响应格式
 type ApiDisResponse struct {
-	Errno  DisRespErrno `json:"errno"`
-	Errmsg string       `json:"errmsg"`
+	Errno  IDL.RespCodeType `json:"errno"`
+	Errmsg string           `json:"errmsg"`
 }
 
 // 数据对象属性注册
@@ -60,7 +60,7 @@ type ApiRegDataRequest struct {
 // 注册数据查询
 
 type ApiRegDataQueryResponse struct {
-	Errno  DisRespErrno      `json:"errno"`
+	Errno  IDL.RespCodeType  `json:"errno"`
 	Errmsg string            `json:"errmsg"`
 	Data   *RegistrationData `json:"data,omitempty"`
 }
@@ -91,7 +91,7 @@ type ApiDOAuthQueryRequest struct {
 
 // 权地址查询响应
 type ApiDOQueryResponse struct {
-	Errno  DisRespErrno            `json:"errno"`
+	Errno  IDL.RespCodeType        `json:"errno"`
 	Errmsg string                  `json:"errmsg"`
 	Data   *ApiDOQueryResponseData `json:"data,omitempty"`
 }
