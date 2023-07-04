@@ -2,12 +2,14 @@ package dis
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
+	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -108,7 +110,7 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	resp, err := http.Get(url)
 	if err != nil {
 		// TODO: 错误返回格式统一
-		fmt.Println("请求发送失败:", err)
+		log.Println("请求发送失败:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -116,7 +118,7 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	// 读取响应的 Body 内容
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("读取响应内容失败:", err)
+		log.Println("读取响应内容失败:", err)
 		return nil, err
 	}
 
@@ -124,15 +126,137 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	var m doqueryresponse
 	err = json.Unmarshal(body, &m)
 	if err != nil {
-		fmt.Println("返回内容unmarshal失败:", err)
+		log.Println("返回内容unmarshal失败:", err)
 		return nil, err
 	}
 
-	return nil, nil
+	// TODO: 测试响应，后面删掉
+	log.Println("Response msg: ", m.Msg)
+
+	response := &idl.ApiDOQueryResponse{}
+
+	response_data := &idl.ApiDOQueryResponseData{}
+	response_digest := &idl.DataDigest{}
+	response_classgrade := &idl.ClassificationAndGrading{}
+
+	response.Errno = IDL.RespCodeType(m.Code)
+
+	// 遍历返回结果
+	for key, value := range m.Data {
+		// TODO: 测试用，可以删掉
+		log.Printf("键: %s\n", key)
+
+		// 进行断言
+		switch key {
+		case "dar":
+			if str, ok := value.(string); ok {
+				response_data.Dar = str
+			}
+		case "owner":
+			if str, ok := value.(string); ok {
+				response_data.Owner = str
+			}
+		case "pubkey":
+			if str, ok := value.(string); ok {
+				response_data.PubKey = str
+			}
+		case "digest":
+			if str, ok := value.(string); ok {
+				b := []byte(str)
+				err := json.Unmarshal(b, &response_digest)
+				if err != nil {
+					log.Println("digest unmarshal失败:", err)
+					return nil, err
+				}
+
+				// 	TODO: 需要测试
+				response_data.Digest = response_digest
+			}
+
+		case "class":
+			if str, ok := value.(string); ok {
+
+				num, err := strconv.ParseUint(str, 10, 16)
+				if err != nil {
+					log.Println("uint16转换失败:", err)
+					return nil, err
+				}
+
+				uint16Val := uint16(num)
+
+				response_classgrade.Class = uint16Val
+			}
+
+		case "grade":
+			if str, ok := value.(string); ok {
+
+				num, err := strconv.ParseUint(str, 10, 16)
+				if err != nil {
+					log.Println("uint16转换失败:", err)
+					return nil, err
+				}
+
+				uint16Val := uint16(num)
+
+				response_classgrade.Grade = uint16Val
+
+				response_data.ClassificationAndGrading = response_classgrade
+
+			}
+
+		}
+
+	}
+
+	response.Data = response_data
+
+	return response, nil
 }
 
 // 数据对象权属查询
 func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryRequest) (*idl.ApiDOQueryResponse, error) {
+
+	// baseurl := c.DisQHost + "/DataObject"
+
+	// // 构建查询参数
+	// queryParams := url.Values{}
+	// queryParams.Set("doi", request.Doi)
+	// queryParams.Set("dudoi", request.DuDoi)
+
+	// // 将查询参数附加到URL
+	// url := baseurl + "?" + queryParams.Encode()
+
+	// // 发送 GET 请求
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	// TODO: 错误返回格式统一
+	// 	log.Println("请求发送失败:", err)
+	// 	return nil, err
+	// }
+	// defer resp.Body.Close()
+
+	// // 读取响应的 Body 内容
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Println("读取响应内容失败:", err)
+	// 	return nil, err
+	// }
+
+	// // TODO: 需要测试返回是否在成功
+	// var m doqueryresponse
+	// err = json.Unmarshal(body, &m)
+	// if err != nil {
+	// 	log.Println("返回内容unmarshal失败:", err)
+	// 	return nil, err
+	// }
+
+	// // TODO: 测试响应，后面删掉
+	// log.Println("Response msg: ", m.Msg)
+
+	// response := &idl.ApiDOQueryResponse{}
+
+	// response_data := &idl.ApiDOQueryResponseData{}
+	// response_auth := &idl.Auth
 
 	return nil, nil
 }
