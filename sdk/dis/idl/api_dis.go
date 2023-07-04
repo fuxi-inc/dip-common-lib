@@ -87,8 +87,9 @@ type ApiDOQueryRequest struct {
 
 // 数据对象权属查询
 type ApiDOAuthQueryRequest struct {
-	Doi   string `json:"doi,omitempty"`
-	DuDoi string `json:"dudoi,omitempty"`
+	Doi   string       `json:"doi,omitempty"`
+	DuDoi string       `json:"dudoi,omitempty"`
+	Type  []SearchType `json:"type,omitempty"` // 查询类型，只包括auth
 }
 
 // 权地址查询响应
