@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/hex"
@@ -56,7 +57,7 @@ func (s *SignatureData) VerifySignature(pubKey string) error {
 	if err != nil {
 		return err
 	}
-	hash := sha1.New()
+	hash := sha256.New()
 	hash.Write([]byte(s.genSignOriginData()))
 	return rsa.VerifyPKCS1v15(pub.(*rsa.PublicKey), crypto.SHA256, hash.Sum(nil), sign)
 }
