@@ -12,6 +12,9 @@ type CommonResponse struct {
 	Message string       `json:"message"`
 }
 
+func NewCommonResponse() *CommonResponse {
+	return &CommonResponse{}
+}
 func (r *CommonResponse) SetCode(code int64) *CommonResponse {
 	r.Code = RespCodeType(code)
 	return r
