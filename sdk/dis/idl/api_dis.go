@@ -1,6 +1,9 @@
 package idl
 
-import "github.com/fuxi-inc/dip-common-lib/IDL"
+import (
+	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+)
 
 // 通用响应（无返回data）。在没有特别定义时，用这种响应格式
 type ApiDisResponse struct {
@@ -102,4 +105,8 @@ type ApiDOQueryResponseData struct {
 	Auth                     map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属，key的内容也为权属对象
 	Digest                   *DataDigest                  `json:"digest,omitempty"`                 // 数据内容摘要
 	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading,omitempty"` // 数据分类分级信息
+}
+
+func (s *ApiDOQueryRequest) ToString() string {
+	return converter.ToString(s)
 }

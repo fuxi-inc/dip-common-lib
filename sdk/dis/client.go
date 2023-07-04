@@ -1,6 +1,11 @@
 package dis
 
 import (
+	"fmt"
+	"net/http"
+	"net/url"
+	"strings"
+
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -72,6 +77,31 @@ func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataReques
 
 // 数据对象属性查询
 func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
+
+	baseurl := c.DisQHost + "/DataObject"
+
+	// 将结构体字段转换为字符串
+	var typeStrings []string
+	for _, t := range request.Type {
+		typeStrings = append(typeStrings, string(t))
+	}
+	typesString := strings.Join(typeStrings, ", ")
+
+	// 构建查询参数
+	queryParams := url.Values{}
+	queryParams.Set("doi", request.Doi)
+	queryParams.Set("param2", typesString)
+
+	// 将查询参数附加到URL
+	url := baseurl + "?" + queryParams.Encode()
+
+	// 发送 GET 请求
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("请求发送失败:", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
 
 	return nil, nil
 }
