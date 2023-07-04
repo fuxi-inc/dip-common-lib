@@ -34,6 +34,9 @@ func (r *CommonResponse) ToString() string {
 	return converter.ToString(r)
 }
 
+func (r *CommonResponse) ToBytes() []byte {
+	return []byte(r.ToString())
+}
 func (r *CommonResponse) Unmarshal(data []byte) error {
 	d := json.NewDecoder(bytes.NewReader(data))
 	d.UseNumber()
