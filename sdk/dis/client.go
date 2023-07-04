@@ -71,10 +71,11 @@ func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataReques
 
 // 数据对象属性查询
 func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
+
 	return nil, nil
 }
 
 // 数据对象权属查询
-func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
+func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryRequest) (*idl.ApiDOQueryResponse, error) {
 	return nil, nil
 }
