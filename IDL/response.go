@@ -3,6 +3,7 @@ package IDL
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
@@ -10,6 +11,10 @@ type CommonResponse struct {
 	Code    RespCodeType `json:"code"`
 	Data    interface{}  `json:"data"`
 	Message string       `json:"message"`
+}
+
+func NewSuccessResponse() *CommonResponse {
+	return NewCommonResponse().SetCode(constants.Success).SetMessage("success")
 }
 
 func NewCommonResponse() *CommonResponse {
