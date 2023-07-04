@@ -15,9 +15,10 @@ import (
 */
 
 type Client struct {
-	Logger  *zap.Logger //日志组件
-	DisHost string
-	DaoHost string
+	Logger   *zap.Logger //日志组件
+	DisHost  string
+	DisQHost string
+	DaoHost  string
 }
 
 func NewClient() *Client {
@@ -71,8 +72,6 @@ func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataReques
 
 // 数据对象属性查询
 func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*idl.ApiDOQueryResponse, error) {
-
-	
 
 	return nil, nil
 }
