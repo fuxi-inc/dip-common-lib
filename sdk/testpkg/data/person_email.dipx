@@ -1,0 +1,8 @@
+{
+  "type":"personal",
+  "title":"email",
+  "describe":"email邮件地址",
+  "content":{
+    "value":"liuyanglong2137@qq.com"
+  }
+}
