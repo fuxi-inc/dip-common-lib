@@ -6,7 +6,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -53,23 +52,31 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 	h := sha256.New()
 	h.Write([]byte(s.genSignOriginData()))
 	hash := h.Sum(nil)
-	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash[:])
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash)
 	if err != nil {
 		fmt.Printf("Error from signing: %s\n", err)
 		return "", err
 	}
 	out := hex.EncodeToString(signature)
+	s.Signature = out
 	return out, nil
 }
 
 // VerifySignature 验签：对采用sha256算法进行签名后转base64格式的数据进行验签
 func (s *SignatureData) VerifySignature(pubKey string) error {
-	sign, err := base64.StdEncoding.DecodeString(s.Signature)
+	sign, err := hex.DecodeString(s.Signature)
 	if err != nil {
 		return err
 	}
-	public, _ := base64.StdEncoding.DecodeString(pubKey)
-	pub, err := x509.ParsePKIXPublicKey(public)
+	/*
+		public, _ := base64.StdEncoding.DecodeString(pubKey)
+	*/
+	keyBytes, err := hex.DecodeString(pubKey)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	pub, err := x509.ParsePKIXPublicKey(keyBytes)
 	if err != nil {
 		return err
 	}
