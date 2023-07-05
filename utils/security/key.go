@@ -2,11 +2,28 @@ package security
 
 import (
 	"crypto"
+	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
 )
+
+func ImportPrivateKey(pkstr string) (*rsa.PrivateKey, error) {
+
+	privateKeyAsBytes, err := base64.StdEncoding.DecodeString(pkstr)
+	if err != nil {
+		return nil, err
+	}
+
+	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyAsBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return privateKey, nil
+}
 
 func ImportPublicKey(pubKey string) (*rsa.PublicKey, error) {
 
@@ -30,4 +47,27 @@ func VerifySignature(publicKey *rsa.PublicKey, hashMsg []byte, signature []byte)
 	}
 
 	return nil
+}
+
+// sign by privateKey
+func SignByPK(privateKey *rsa.PrivateKey, hashMsg []byte) ([]byte, error) {
+
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hashMsg)
+	if err != nil {
+		return nil, fmt.Errorf("无法签名消息 %v", err)
+	}
+
+	return signature, nil
+}
+
+// sha256 hash
+func Sha256Hash(msg []byte) []byte {
+
+	hash := sha256.New()
+	_, err := hash.Write(msg)
+	if err != nil {
+		panic(err)
+	}
+
+	return hash.Sum(nil)
 }
