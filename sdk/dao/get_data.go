@@ -2,24 +2,20 @@ package dao
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strings"
-
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
 )
 
 //GetData 调用DAO service 获取服务
 func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.GetDataResponse, error) {
-	daoUrl := c.DaoHost + "/dip/data/get"
+	daoUrl := c.DaoHost + "/dip/data/get?" + fmt.Sprintf("du_doi=%s&data_doi=%s&operator_doi=%s&signature_nonce=%s&signature=%s", request.DuDoi, request.DataDoi, request.OperatorDoi, request.SignatureNonce, request.Signature)
 	method := constants.GET
-	payload := strings.NewReader(converter.ToString(request))
 
 	client := &http.Client{}
-	req, err := http.NewRequest(method, daoUrl, payload)
+	req, err := http.NewRequest(method, daoUrl, nil)
 
 	if err != nil {
 		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
