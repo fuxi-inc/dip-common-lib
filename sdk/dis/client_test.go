@@ -370,9 +370,9 @@ func TestClient_ApiDOCreate(t *testing.T) {
 				request: &idl.ApiDOCreateRequest{
 					Doi:           "alice_create_by_liuyanglong.viv.cn",
 					DwDoi:         "alice_create_by_liuyanglong.viv.cn",
-					PubKey:        testpkg.GetMockDataContent("/mock_data/user/alice/public.hex"),
+					PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					WhoisData:     nil,
-					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn", testpkg.GetMockDataContent("/mock_data/user/bob/private.hex")),
+					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn", string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex"))),
 				},
 			},
 			want:    nil,
