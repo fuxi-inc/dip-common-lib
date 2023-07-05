@@ -47,6 +47,11 @@ func (c *Client) InitDis(disHost string) *Client {
 	return c
 }
 
+func (c *Client) InitDisQ(disqHost string) *Client {
+	c.DisQHost = disqHost
+	return c
+}
+
 func (c *Client) InitDao(daoHost string) *Client {
 	c.DaoHost = daoHost
 	return c

@@ -2,19 +2,13 @@ package dis
 
 import (
 	"testing"
+
+	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
-
-func Test_DoiCreate(t *testing.T) {
-	request:=&idl.ApiDOCreateRequest{
-		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		DwDoi:     "usera.viv.cn",
-		PubKey:    "XXX",
-		WhoisData: nil,
-		
-
-		
-}
 
 // func Test_DOCreate(t *testing.T) {
 
@@ -110,3 +104,114 @@ func Test_DoiCreate(t *testing.T) {
 // 	println(request)
 
 // }
+
+func Test_DOQuery(t *testing.T) {
+
+	// 设置测试数据
+	request := &idl.ApiDOQueryRequest{
+		// TODO: 设置测试doi
+		Doi: "example_doi",
+		Type: []idl.SearchType{
+			idl.Dar,
+			idl.Owner,
+			idl.PubKey,
+			idl.Digest,
+			idl.ClassGrade,
+		},
+	}
+
+	ctx := &gin.Context{}
+
+	// 创建一个 Client 实例
+	client := NewClient().
+		InitLogger(zap.NewExample()).
+		// TODO: 添加disq的host名称
+		InitDisQ("xxxxx")
+
+	// 执行被测试的函数
+	response, err := client.ApiDOQuery(ctx, request)
+
+	// 断言函数返回的错误为 nil
+	assert.Nil(t, err)
+
+	// 判断 Errno 是否为 0
+	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+
+	// TODO：需要补充具体内容，是否需要测试？
+	// 创建一个预期的响应数据
+	expectedData := &idl.ApiDOQueryResponseData{
+		PubKey: "xxxx",
+		Owner:  "xxxx",
+		Dar:    "xxx",
+		Digest: &idl.DataDigest{
+			Algorithm: "xxx",
+			Result:    "xxx",
+		},
+		ClassificationAndGrading: &idl.ClassificationAndGrading{
+			Class: 0,
+			Grade: 0,
+		},
+	}
+
+	// 判断预期响应结构是否正确
+	assert.Equal(t, expectedData.PubKey, response.Data.PubKey)
+	assert.Equal(t, expectedData.Owner, response.Data.Owner)
+	assert.Equal(t, expectedData.Dar, response.Data.Dar)
+	assert.Equal(t, expectedData.Digest, response.Data.Digest)
+	assert.Equal(t, expectedData.ClassificationAndGrading, response.Data.ClassificationAndGrading)
+
+}
+
+func Test_DOAuthQuery(t *testing.T) {
+
+	dudoi := ""
+
+	// 设置测试数据
+	request := &idl.ApiDOAuthQueryRequest{
+		// TODO: 设置测试doi
+		Doi:   "example_doi",
+		DuDoi: dudoi,
+		Type: []idl.SearchType{
+			idl.Auth,
+		},
+	}
+
+	ctx := &gin.Context{}
+
+	// 创建一个 Client 实例
+	client := NewClient().
+		InitLogger(zap.NewExample()).
+		// TODO: 添加disq的host名称
+		InitDisQ("xxxxx")
+
+	// 执行被测试的函数
+	response, err := client.ApiDOAuthQuery(ctx, request)
+
+	// 断言函数返回的错误为 nil
+	assert.Nil(t, err)
+
+	// 判断 Errno 是否为 0
+	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+
+	// TODO：需要补充具体内容，是否需要测试？
+	// 创建一个预期的响应数据DataAuthorization
+	expectedData := &idl.DataAuthorization{
+		Doi:          "",
+		Type:         idl.AuthorizationType(0),
+		Confirmation: "",
+		Description: &idl.PermissionDescription{
+			PermissionDoi: "",
+			CreatorDoi:    "",
+			Key:           "",
+		},
+	}
+
+	au := response.Data.Auth[dudoi]
+
+	// 判断预期响应结构是否正确
+	assert.Equal(t, expectedData.Doi, au.Doi)
+	assert.Equal(t, expectedData.Type, au.Type)
+	assert.Equal(t, expectedData.Confirmation, au.Confirmation)
+	assert.Equal(t, expectedData.Description, au.Description)
+
+}
