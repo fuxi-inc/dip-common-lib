@@ -7,6 +7,7 @@ import (
 )
 
 // GetMockDataContent 获取testpkg下相对路径的文件内容
+// 如： testpkg.GetMockDataContent("/mock_data/user/bob/private.hex") 读取的是 /utils/testpkg/mock_data/user/bob/private.hex的文件内容
 func GetMockDataContent(fp string) string {
 	var dir string
 	_, filename, _, ok := runtime.Caller(0)
