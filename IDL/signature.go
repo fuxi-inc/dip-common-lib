@@ -10,12 +10,29 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 )
 
 type SignatureData struct {
 	OperatorDoi    string `json:"operator_doi" binding:"required"`    //操作者的doi，在不同的场景中，可能为DW或DU
 	SignatureNonce string `json:"signature_nonce" binding:"required"` //唯一随机数，用于防止网络重放攻击。用户在不同请求间要使用不同的随机值，建议使用通用唯一识别码UUID（Universally Unique Identifier）
 	Signature      string `json:"signature" binding:"required"`       //对请求进行秘钥签名
+}
+
+func NewSignatureData() *SignatureData {
+	return &SignatureData{}
+}
+
+func NewSignatureDataWithSign(operator, prvKey string) *SignatureData {
+	var err error
+	signData := NewSignatureData()
+	signData.OperatorDoi = operator
+	signData.SignatureNonce = uuid.NewString()
+	signData.Signature, err = signData.CreateSignature(prvKey)
+	if err != nil {
+		return nil
+	}
+	return signData
 }
 
 // CreateSignature 签名：采用sha256算法进行签名并输出为hex格式（私钥PKCS8格式）

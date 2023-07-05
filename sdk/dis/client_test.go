@@ -1,6 +1,7 @@
 package dis
 
 import (
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"testing"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
@@ -214,4 +215,58 @@ func Test_DOAuthQuery(t *testing.T) {
 	assert.Equal(t, expectedData.Confirmation, au.Confirmation)
 	assert.Equal(t, expectedData.Description, au.Description)
 
+}
+
+func TestClient_ApiDOCreate(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDOCreateRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 注册用户",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:           "alice_create_by_liuyanglong.viv.cn",
+					DwDoi:         "alice_create_by_liuyanglong.viv.cn",
+					PubKey:        testpkg.GetMockDataContent("/mock_data/user/alice/public.hex"),
+					WhoisData:     nil,
+					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn", testpkg.GetMockDataContent("/mock_data/user/bob/private.hex")),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiDOCreate(tt.args.ctx, tt.args.request)
+			assert.Equalf(t, tt.want, got, "ApiDOCreate(%v, %v, %v)", tt.args.ctx, tt.args.request, err)
+		})
+	}
 }
