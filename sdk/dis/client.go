@@ -2,6 +2,7 @@ package dis
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,7 +11,9 @@ import (
 	"strings"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -51,17 +54,133 @@ func (c *Client) InitDao(daoHost string) *Client {
 
 // 数据对象属性注册
 func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+	disurl := c.DisHost + "/dip/dis-r/doi/register"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, err
+	}
+	return response, nil
+
 }
 
 // 数据对象属性更新
 func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+	disurl := c.DisHost + "/dip/dis-r/doi/update"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, err
+	}
+	return response, nil
 }
 
 // 数据对象属性删除
 func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+	disurl := c.DisHost + "/dip/dis-r/doi/delete"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, err
+	}
+	return response, nil
+
 }
 
 // 授权发起

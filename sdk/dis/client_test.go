@@ -1,5 +1,21 @@
 package dis
 
+import (
+	"testing"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+)
+
+func Test_DoiCreate(t *testing.T) {
+	request:=&idl.ApiDOCreateRequest{
+		Doi:       "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+		DwDoi:     "usera.viv.cn",
+		PubKey:    "XXX",
+		WhoisData: nil,
+		
+
+		
+}
+
 // func Test_DOCreate(t *testing.T) {
 
 // 	request := &idl.ApiDOCreateRequest{
