@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
@@ -35,7 +36,7 @@ func (c *Client) getAllZones(sk string) ([]string, error) {
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetHeader("Authorization", "Bearer: "+base64.StdEncoding.EncodeToString(signature)).
-		Get(hubAddress + "/name_server/allzones/")
+		Get(hubAddress + "/dip/dis-r/name_server/allzones/")
 
 	if err != nil {
 		c.Logger.Error(err.Error())
