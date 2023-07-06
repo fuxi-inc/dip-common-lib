@@ -50,7 +50,7 @@ func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
 	sign.OperatorDoi = "alice.viv.cn"
 	sign.SignatureNonce = "123456"
-	Signature, err := sign.CreateSignature(GetPrivKeyString())
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("utils/testpkg/mock_data/user/alice/private.hex")))
 	if err != nil {
 		print(err.Error())
 	}
