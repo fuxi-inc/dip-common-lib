@@ -38,6 +38,16 @@ func (s *RespCodeType) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	*s = RespCodeType(converter.InterfaceToInt64(data))
+
+	var codeType int64
+	switch data.(type) {
+	case string:
+		codeType = converter.StringToInt64(data.(string))
+	case int, int16, int32, int64:
+		codeType = int64(data.(int))
+	case float32, float64:
+		codeType = int64(data.(float64))
+	}
+	*s = RespCodeType(codeType)
 	return nil
 }
