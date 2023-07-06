@@ -54,9 +54,16 @@ func (c *Client) getZone(zone string, sk string) (*idl.ZoneResponse, error) {
 		return nil, err
 	}
 
-	zr, ok := cr.Data.(idl.ZoneResponse)
-	if !ok {
-		err = fmt.Errorf("interface claim to ZoneResponse failed")
+	by, err := json.Marshal(cr.Data)
+	if err != nil {
+		err = fmt.Errorf("cr marshal failed: %v", err)
+		c.Logger.Error(err.Error())
+		return nil, err
+	}
+	zr := idl.ZoneResponse{}
+	err = json.Unmarshal(by, &zr)
+	if err != nil {
+		err = fmt.Errorf("cr unmarshal failed: %v", err)
 		c.Logger.Error(err.Error())
 		return nil, err
 	}
