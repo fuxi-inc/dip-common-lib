@@ -50,6 +50,9 @@ func Test_DOCreate(t *testing.T) {
 	sign.OperatorDoi = "alice.viv.cn"
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(GetPrivKeyString())
+	if err != nil {
+		print(err.Error())
+	}
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	request := &idl.ApiDOCreateRequest{
@@ -62,12 +65,12 @@ func Test_DOCreate(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDisQ("xxxxx")
+		InitDis("39.107.180.231:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
 	response, err := client.ApiDOCreate(ctx, request)
-
+	print(err.Error())
 	// 断言函数返回的错误为 nil
 	assert.Nil(t, err)
 
