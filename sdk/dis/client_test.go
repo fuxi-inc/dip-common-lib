@@ -50,23 +50,23 @@ func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
 	sign.OperatorDoi = "alice.viv.cn"
 	sign.SignatureNonce = "123456"
-	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("utils/testpkg/mock_data/user/alice/private.hex")))
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
 		print(err.Error())
 	}
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+		Doi:           "alice.viv.cn",
 		DwDoi:         "alice.viv.cn",
-		PubKey:        GetPubKeyString(),
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     nil,
 		SignatureData: sign,
 	}
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("39.107.180.231:8991")
+		InitDis("http://39.107.180.231:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
