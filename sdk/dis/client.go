@@ -225,7 +225,7 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	// 构建查询参数
 	queryParams := url.Values{}
 	queryParams.Set("doi", request.Doi)
-	queryParams.Set("param2", typesString)
+	queryParams.Set("type", typesString)
 
 	// 将查询参数附加到URL
 	url := baseurl + "?" + queryParams.Encode()
