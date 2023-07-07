@@ -63,7 +63,8 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 		return "", err
 	}
 	h := sha256.New()
-	h.Write([]byte(s.genSignOriginData()))
+	originData := s.genSignOriginData()
+	h.Write([]byte(originData))
 	hash := h.Sum(nil)
 	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash)
 	if err != nil {

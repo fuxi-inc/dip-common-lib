@@ -788,7 +788,10 @@ func TestClient_ApiAuthInit(t *testing.T) {
 					SignatureData: IDL.SignatureData{
 						OperatorDoi:    "bob.viv.cn.",
 						SignatureNonce: "123456",
-						Signature:      string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")),
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
 					},
 				},
 			},
@@ -807,6 +810,73 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			got, err := c.ApiAuthInit(tt.args.ctx, tt.args.request)
 			fmt.Printf("ApiAuthInit( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
 			assert.Equalf(t, tt.want, got, "ApiAuthInit(%v, %v)", tt.args.ctx, tt.args.request)
+		})
+	}
+}
+
+func TestClient_ApiAuthConf(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiAuthConfRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *IDL.CommonResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "TestClient_ApiAuthConf",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi: "bob.viv.cn.",
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "alice.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiAuthConf(tt.args.ctx, tt.args.request)
+			fmt.Printf("ApiAuthConf( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
+
+			assert.Equalf(t, tt.want, got, "ApiAuthConf(%v, %v)", tt.args.ctx, tt.args.request)
 		})
 	}
 }
