@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	OwnerAuthType AuthorizationType = 0 //所有者
-	UserAuthType  AuthorizationType = 1 //使用者
+	OwnerAuthType AuthorizationType = 0   //所有者
+	UserAuthType  AuthorizationType = 255 //使用者
 )
 
 func (s AuthorizationType) IsOwner() bool {

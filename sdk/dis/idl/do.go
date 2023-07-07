@@ -18,10 +18,10 @@ type DataDigest struct {
 
 // 权属信息
 type DataAuthorization struct {
-	Doi          string                 `json:"doi"`                    //权属对象。
-	Type         AuthorizationType      `json:"type"`                   // 权属类型。0开头表示所有者，1开头表示使用者
-	Confirmation string                 `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
-	Description  *PermissionDescription `json:"description"`            // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Doi          string                 `json:"doi"`          //权属对象。
+	Type         AuthorizationType      `json:"type"`         // 权属类型。0开头表示所有者，1开头表示使用者
+	Confirmation string                 `json:"confirmation"` // 确权信息。DW私钥对数据摘要的签名
+	Description  *PermissionDescription `json:"description"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
 }
 
 // 权属信息中的权益特征

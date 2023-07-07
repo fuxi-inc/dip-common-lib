@@ -3,6 +3,8 @@ package dis
 import (
 	"encoding/base64"
 	"encoding/pem"
+	"fmt"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"log"
 	"os"
 	"testing"
@@ -365,6 +367,80 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			}
 			got, err := c.ApiDOCreate(tt.args.ctx, tt.args.request)
 			assert.Equalf(t, tt.want, got, "ApiDOCreate(%v, %v, %v)", tt.args.ctx, tt.args.request, err)
+		})
+	}
+}
+
+func TestClient_ApiAuthInit(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiAuthInitRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "data.viv.cn",
+							CreatorDoi:    "bob.viv.cn",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "bob.viv.cn.",
+						SignatureNonce: "123456",
+						Signature:      string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiAuthInit(tt.args.ctx, tt.args.request)
+			fmt.Printf("ApiAuthInit( %s), got is :%s, err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
+			assert.Equalf(t, tt.want, got, "ApiAuthInit(%v, %v)", tt.args.ctx, tt.args.request)
 		})
 	}
 }

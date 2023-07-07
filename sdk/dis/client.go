@@ -190,16 +190,92 @@ func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) 
 }
 
 // 授权发起
-func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) (*IDL.CommonResponse, error) {
+	disurl := c.DisHost + "/dip/dis-x/auth/init"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if !response.Code.IsSuccess() {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return nil, err
+	}
+	return response, nil
 }
 
 // 授权确认
-func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) (*IDL.CommonResponse, error) {
+	disurl := c.DisHost + "/dip/dis-x/auth/confirm"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if !response.Code.IsSuccess() {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return nil, err
+	}
+	return response, nil
 }
 
-// 注册数据查询
+// 注册数据查询,todo whois 查询，暂未实现
 func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataRequest) (*idl.ApiRegDataQueryResponse, error) {
 	return nil, nil
 }
