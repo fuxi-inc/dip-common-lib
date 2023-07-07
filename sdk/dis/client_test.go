@@ -805,7 +805,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiAuthInit(tt.args.ctx, tt.args.request)
-			fmt.Printf("ApiAuthInit( %s), got is :%s, err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
+			fmt.Printf("ApiAuthInit( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
 			assert.Equalf(t, tt.want, got, "ApiAuthInit(%v, %v)", tt.args.ctx, tt.args.request)
 		})
 	}
