@@ -3,6 +3,7 @@ package idl
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
@@ -46,6 +47,16 @@ func (s *AuthorizationType) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	*s = AuthorizationType(converter.InterfaceToInt64(data))
+	var authType uint8
+	switch data.(type) {
+	case string:
+		authType = uint8(converter.StringToInt8(data.(string)))
+	case int, int16, int32, int64:
+		authType = uint8(data.(int))
+	case float32, float64:
+		authType = uint8(data.(float64))
+	}
+
+	*s = AuthorizationType(authType)
 	return nil
 }
