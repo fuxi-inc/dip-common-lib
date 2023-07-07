@@ -38,6 +38,17 @@ func (s *NotifyType) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	*s = NotifyType(converter.InterfaceToInt64(data))
+
+	var notifyType int64
+	switch data.(type) {
+	case string:
+		notifyType = converter.StringToInt64(data.(string))
+	case int, int16, int32, int64:
+		notifyType = int64(data.(int))
+	case float32, float64:
+		notifyType = int64(data.(float64))
+	}
+
+	*s = NotifyType(notifyType)
 	return nil
 }
