@@ -238,12 +238,12 @@ func Test_DOQuery(t *testing.T) {
 	// 设置测试数据
 	request := &idl.ApiDOQueryRequest{
 		// TODO: 设置测试doi
-		Doi: "example_doi",
+		Doi: "data.viv.cn.",
 		Type: []idl.SearchType{
-			// idl.Dar,
+			idl.Dar,
 			idl.Owner,
 			idl.PubKey,
-			// idl.Digest,
+			idl.Digest,
 			idl.ClassGrade,
 		},
 	}
@@ -254,7 +254,7 @@ func Test_DOQuery(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDisQ("39.107.180.231:53")
+		InitDisQ("http://39.107.180.231:8053")
 
 	// 执行被测试的函数
 	response, err := client.ApiDOQuery(ctx, request)
@@ -265,44 +265,25 @@ func Test_DOQuery(t *testing.T) {
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
-	log.Println(response.Data.Dar)
+	log.Println(response.Data.PubKey)
 	log.Println(response.Data.Owner)
 	log.Println(response.Data.ClassificationAndGrading.Class)
 	log.Println(response.Data.ClassificationAndGrading.Grade)
 
-	// // TODO：需要补充具体内容，是否需要测试？
-	// // 创建一个预期的响应数据
-	// expectedData := &idl.ApiDOQueryResponseData{
-	// 	PubKey: "xxxx",
-	// 	Owner:  "xxxx",
-	// 	Dar:    "xxx",
-	// 	Digest: &idl.DataDigest{
-	// 		Algorithm: "xxx",
-	// 		Result:    "xxx",
-	// 	},
-	// 	ClassificationAndGrading: &idl.ClassificationAndGrading{
-	// 		Class: 0,
-	// 		Grade: 0,
-	// 	},
-	// }
-
-	// // 判断预期响应结构是否正确
-	// assert.Equal(t, expectedData.PubKey, response.Data.PubKey)
-	// assert.Equal(t, expectedData.Owner, response.Data.Owner)
-	// assert.Equal(t, expectedData.Dar, response.Data.Dar)
-	// assert.Equal(t, expectedData.Digest, response.Data.Digest)
-	// assert.Equal(t, expectedData.ClassificationAndGrading, response.Data.ClassificationAndGrading)
+	log.Println(response.Data.Dar)
+	log.Println(response.Data.Digest.Algorithm)
+	log.Println(response.Data.Digest.Result)
 
 }
 
 func Test_DOAuthQuery(t *testing.T) {
 
-	dudoi := ""
+	dudoi := "alice.viv.cn."
 
 	// 设置测试数据
 	request := &idl.ApiDOAuthQueryRequest{
 		// TODO: 设置测试doi
-		Doi:   "example_doi",
+		Doi:   "data.viv.cn.",
 		DuDoi: dudoi,
 		Type: []idl.SearchType{
 			idl.Auth,
@@ -315,7 +296,7 @@ func Test_DOAuthQuery(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDisQ("xxxxx")
+		InitDisQ("http://39.107.180.231:8053")
 
 	// 执行被测试的函数
 	response, err := client.ApiDOAuthQuery(ctx, request)
@@ -326,28 +307,11 @@ func Test_DOAuthQuery(t *testing.T) {
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
-	// log.Println(response)
-
-	// // TODO：需要补充具体内容，是否需要测试？
-	// // 创建一个预期的响应数据DataAuthorization
-	// expectedData := &idl.DataAuthorization{
-	// 	Doi:          "",
-	// 	Type:         idl.AuthorizationType(0),
-	// 	Confirmation: "",
-	// 	Description: &idl.PermissionDescription{
-	// 		PermissionDoi: "",
-	// 		CreatorDoi:    "",
-	// 		Key:           "",
-	// 	},
-	// }
-
-	// au := response.Data.Auth[dudoi]
-
-	// // 判断预期响应结构是否正确
-	// assert.Equal(t, expectedData.Doi, au.Doi)
-	// assert.Equal(t, expectedData.Type, au.Type)
-	// assert.Equal(t, expectedData.Confirmation, au.Confirmation)
-	// assert.Equal(t, expectedData.Description, au.Description)
+	log.Println(response.Data.Auth[dudoi].Doi)
+	log.Println(response.Data.Auth[dudoi].Type)
+	log.Println(response.Data.Auth[dudoi].Confirmation)
+	log.Println(response.Data.Auth[dudoi].Description.CreatorDoi)
+	log.Println(response.Data.Auth[dudoi].Description.PermissionDoi)
 
 }
 
