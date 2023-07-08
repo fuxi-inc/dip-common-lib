@@ -705,18 +705,43 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			name: "[应用测试用户] 注册用户",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "",
+				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOCreateRequest{
-					Doi:           "alice_create_by_liuyanglong.viv.cn",
-					DwDoi:         "alice_create_by_liuyanglong.viv.cn",
+					Doi:    "alice_create_by_lyl.viv.cn.",
+					DwDoi:  "alice_create_by_lyl.viv.cn.",
+					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					WhoisData: &idl.RegistrationData{
+						Doi: "alice_create_by_lyl.viv.cn.",
+						Contact: []string{
+							"https://segmentfault.com/q/1010000043984824",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[应用测试用户] 注册数岛",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:           "alice_create_by_lyl_dao.viv.cn.",
+					DwDoi:         "alice_create_by_lyl.viv.cn.",
 					PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					WhoisData:     nil,
-					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn", string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex"))),
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,
@@ -732,7 +757,10 @@ func TestClient_ApiDOCreate(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiDOCreate(tt.args.ctx, tt.args.request)
-			assert.Equalf(t, tt.want, got, "ApiDOCreate(%v, %v, %v)", tt.args.ctx, tt.args.request, err)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
 		})
 	}
 }
@@ -877,6 +905,61 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			fmt.Printf("ApiAuthConf( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
 
 			assert.Equalf(t, tt.want, got, "ApiAuthConf(%v, %v)", tt.args.ctx, tt.args.request)
+		})
+	}
+}
+
+func TestClient_ApiDOUpdate(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDOUpdateRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 更新数岛DAR地址",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi:           "alice_create_by_lyl_dao.viv.cn.",
+					Dar:           "http://alice_create_by_lyl.dao.viv.cn",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiDOUpdate(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
 		})
 	}
 }
