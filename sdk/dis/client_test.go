@@ -1037,10 +1037,10 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOUpdateRequest{
-					Doi: "test_pic_pm.viv.cn.",
+					Doi: "test_pic_pm3.viv.cn.",
 					Authorization: &idl.DataAuthorization{
-						Doi:  "test_pic_pm.viv.cn.",
-						Type: 0,
+						Doi:  "test_pic_pm3.viv.cn.",
+						Type: idl.UserAuthType,
 						Description: &idl.PermissionDescription{
 							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn.",
 							CreatorDoi:    "alice_create_by_lyl.viv.cn.",

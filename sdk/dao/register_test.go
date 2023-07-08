@@ -135,11 +135,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "test_pic_pm.viv.cn.",
+					Doi:       "test_pic_pm3.viv.cn.",
 					DwDoi:     "alice_create_by_lyl.viv.cn.",
 					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:   testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
-					FilePath:  "/picture/test_pic_pm.jpeg",
+					FilePath:  "/picture/test_pic_pm3.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"))),
