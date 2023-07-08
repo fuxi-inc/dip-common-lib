@@ -946,6 +946,33 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+
+		{
+			name: "[应用测试用户] 更新图片标识的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "test_pic.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "test_pic.viv.cn.",
+						Type: 0,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -956,6 +983,87 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiDOUpdate(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiDOQuery(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDOQueryRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDOQueryResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 查询用户属性",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "alice_create_by_lyl.viv.cn.",
+					Type: []idl.SearchType{
+						idl.ClassGrade,
+						idl.Owner,
+						idl.PubKey,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[应用测试用户] 查询数岛属性",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "alice_create_by_lyl_dao.viv.cn.",
+					Type: []idl.SearchType{
+						idl.ClassGrade,
+						idl.Owner,
+						idl.PubKey,
+						idl.Dar,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiDOQuery(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name", tt.name)
 			log.Println("-->request:", converter.ToString(tt.args.request))
 			log.Println("-->response:", converter.ToString(got))

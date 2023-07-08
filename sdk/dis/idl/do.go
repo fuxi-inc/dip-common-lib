@@ -33,6 +33,6 @@ type PermissionDescription struct {
 
 // 分类分级
 type ClassificationAndGrading struct {
-	Class uint16 `json:"class,omitempty"` // 数据分类
-	Grade uint16 `json:"grade,omitempty"` // 数据分级。如果是加密数据，第1位是1。
+	Class uint16 `json:"class"` // 数据分类
+	Grade uint16 `json:"grade"` // 数据分级。如果是加密数据，第1位是1。
 }
