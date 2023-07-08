@@ -140,7 +140,7 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 	}
 	if response.Errno != 0 {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
-		return nil, err
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
 	}
 	return response, nil
 }

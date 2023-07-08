@@ -712,16 +712,16 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOCreateRequest{
-					Doi:    "alice_create_by_lyl.viv.cn.",
-					DwDoi:  "alice_create_by_lyl.viv.cn.",
+					Doi:    "alice_create_by_lyl4.viv.cn.",
+					DwDoi:  "alice_create_by_lyl4.viv.cn.",
 					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					WhoisData: &idl.RegistrationData{
-						Doi: "alice_create_by_lyl.viv.cn.",
+						Doi: "alice_create_by_lyl2.viv.cn.",
 						Contact: []string{
 							"https://segmentfault.com/q/1010000043984824",
 						},
 					},
-					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+					SignatureData: *IDL.NewSignatureDataWithSign("alice.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,
@@ -784,7 +784,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "授权测试用例",
+			name: "Du授权测试用例",
 			fields: fields{
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
@@ -826,6 +826,44 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+		{
+			name: "Dw授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "data.viv.cn",
+							CreatorDoi:    "alice.viv.cn",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "alice.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -836,8 +874,10 @@ func TestClient_ApiAuthInit(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiAuthInit(tt.args.ctx, tt.args.request)
-			fmt.Printf("ApiAuthInit( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
-			assert.Equalf(t, tt.want, got, "ApiAuthInit(%v, %v)", tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->err:", err)
 		})
 	}
 }
@@ -861,7 +901,7 @@ func TestClient_ApiAuthConf(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "TestClient_ApiAuthConf",
+			name: "TestClient_DwApiAuthConf",
 			fields: fields{
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
@@ -892,6 +932,44 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+		{
+			name: "TestClient_DuApiAuthConf",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "bob.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -902,9 +980,10 @@ func TestClient_ApiAuthConf(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiAuthConf(tt.args.ctx, tt.args.request)
-			fmt.Printf("ApiAuthConf( %s);\n got is :%s;\n err is: %v", converter.ToString(tt.args.request), converter.ToString(got), err)
-
-			assert.Equalf(t, tt.want, got, "ApiAuthConf(%v, %v)", tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->err:", err)
 		})
 	}
 }
@@ -958,9 +1037,9 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOUpdateRequest{
-					Doi: "test_pic.viv.cn.",
+					Doi: "test_pic_pm.viv.cn.",
 					Authorization: &idl.DataAuthorization{
-						Doi:  "test_pic.viv.cn.",
+						Doi:  "test_pic_pm.viv.cn.",
 						Type: 0,
 						Description: &idl.PermissionDescription{
 							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn.",

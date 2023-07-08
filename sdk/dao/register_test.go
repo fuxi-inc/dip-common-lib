@@ -135,18 +135,17 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "test_pic.viv.cn.",
+					Doi:       "test_pic_pm.viv.cn.",
 					DwDoi:     "alice_create_by_lyl.viv.cn.",
 					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:   testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
-					FilePath:  "/picture/test_pic.jpeg",
+					FilePath:  "/picture/test_pic_pm.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"))),
 					},
 					Confirmation: func() string {
-						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg")))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
-						fmt.Println("SignByPK-->:", sign, err)
+						sign, _ := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg")))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 						return sign
 					}(),
 					SecretKey: "",
@@ -207,9 +206,9 @@ func TestClient_Register(t *testing.T) {
 			}
 			err := c.Register(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name:", tt.name)
+			log.Println("-->err:", err)
 			log.Println("--->register_content:", tt.args.permObj.ToString())
 			log.Println("-->request:", converter.ToString(tt.args.request))
-			log.Println("-->err:", err)
 		})
 	}
 }
