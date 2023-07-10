@@ -1080,6 +1080,53 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+
+		{
+			name: "[应用测试用户] 更新资讯属性，增加到专题",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi:           "information_create_by_lyl.viv.cn.",
+					DwDoi:         "subject_create_by_lyl2.viv.cn.",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 更新资讯的继承上级匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "information_create_by_lyl.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "information_create_by_lyl.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
