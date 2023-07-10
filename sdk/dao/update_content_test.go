@@ -39,7 +39,7 @@ func TestClient_UpdateContent(t *testing.T) {
 			fields: fields{
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
-				DisQHost: "",
+				DisQHost: "http://39.107.180.231:8053",
 				DaoHost:  "http://127.0.0.1:8990",
 			},
 			args: args{

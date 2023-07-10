@@ -19,6 +19,8 @@ import (
 func TestClient_Register(t *testing.T) {
 	subjectContent := `{"type":"subject","title":"测试专题1","describe":"这是一个测试专题","content":{"cover_image":"dip://test_pic_pm3.viv.cn","article_list":[]}}`
 
+	inforContent := `{"type":"information","title":"资讯1","describe":"这是一个测试资讯","content":{"value":"资讯内容"}}`
+
 	defaultPermission := &idl.Permission{
 		Operations:   4,
 		AlgorithmDOI: "",
@@ -63,11 +65,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultPermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "alice_create_by_lyl_default_permission.viv.cn.",
-					DwDoi:     "alice_create_by_lyl.viv.cn.",
-					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:   []byte(defaultPermission.ToString()),
-					FilePath:  "/permission/default_data_permission.data",
+					Doi:      "alice_create_by_lyl_default_permission.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  []byte(defaultPermission.ToString()),
+					FilePath: "/permission/default_data_permission.data",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(defaultPermission.ToString()))),
@@ -100,11 +102,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
-					DwDoi:     "alice_create_by_lyl.viv.cn.",
-					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:   []byte(defaultSubjectArticlePermission.ToString()),
-					FilePath:  "/permission/default_subject_article_permission.data",
+					Doi:      "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  []byte(defaultSubjectArticlePermission.ToString()),
+					FilePath: "/permission/default_subject_article_permission.data",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(defaultSubjectArticlePermission.ToString()))),
@@ -137,11 +139,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "test_pic_pm3.viv.cn.",
-					DwDoi:     "alice_create_by_lyl.viv.cn.",
-					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:   testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
-					FilePath:  "/picture/test_pic_pm3.jpeg",
+					Doi:      "test_pic_pm3.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
+					FilePath: "/picture/test_pic_pm3.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"))),
@@ -173,11 +175,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "test_pic_no_permission.viv.cn.",
-					DwDoi:     "alice_create_by_lyl.viv.cn.",
-					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:   testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
-					FilePath:  "/picture/test_pic_no_permission.jpeg",
+					Doi:      "test_pic_no_permission.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
+					FilePath: "/picture/test_pic_no_permission.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"))),
@@ -210,17 +212,54 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:       "subject_create_by_lyl.viv.cn.",
-					DwDoi:     "alice_create_by_lyl.viv.cn.",
-					PublicKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:   []byte(subjectContent),
-					FilePath:  "/subject/subject_create_by_lyl.dipx",
+					Doi:      "subject_create_by_lyl.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  []byte(subjectContent),
+					FilePath: "/subject/subject_create_by_lyl.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(subjectContent))),
 					},
 					Confirmation: func() string {
 						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(subjectContent)))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+						fmt.Println("SignByPK-->:", sign, err)
+						return sign
+					}(),
+					SecretKey: "",
+					ClassificationAndGrading: &idl2.ClassificationAndGrading{
+						Class: 0,
+						Grade: 0,
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			wantErr: false,
+		},
+
+		{
+			name: "[应用测试用户] 创建资讯",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx:     &gin.Context{},
+				permObj: defaultSubjectArticlePermission,
+				request: &idl.RegisterDataRequest{
+					Doi:      "information_create_by_lyl.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  []byte(subjectContent),
+					FilePath: "/information/information_create_by_lyl.dipx",
+					Digest: &idl2.DataDigest{
+						Algorithm: "SHA256",
+						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(inforContent))),
+					},
+					Confirmation: func() string {
+						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(inforContent)))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 						fmt.Println("SignByPK-->:", sign, err)
 						return sign
 					}(),

@@ -9,7 +9,7 @@ import (
 type RegisterDataRequest struct {
 	Doi                      string                        `json:"doi,omitempty" binding:"required"`
 	DwDoi                    string                        `json:"dw_doi" binding:"required"` //数据所有者身份标识
-	PublicKey                string                        `json:"public_key" binding:"required"`
+	PubKey                   string                        `json:"pub_key" binding:"required"`
 	Content                  []byte                        `json:"content" binding:"required"`                //数据内容
 	FilePath                 string                        `json:"file_path" binding:"required"`              //保存的文件路径
 	Digest                   *idl.DataDigest               `json:"digest,omitempty" binding:"required"`       // 数据内容摘要
