@@ -96,7 +96,7 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 	}
 	if response.Errno != 0 {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
-		return nil, err
+		return nil, fmt.Errorf("Error response.Errno,error:%s", response.Errmsg)
 	}
 	return response, nil
 
