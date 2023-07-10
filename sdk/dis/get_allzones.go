@@ -56,11 +56,18 @@ func (c *Client) getAllZones(sk string) ([]string, error) {
 		return nil, err
 	}
 
-	zones, ok := cr.Data.(idl.ServiceZonesInDIS)
-	if !ok {
-		err := fmt.Errorf("error: interface claim to ServiceZonesInDIS failed")
+	by, err := json.Marshal(cr.Data)
+	if err != nil {
+		err = fmt.Errorf("cr marshal failed: %v", err)
 		c.Logger.Error(err.Error())
 		return nil, err
+	}
+	zones := idl.ServiceZonesInDIS{}
+	err = json.Unmarshal(by, &zones)
+	if err != nil {
+		err = fmt.Errorf("cr unmarshal failed: %v", err)
+		c.Logger.Error(err.Error())
+		return nil, fmt.Errorf("cr unmarshal failed: %v", err)
 	}
 
 	return zones.Zones, nil

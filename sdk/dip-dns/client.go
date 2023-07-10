@@ -71,6 +71,7 @@ func (c *Client) GetPublicKey(identifier string) string {
 		return ""
 	}
 
+	c.Logger.Info("[GetPublicKey] receive query user key response", zap.String("identifier", identifier), zap.String("response", slice[3]))
 	return slice[3]
 }
 
@@ -113,6 +114,7 @@ func (c *Client) GetDataOwner(identifier string) string {
 		c.Logger.Error("[GetDataOwner] failed to split the ownerID from the whole name", zap.String("answer", tmp))
 		return ""
 	}
+	c.Logger.Info("[GetDataOwner] receive query user key response", zap.String("identifier", identifier), zap.String("response", tmp2[0]))
 
 	return tmp2[0]
 }

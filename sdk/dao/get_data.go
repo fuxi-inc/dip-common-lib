@@ -45,7 +45,7 @@ func (c *Client) GetData(ctx *gin.Context, request *idl.GetDataRequest) (*idl.Ge
 	}
 	if response.Code != 0 {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.ToString()))
-		return nil, err
+		return nil, fmt.Errorf("Error response.Errno,error:%s", response.ToString())
 	}
 	return response, nil
 }

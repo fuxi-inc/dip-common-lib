@@ -54,9 +54,17 @@ func (c *Client) getSOA(zone string, sk string) (*idl.SOAData, error) {
 		return nil, err
 	}
 
-	sr, ok := cr.Data.(idl.SOAResponse)
-	if !ok {
-		err = fmt.Errorf("interface claim to SOAResponse failed")
+	by, err := json.Marshal(cr.Data)
+	if err != nil {
+		err = fmt.Errorf("cr marshal failed: %v", err)
+		c.Logger.Error(err.Error())
+		return nil, err
+	}
+
+	sr := idl.SOAResponse{}
+	err = json.Unmarshal(by, &sr)
+	if err != nil {
+		err = fmt.Errorf("cr unmarshal failed: %v", err)
 		c.Logger.Error(err.Error())
 		return nil, err
 	}
