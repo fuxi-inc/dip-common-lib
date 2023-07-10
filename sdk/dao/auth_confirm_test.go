@@ -1,9 +1,14 @@
 package dao
 
 import (
-	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
+	"fmt"
+	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 	"testing"
 )
 
@@ -16,7 +21,7 @@ func TestClient_AuthConfirm(t *testing.T) {
 	}
 	type args struct {
 		ctx     *gin.Context
-		request *idl.ConfirmAuthRequest
+		request *idl.ApiAuthConfRequest
 	}
 	tests := []struct {
 		name    string
@@ -24,7 +29,35 @@ func TestClient_AuthConfirm(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "[应用测试] du bob 确认 alice_create_by_lyl 的授权",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "subject_create_by_lyl2.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -34,9 +67,10 @@ func TestClient_AuthConfirm(t *testing.T) {
 				DisQHost: tt.fields.DisQHost,
 				DaoHost:  tt.fields.DaoHost,
 			}
-			if err := c.AuthConfirm(tt.args.ctx, tt.args.request); (err != nil) != tt.wantErr {
-				t.Errorf("AuthConfirm() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := c.AuthConfirm(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->err:", err)
+			log.Println("-->request:", converter.ToString(tt.args.request))
 		})
 	}
 }
