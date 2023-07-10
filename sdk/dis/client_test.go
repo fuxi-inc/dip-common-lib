@@ -4,11 +4,12 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
-	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
@@ -283,7 +284,7 @@ func Test_DOUpdate(t *testing.T) {
 
 }
 
-//更新公钥
+// 更新公钥
 func Test_DOUpdate1(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -328,7 +329,7 @@ func Test_DOUpdate1(t *testing.T) {
 
 }
 
-//dar digest
+// dar digest
 func Test_DOUpdate2(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -369,7 +370,7 @@ func Test_DOUpdate2(t *testing.T) {
 
 }
 
-//分类分级
+// 分类分级
 func Test_DOUpdate3(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -417,7 +418,7 @@ func Test_DOUpdate3(t *testing.T) {
 
 }
 
-//更新权属
+// 更新权属
 func Test_DOUpdate4(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -523,7 +524,7 @@ func Test_DOUpdate5(t *testing.T) {
 
 }
 
-//new doi
+// new doi
 func Test_DOUpdate6(t *testing.T) {
 
 	sign := IDL.SignatureData{}

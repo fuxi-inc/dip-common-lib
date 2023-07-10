@@ -27,6 +27,7 @@ type DataAuthorization struct {
 // 权属信息中的权益特征
 type PermissionDescription struct {
 	PermissionDoi string `json:"permission_doi,omitempty"` // 权限定义DOI
+	ParentDoi     string `json:"parent_doi,omitempty"`     // 上一级数据对象DOI
 	CreatorDoi    string `json:"creator_doi,omitempty"`    // 权限创建者DOI
 	Key           string `json:"key,omitempty"`            // 权限密钥，权属对象公钥加密的数据内容加密对称密钥的16进制表示（长度为256）
 }
