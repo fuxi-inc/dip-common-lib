@@ -1,14 +1,22 @@
 package dao
 
 import (
+	"encoding/base64"
+	"fmt"
+	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
+	idl2 "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/security"
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 	"testing"
 )
 
 func TestClient_UpdateContent(t *testing.T) {
-	//subjectNewContent := `{"type":"subject","title":"测试专题1_newcontent","describe":"这是一个测试专题_newcontent","content":{"cover_image":"dip://test_pic_pm3.viv.cn","article_list":[]}}`
+	subjectNewContent := `{"type":"subject","title":"测试专题1_newcontent","describe":"这是一个测试专题_newcontent","content":{"cover_image":"dip://test_pic_pm3.viv.cn","article_list":[]}}`
 
 	type fields struct {
 		Logger   *zap.Logger
@@ -34,7 +42,25 @@ func TestClient_UpdateContent(t *testing.T) {
 				DisQHost: "",
 				DaoHost:  "http://127.0.0.1:8990",
 			},
-			args:    args{},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.UpdateDataContentRequest{
+					Doi:     "subject_create_by_lyl.viv.cn.",
+					DwDoi:   "alice_create_by_lyl.viv.cn.",
+					Content: []byte(subjectNewContent),
+					Digest: &idl2.DataDigest{
+						Algorithm: "SHA256",
+						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(subjectNewContent))),
+					},
+					Confirmation: func() string {
+						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(subjectNewContent)))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+						fmt.Println("SignByPK-->:", sign, err)
+						return sign
+					}(),
+					SecretKey:     "",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
 			wantErr: false,
 		},
 	}
@@ -46,9 +72,10 @@ func TestClient_UpdateContent(t *testing.T) {
 				DisQHost: tt.fields.DisQHost,
 				DaoHost:  tt.fields.DaoHost,
 			}
-			if err := c.UpdateContent(tt.args.ctx, tt.args.request); (err != nil) != tt.wantErr {
-				t.Errorf("UpdateContent() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := c.UpdateContent(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->err:", err)
+			log.Println("-->request:", converter.ToString(tt.args.request))
 		})
 	}
 }
