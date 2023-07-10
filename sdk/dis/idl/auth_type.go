@@ -17,7 +17,7 @@ func (s AuthorizationType) IsOwner() bool {
 	var op uint8
 	biu.ReadBinaryString("10000000", &op)
 	num := s.ToUInt8() & op
-	return num > 0
+	return num <= 0
 }
 
 func (s AuthorizationType) IsUser() bool {
