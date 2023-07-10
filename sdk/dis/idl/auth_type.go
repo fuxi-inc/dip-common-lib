@@ -3,6 +3,7 @@ package idl
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/imroc/biu"
 
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
@@ -13,11 +14,14 @@ const (
 )
 
 func (s AuthorizationType) IsOwner() bool {
-	return s == OwnerAuthType
+	var op uint8
+	biu.ReadBinaryString("10000000", &op)
+	num := s.ToUInt8() & op
+	return num > 0
 }
 
 func (s AuthorizationType) IsUser() bool {
-	return s == UserAuthType
+	return !s.IsOwner()
 }
 
 type AuthorizationType uint8
@@ -25,8 +29,8 @@ type AuthorizationType uint8
 func (s AuthorizationType) ToInt() int {
 	return int(s.ToInt64())
 }
-func (s AuthorizationType) ToInt8() int8 {
-	return int8(s.ToInt64())
+func (s AuthorizationType) ToUInt8() uint8 {
+	return uint8(s)
 }
 func (s AuthorizationType) ToInt16() int16 {
 	return int16(s.ToInt64())

@@ -68,6 +68,46 @@ func TestClient_GetData(t *testing.T) {
 			want:    nil,
 			wantErr: false,
 		},
+
+		{
+			name: "[应用测试] lyl 读取 subject_create_by_lyl",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.GetDataRequest{
+					DuDoi:         "alice_create_by_lyl.viv.cn.",
+					DataDoi:       "subject_create_by_lyl.viv.cn.",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: false,
+		},
+
+		{
+			name: "[应用测试] subject_create_by_lyl 读取 subject_create_by_lyl",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.GetDataRequest{
+					DuDoi:         "subject_create_by_lyl.viv.cn.",
+					DataDoi:       "subject_create_by_lyl.viv.cn.",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
