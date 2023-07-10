@@ -238,7 +238,7 @@ func TestClient_Register(t *testing.T) {
 		},
 
 		{
-			name: "[应用测试用户] 创建专题2没有默认权限",
+			name: "[应用测试用户] 创建专题没有默认权限",
 			fields: fields{
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
@@ -249,7 +249,7 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:      "subject_create_by_lyl2.viv.cn.",
+					Doi:      "subject_create_by_lyl3.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:  []byte(subjectContent),
@@ -286,7 +286,7 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultSubjectArticlePermission,
 				request: &idl.RegisterDataRequest{
-					Doi:      "information_create_by_lyl.viv.cn.",
+					Doi:      "information_create_by_lyl2.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:  []byte(subjectContent),

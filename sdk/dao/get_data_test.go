@@ -149,7 +149,7 @@ func TestClient_GetData(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "[应用测试] bob 读取 information_create_by_lyl",
+			name: "[应用测试] bob 读取 information_create_by_lyl2",
 			fields: fields{
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
@@ -160,7 +160,7 @@ func TestClient_GetData(t *testing.T) {
 				ctx: &gin.Context{},
 				request: &idl.GetDataRequest{
 					DuDoi:         "bob.viv.cn.",
-					DataDoi:       "information_create_by_lyl.viv.cn.",
+					DataDoi:       "information_create_by_lyl2.viv.cn.",
 					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
