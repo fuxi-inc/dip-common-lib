@@ -69,7 +69,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "alice_create_by_lyl_default_permission.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(defaultPermission.ToString()),
+					Content:  (defaultPermission.ToString()),
 					FilePath: "/permission/default_data_permission.data",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -106,7 +106,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(defaultSubjectArticlePermission.ToString()),
+					Content:  (defaultSubjectArticlePermission.ToString()),
 					FilePath: "/permission/default_subject_article_permission.data",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -143,7 +143,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "test_pic_pm3.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
+					Content:  string(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg")),
 					FilePath: "/picture/test_pic_pm3.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -179,7 +179,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "test_pic_no_permission.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg"),
+					Content:  string(testpkg.GetMockDataContent("/mock_data/data/test_pic.jpeg")),
 					FilePath: "/picture/test_pic_no_permission.jpeg",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -216,7 +216,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "subject_create_by_lyl.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(subjectContent),
+					Content:  (subjectContent),
 					FilePath: "/subject/subject_create_by_lyl.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -253,7 +253,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "subject_create_by_lyl3.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(subjectContent),
+					Content:  (subjectContent),
 					FilePath: "/subject/subject_create_by_lyl2.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -290,7 +290,7 @@ func TestClient_Register(t *testing.T) {
 					Doi:      "information_create_by_lyl2.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(subjectContent),
+					Content:  (subjectContent),
 					FilePath: "/information/information_create_by_lyl.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
@@ -323,10 +323,10 @@ func TestClient_Register(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.RegisterDataRequest{
-					Doi:      "encryption_file6.viv.cn.",
+					Doi:      "encryption_file7.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					Content:  []byte(encryptionContent),
+					Content:  "bGl1eWFuZ2xvbmc=",
 					FilePath: "/file/encryption_file.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",

@@ -47,7 +47,7 @@ func TestClient_UpdateContent(t *testing.T) {
 				request: &idl.UpdateDataContentRequest{
 					Doi:     "subject_create_by_lyl.viv.cn.",
 					DwDoi:   "alice_create_by_lyl.viv.cn.",
-					Content: []byte(subjectNewContent),
+					Content: (subjectNewContent),
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(subjectNewContent))),

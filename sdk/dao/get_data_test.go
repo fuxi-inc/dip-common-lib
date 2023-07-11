@@ -179,7 +179,7 @@ func TestClient_GetData(t *testing.T) {
 				ctx: &gin.Context{},
 				request: &idl.GetDataRequest{
 					DuDoi:         "alice_create_by_lyl.viv.cn.",
-					DataDoi:       "encryption_file6.viv.cn.",
+					DataDoi:       "encryption_file7.viv.cn.",
 					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
