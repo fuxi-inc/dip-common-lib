@@ -21,6 +21,7 @@ func TestClient_Register(t *testing.T) {
 
 	inforContent := `{"type":"information","title":"资讯1","describe":"这是一个测试资讯","content":{"value":"资讯内容"}}`
 
+	encryptionContent := `{"type":"encryption","title":""}`
 	defaultPermission := &idl.Permission{
 		Operations:   4,
 		AlgorithmDOI: "",
@@ -304,6 +305,42 @@ func TestClient_Register(t *testing.T) {
 					ClassificationAndGrading: &idl2.ClassificationAndGrading{
 						Class: 0,
 						Grade: 0,
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			wantErr: false,
+		},
+
+		{
+			name: "[应用测试用户] 创建加密文件",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.RegisterDataRequest{
+					Doi:      "encryption_file6.viv.cn.",
+					DwDoi:    "alice_create_by_lyl.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  []byte(encryptionContent),
+					FilePath: "/file/encryption_file.dipx",
+					Digest: &idl2.DataDigest{
+						Algorithm: "SHA256",
+						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(encryptionContent))),
+					},
+					Confirmation: func() string {
+						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(encryptionContent)))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+						fmt.Println("SignByPK-->:", sign, err)
+						return sign
+					}(),
+					SecretKey: "1122334455",
+					ClassificationAndGrading: &idl2.ClassificationAndGrading{
+						Class: 0,
+						Grade: 32768,
 					},
 					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},

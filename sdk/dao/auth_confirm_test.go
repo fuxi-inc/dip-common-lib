@@ -40,7 +40,7 @@ func TestClient_AuthConfirm(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthConfRequest{
-					DataDoi: "subject_create_by_lyl2.viv.cn.",
+					DataDoi: "subject_create_by_lyl3.viv.cn.",
 					Authorization: idl.DataAuthorization{
 						Doi:  "bob.viv.cn.",
 						Type: idl.UserAuthType,
