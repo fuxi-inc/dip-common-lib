@@ -3,6 +3,7 @@ package IDL
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )

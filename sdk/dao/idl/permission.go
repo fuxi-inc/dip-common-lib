@@ -2,6 +2,7 @@ package idl
 
 import (
 	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/imroc/biu"
 )
 
@@ -17,6 +18,10 @@ type Permission struct {
 	StartAt      *IDL.Time            `json:"start_at,omitempty"`      //生效时间 ,时间戳
 	ExpiredAt    *IDL.Time            `json:"expired_at,omitempty"`    //生效时间，时间戳
 	Condition    *PermissionCondition `json:"condition,omitempty"`
+}
+
+func (p *Permission) ToString() string {
+	return converter.ToString(p)
 }
 
 /**

@@ -4,17 +4,18 @@ import (
 	"errors"
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
-	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
+	idl2 "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func (c *Client) AuthConfirm(ctx *gin.Context, request *idl.ConfirmAuthRequest) error {
+func (c *Client) AuthConfirm(ctx *gin.Context, request *idl2.ApiAuthConfRequest) error {
 	url := c.DaoHost + "/dip/data/confirm_auth"
 	method := "POST"
-	payload := strings.NewReader(request.ToString())
+	payload := strings.NewReader(converter.ToString(request))
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)

@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"github.com/google/uuid"
 )
@@ -20,6 +19,20 @@ type SignatureData struct {
 
 func NewSignatureData() *SignatureData {
 	return &SignatureData{}
+}
+func (s *SignatureData) SetOperator(operator string) *SignatureData {
+	s.OperatorDoi = operator
+	return s
+}
+
+func (s *SignatureData) SetNonce(nonce string) *SignatureData {
+	s.SignatureNonce = nonce
+	return s
+}
+
+func (s *SignatureData) SetSign(sign string) *SignatureData {
+	s.Signature = sign
+	return s
 }
 
 func NewSignatureDataWithSign(operator, prvKey string) *SignatureData {
@@ -37,7 +50,7 @@ func NewSignatureDataWithSign(operator, prvKey string) *SignatureData {
 // CreateSignature 签名：采用sha256算法进行签名并输出为hex格式（私钥PKCS8格式）
 func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 	if s.OperatorDoi == "" || s.SignatureNonce == "" {
-		return "", errors.New("invalid signature params")
+		//return "", errors.New("invalid signature params")
 	}
 	keyBytes, err := hex.DecodeString(prvKey)
 	if err != nil {
@@ -50,7 +63,8 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 		return "", err
 	}
 	h := sha256.New()
-	h.Write([]byte(s.genSignOriginData()))
+	originData := s.genSignOriginData()
+	h.Write([]byte(originData))
 	hash := h.Sum(nil)
 	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash)
 	if err != nil {

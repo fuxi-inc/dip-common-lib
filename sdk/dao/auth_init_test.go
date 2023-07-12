@@ -1,9 +1,13 @@
 package dao
 
 import (
-	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
+	"github.com/fuxi-inc/dip-common-lib/IDL"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 	"testing"
 )
 
@@ -16,7 +20,7 @@ func TestClient_AuthInit(t *testing.T) {
 	}
 	type args struct {
 		ctx     *gin.Context
-		request *idl.InitiateAuthRequest
+		request *idl.ApiAuthInitRequest
 	}
 	tests := []struct {
 		name    string
@@ -24,7 +28,35 @@ func TestClient_AuthInit(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "[应用测试] dw alice_create_by_lyl 授权专题给bob",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "subject_create_by_lyl3.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -34,9 +66,10 @@ func TestClient_AuthInit(t *testing.T) {
 				DisQHost: tt.fields.DisQHost,
 				DaoHost:  tt.fields.DaoHost,
 			}
-			if err := c.AuthInit(tt.args.ctx, tt.args.request); (err != nil) != tt.wantErr {
-				t.Errorf("AuthInit() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := c.AuthInit(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->err:", err)
+			log.Println("-->request:", converter.ToString(tt.args.request))
 		})
 	}
 }

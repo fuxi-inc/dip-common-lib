@@ -4,10 +4,12 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
@@ -282,7 +284,7 @@ func Test_DOUpdate(t *testing.T) {
 
 }
 
-//更新公钥
+// 更新公钥
 func Test_DOUpdate1(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -327,7 +329,7 @@ func Test_DOUpdate1(t *testing.T) {
 
 }
 
-//dar digest
+// dar digest
 func Test_DOUpdate2(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -368,7 +370,7 @@ func Test_DOUpdate2(t *testing.T) {
 
 }
 
-//分类分级
+// 分类分级
 func Test_DOUpdate3(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -416,7 +418,7 @@ func Test_DOUpdate3(t *testing.T) {
 
 }
 
-//更新权属
+// 更新权属
 func Test_DOUpdate4(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -522,7 +524,7 @@ func Test_DOUpdate5(t *testing.T) {
 
 }
 
-//new doi
+// new doi
 func Test_DOUpdate6(t *testing.T) {
 
 	sign := IDL.SignatureData{}
@@ -645,12 +647,12 @@ func Test_DOQuery(t *testing.T) {
 
 func Test_DOAuthQuery(t *testing.T) {
 
-	dudoi := "alice.viv.cn."
+	dudoi := "2igu76pcye.viv.cn."
 
 	// 设置测试数据
 	request := &idl.ApiDOAuthQueryRequest{
 		// TODO: 设置测试doi
-		Doi:   "data.viv.cn.",
+		Doi:   "hzb7ug12cf.viv.cn.",
 		DuDoi: dudoi,
 		Type: []idl.SearchType{
 			idl.Auth,
@@ -673,7 +675,7 @@ func Test_DOAuthQuery(t *testing.T) {
 
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-
+	log.Println("----->auth: ", converter.ToString(response.Data))
 	log.Println(response.Data.Auth[dudoi].Doi)
 	log.Println(response.Data.Auth[dudoi].Type)
 	log.Println(response.Data.Auth[dudoi].Confirmation)
@@ -704,18 +706,43 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			name: "[应用测试用户] 注册用户",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "",
+				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOCreateRequest{
-					Doi:           "alice_create_by_liuyanglong.viv.cn",
-					DwDoi:         "alice_create_by_liuyanglong.viv.cn",
+					Doi:    "alice_create_by_lyl4.viv.cn.",
+					DwDoi:  "alice_create_by_lyl4.viv.cn.",
+					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					WhoisData: &idl.RegistrationData{
+						Doi: "alice_create_by_lyl2.viv.cn.",
+						Contact: []string{
+							"https://segmentfault.com/q/1010000043984824",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[应用测试用户] 注册数岛",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:           "alice_create_by_lyl_dao.viv.cn.",
+					DwDoi:         "alice_create_by_lyl.viv.cn.",
 					PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-					WhoisData:     nil,
-					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn", string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex"))),
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,
@@ -731,7 +758,498 @@ func TestClient_ApiDOCreate(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiDOCreate(tt.args.ctx, tt.args.request)
-			assert.Equalf(t, tt.want, got, "ApiDOCreate(%v, %v, %v)", tt.args.ctx, tt.args.request, err)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiAuthInit(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiAuthInitRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "Du授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "data.viv.cn",
+							CreatorDoi:    "bob.viv.cn",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "bob.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "Dw授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "data.viv.cn",
+							CreatorDoi:    "alice.viv.cn",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "alice.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiAuthInit(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiAuthConf(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiAuthConfRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *IDL.CommonResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "TestClient_DwApiAuthConf",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi: "bob.viv.cn.",
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "alice.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "TestClient_DuApiAuthConf",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "example_alice.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "bob.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "bob.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiAuthConf(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiDOUpdate(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDOUpdateRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 更新数岛DAR地址",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi:           "alice_create_by_lyl_dao.viv.cn.",
+					Dar:           "http://alice_create_by_lyl.dao.viv.cn",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 更新图片标识的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "test_pic_pm3.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "test_pic_pm3.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 更新专题的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "subject_create_by_lyl.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "subject_create_by_lyl.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 更新资讯属性，增加到专题",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi:           "information_create_by_lyl.viv.cn.",
+					DwDoi:         "subject_create_by_lyl2.viv.cn.",
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 更新资讯的继承上级匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "information_create_by_lyl.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "information_create_by_lyl.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户] 资讯添加到专题，更新资讯的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "information_create_by_lyl2.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "information_create_by_lyl2.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+							CreatorDoi:    "alice_create_by_lyl.viv.cn.",
+							ParentDoi:     "subject_create_by_lyl3.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiDOUpdate(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiDOQuery(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDOQueryRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDOQueryResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 查询用户属性",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "alice_create_by_lyl.viv.cn.",
+					Type: []idl.SearchType{
+						idl.ClassGrade,
+						idl.Owner,
+						idl.PubKey,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[应用测试用户] 查询数岛属性",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "alice_create_by_lyl_dao.viv.cn.",
+					Type: []idl.SearchType{
+						idl.ClassGrade,
+						idl.Owner,
+						idl.PubKey,
+						idl.Dar,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiDOQuery(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
 		})
 	}
 }

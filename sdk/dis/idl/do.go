@@ -18,21 +18,22 @@ type DataDigest struct {
 
 // 权属信息
 type DataAuthorization struct {
-	Doi          string                 `json:"doi"`                    //权属对象。
-	Type         AuthorizationType      `json:"type"`                   // 权属类型。0开头表示所有者，1开头表示使用者
-	Confirmation string                 `json:"confirmation,omitempty"` // 确权信息。DW私钥对数据摘要的签名
-	Description  *PermissionDescription `json:"description"`            // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
+	Doi          string                 `json:"doi"`          //权属对象。
+	Type         AuthorizationType      `json:"type"`         // 权属类型。0开头表示所有者，1开头表示使用者
+	Confirmation string                 `json:"confirmation"` // 确权信息。DW私钥对数据摘要的签名
+	Description  *PermissionDescription `json:"description"`  // 权益特征。json格式，包括权限定义DOI（permission），权限创建者DOI（creator），及解密密钥（key）
 }
 
 // 权属信息中的权益特征
 type PermissionDescription struct {
 	PermissionDoi string `json:"permission_doi,omitempty"` // 权限定义DOI
+	ParentDoi     string `json:"parent_doi,omitempty"`     // 上一级数据对象DOI
 	CreatorDoi    string `json:"creator_doi,omitempty"`    // 权限创建者DOI
 	Key           string `json:"key,omitempty"`            // 权限密钥，权属对象公钥加密的数据内容加密对称密钥的16进制表示（长度为256）
 }
 
 // 分类分级
 type ClassificationAndGrading struct {
-	Class uint16 `json:"class,omitempty"` // 数据分类
-	Grade uint16 `json:"grade,omitempty"` // 数据分级。如果是加密数据，第1位是1。
+	Class uint16 `json:"class"` // 数据分类
+	Grade uint16 `json:"grade"` // 数据分级。如果是加密数据，第1位是1。
 }

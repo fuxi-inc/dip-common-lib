@@ -97,16 +97,16 @@ type ApiDOAuthQueryRequest struct {
 type ApiDOQueryResponse struct {
 	Errno  IDL.RespCodeType        `json:"errno"`
 	Errmsg string                  `json:"errmsg"`
-	Data   *ApiDOQueryResponseData `json:"data,omitempty"`
+	Data   *ApiDOQueryResponseData `json:"data"`
 }
 
 type ApiDOQueryResponseData struct {
-	PubKey                   string                       `json:"pub_key,omitempty"`
-	Owner                    string                       `json:"owner,omitempty"`
-	Dar                      string                       `json:"dar,omitempty"`                    // DOI地址
-	Auth                     map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属，key的内容也为权属对象
-	Digest                   *DataDigest                  `json:"digest,omitempty"`                 // 数据内容摘要
-	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading,omitempty"` // 数据分类分级信息
+	PubKey                   string                       `json:"pub_key"`
+	Owner                    string                       `json:"owner"`
+	Dar                      string                       `json:"dar"`                    // DOI地址
+	Auth                     map[string]DataAuthorization `json:"authorization"`          // 权属，key的内容也为权属对象
+	Digest                   *DataDigest                  `json:"digest"`                 // 数据内容摘要
+	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading"` // 数据分类分级信息
 }
 
 func (s *ApiDOQueryRequest) ToString() string {
