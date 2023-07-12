@@ -647,12 +647,12 @@ func Test_DOQuery(t *testing.T) {
 
 func Test_DOAuthQuery(t *testing.T) {
 
-	dudoi := "alice.viv.cn."
+	dudoi := "2igu76pcye.viv.cn."
 
 	// 设置测试数据
 	request := &idl.ApiDOAuthQueryRequest{
 		// TODO: 设置测试doi
-		Doi:   "data.viv.cn.",
+		Doi:   "hzb7ug12cf.viv.cn.",
 		DuDoi: dudoi,
 		Type: []idl.SearchType{
 			idl.Auth,
@@ -675,7 +675,7 @@ func Test_DOAuthQuery(t *testing.T) {
 
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-
+	log.Println("----->auth: ", converter.ToString(response.Data))
 	log.Println(response.Data.Auth[dudoi].Doi)
 	log.Println(response.Data.Auth[dudoi].Type)
 	log.Println(response.Data.Auth[dudoi].Confirmation)
