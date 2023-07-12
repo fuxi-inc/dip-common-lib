@@ -227,7 +227,7 @@ func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) 
 	}
 	if !response.Code.IsSuccess() {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
-		return nil, err
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
 	}
 	return response, nil
 }
@@ -270,7 +270,7 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 	}
 	if !response.Code.IsSuccess() {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
-		return nil, err
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
 	}
 	return response, nil
 }
