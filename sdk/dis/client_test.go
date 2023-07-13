@@ -52,7 +52,7 @@ func GetPrivKeyString() string {
 }
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "zzzalice.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -61,12 +61,12 @@ func Test_DOCreate(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "XXX.viv.cn",
+		Doi:     "zzzalice.viv.cn.",
 		Contact: []string{"xxx", "yyy"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "example_alice.viv.cn.",
-		DwDoi:         "alice.viv.cn.",
+		Doi:           "zzzalice.viv.cn.",
+		DwDoi:         "zzzalice.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -422,7 +422,7 @@ func Test_DOUpdate3(t *testing.T) {
 func Test_DOUpdate4(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "alice3.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -437,19 +437,19 @@ func Test_DOUpdate4(t *testing.T) {
 	//	SignatureData: sign,
 	//}
 	desc := &idl.PermissionDescription{
-		PermissionDoi: "XXX.viv.cn",
-		CreatorDoi:    "yyy.viv.cn",
+		PermissionDoi: "XXX_alice3_data3.viv.cn.",
+		CreatorDoi:    "alice3.viv.cn.",
 	}
 
 	auth := &idl.DataAuthorization{
-		Doi:         "alice.viv.cn.",
+		Doi:         "alice3_data3.viv.cn.",
 		Type:        0,
 		Description: desc,
 	}
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "data.viv.cn.",
+		Doi:           "alice3_data3.viv.cn.",
 		Authorization: auth,
-		DwDoi:         "alice.viv.cn.",
+		DwDoi:         "alice3.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -460,7 +460,7 @@ func Test_DOUpdate4(t *testing.T) {
 	// 执行被测试的函数
 	ctx := &gin.Context{}
 	response, err := client.ApiDOUpdate(ctx, request)
-
+	fmt.Println(response.Errmsg)
 	// 断言函数返回的错误为 nil
 	assert.Nil(t, err)
 
@@ -575,7 +575,7 @@ func Test_DOUpdate6(t *testing.T) {
 
 func Test_DODelete(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "bob.viv.cn."
+	sign.OperatorDoi = "test_pic_pm2.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -583,7 +583,7 @@ func Test_DODelete(t *testing.T) {
 
 	// 删除数据标识
 	request := &idl.ApiDODeleteRequest{
-		Doi: "bob.viv.cn.",
+		Doi: "test_pic_pm2.viv.cn.",
 
 		SignatureData: sign,
 	}
