@@ -647,12 +647,12 @@ func Test_DOQuery(t *testing.T) {
 
 func Test_DOAuthQuery(t *testing.T) {
 
-	dudoi := "2igu76pcye.viv.cn."
+	dudoi := "alice_create_by_lyl.viv.cn."
 
 	// 设置测试数据
 	request := &idl.ApiDOAuthQueryRequest{
 		// TODO: 设置测试doi
-		Doi:   "hzb7ug12cf.viv.cn.",
+		Doi:   "encryption_file10.viv.cn.",
 		DuDoi: dudoi,
 		Type: []idl.SearchType{
 			idl.Auth,

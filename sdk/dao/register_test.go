@@ -66,11 +66,11 @@ func TestClient_Register(t *testing.T) {
 				ctx:     &gin.Context{},
 				permObj: defaultPermission,
 				request: &idl.RegisterDataRequest{
-					Doi:      "alice_create_by_lyl_default_permission.viv.cn.",
+					Doi:      "alice_create_by_lyl_default_permission2.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:  (defaultPermission.ToString()),
-					FilePath: "/permission/default_data_permission.data",
+					FilePath: "/permission/default_data_permission2.data",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(defaultPermission.ToString()))),
@@ -323,11 +323,11 @@ func TestClient_Register(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.RegisterDataRequest{
-					Doi:      "encryption_file7.viv.cn.",
+					Doi:      "encryption_file10.viv.cn.",
 					DwDoi:    "alice_create_by_lyl.viv.cn.",
 					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 					Content:  "bGl1eWFuZ2xvbmc=",
-					FilePath: "/file/encryption_file.dipx",
+					FilePath: "/file/encryption_file_10.dipx",
 					Digest: &idl2.DataDigest{
 						Algorithm: "SHA256",
 						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(encryptionContent))),

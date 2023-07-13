@@ -30,6 +30,7 @@ type GetDataResponse struct {
 }
 
 type GetDataResponseData struct {
+	IsAccessible bool   `json:"is_accessible"`
 	DataContent  string `json:"data_content"`
 	EncryptedKey string `json:"encrypted_key"`
 }

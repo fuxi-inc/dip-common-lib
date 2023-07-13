@@ -209,6 +209,34 @@ func TestClient_GetData(t *testing.T) {
 			want:    nil,
 			wantErr: false,
 		},
+
+		{
+			name: "手动测试",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.GetDataRequest{
+					DuDoi:   "ra22abf7n7.viv.cn.",
+					DataDoi: "s0mf7w2u23.viv.cn.",
+					//SignatureData: *IDL.NewSignatureDataWithSign("ra22abf7n7.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/usera/private.hex"))),
+
+					/*
+						SignatureData: IDL.SignatureData{
+							OperatorDoi:    "ra22abf7n7.viv.cn.",
+							SignatureNonce: `jdnynogYuY\\vhiwd`,
+							Signature:      "9f7fd042fac820e16aa10961a60f6e2f4cc6d9fdcd78b1340e0d41a02f4d0e447b5f68b94c482c4f99ff21f84b1146b0d17abb55e78d8223a3f940d4b4825cbd7e0edfb6e0562787d9c788b0a97ee63337856dfb4e01096c8bf9064d3bb9869a05e5877ef3567444832f6104d00bd1623ae91f80b0920c0fbfad12f008c18496f00a6288160987cff313916cfcfe201cebd308a3036c1b11c0406a0a4eb20ab3e819735fba143f8fe394253e93c9a6a0b8ec57901b87c260ddef63cc0aaba435b58e41e46aa83f855c31a8ed0444c1e3229903a6f1c5891681b92dd35c69847f204385082318fcdb6970ccb4deedc9aca2562172dbd70f3dd94c90a8f042b002",
+						},
+					*/
+				},
+			},
+			want:    nil,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
