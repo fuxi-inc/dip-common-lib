@@ -2,6 +2,8 @@ package idl
 
 import (
 	"encoding/json"
+	"github.com/fuxi-inc/dip-common-lib/middleware"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -24,7 +26,7 @@ func (r *CallbackData) ToString() string {
 	return converter.ToString(r)
 }
 
-func (r *CallbackData) Send(url string) (*ApiDisResponse, error) {
+func (r *CallbackData) Send(ctx *gin.Context, url string) (*ApiDisResponse, error) {
 	method := "POST"
 	payload := strings.NewReader(r.ToString())
 
@@ -34,7 +36,11 @@ func (r *CallbackData) Send(url string) (*ApiDisResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add(middleware.TraceIDKeyName, ctx.GetHeader(middleware.TraceIDKeyName))
+	req.Header.Add(middleware.SpanIDKeyName, ctx.GetHeader(middleware.SpanIDKeyName))
+	req.Header.Add(middleware.ParentSpanIDKeyName, ctx.GetHeader(middleware.ParentSpanIDKeyName))
 
 	res, err := client.Do(req)
 	if err != nil {
