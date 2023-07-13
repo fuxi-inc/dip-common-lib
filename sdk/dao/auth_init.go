@@ -3,7 +3,8 @@ package dao
 import (
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
-	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
+	idl2 "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -11,10 +12,10 @@ import (
 	"strings"
 )
 
-func (c *Client) AuthInit(ctx *gin.Context, request *idl.InitiateAuthRequest) error {
+func (c *Client) AuthInit(ctx *gin.Context, request *idl2.ApiAuthInitRequest) error {
 	url := c.DaoHost + "/dip/data/initiate_auth"
 	method := "POST"
-	payload := strings.NewReader(request.ToString())
+	payload := strings.NewReader(converter.ToString(request))
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)

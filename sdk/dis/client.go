@@ -86,7 +86,7 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
-
+	fmt.Println("body", string(body), res.StatusCode)
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
 
@@ -96,8 +96,9 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 	}
 	if response.Errno != 0 {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
-		return nil, err
+		return nil, fmt.Errorf("Error response.Errno,error:%s", response.Errmsg)
 	}
+	fmt.Println("reponse", response)
 	return response, nil
 
 }
@@ -142,6 +143,7 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
 		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
 	}
+	fmt.Println("update response", response)
 	return response, nil
 }
 
@@ -227,7 +229,7 @@ func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) 
 	}
 	if !response.Code.IsSuccess() {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
-		return nil, err
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
 	}
 	return response, nil
 }
@@ -270,7 +272,7 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 	}
 	if !response.Code.IsSuccess() {
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
-		return nil, err
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
 	}
 	return response, nil
 }
