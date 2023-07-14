@@ -52,7 +52,7 @@ func GetPrivKeyString() string {
 }
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "zzzalice.viv.cn."
+	sign.OperatorDoi = "14test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -61,12 +61,12 @@ func Test_DOCreate(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "zzzalice.viv.cn.",
-		Contact: []string{"xxx", "yyy"},
+		Doi:     "14test1.viv.cn.",
+		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "zzzalice.viv.cn.",
-		DwDoi:         "zzzalice.viv.cn.",
+		Doi:           "14test1.viv.cn.",
+		DwDoi:         "14test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -89,7 +89,7 @@ func Test_DOCreate(t *testing.T) {
 }
 func Test_DOCreate2(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "bob.viv.cn."
+	sign.OperatorDoi = "14test2.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -98,12 +98,12 @@ func Test_DOCreate2(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "XXX.viv.cn",
-		Contact: []string{"xxx", "yyy"},
+		Doi:     "14test2.viv.cn",
+		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "bob.viv.cn.",
-		DwDoi:         "bob.viv.cn.",
+		Doi:           "14test2.viv.cn.",
+		DwDoi:         "14test2.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -126,7 +126,7 @@ func Test_DOCreate2(t *testing.T) {
 }
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "14test1_data.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -135,12 +135,12 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "XXX.viv.cn",
-		Contact: []string{"xxx", "yyy"},
+		Doi:     "14test1_data.viv.cn",
+		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "张三.viv.cn.",
-		DwDoi:         "alice.viv.cn.",
+		Doi:           "14test1_data.viv.cn.",
+		DwDoi:         "14test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -748,6 +748,33 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+
+		{
+			name: "[数岛递归读取测试] 注册用户", //注册dao_alice,dao_bob,dao_cindy,dao_dale
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:    "dao_dale_by_lyl.viv.cn.",
+					DwDoi:  "dao_dale_by_lyl.viv.cn.",
+					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					WhoisData: &idl.RegistrationData{
+						Doi: "dao_dale_by_lyl.viv.cn.",
+						Contact: []string{
+							"https://segmentfault.com/q/1010000043984824",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_dale_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1150,6 +1177,34 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 						},
 					},
 					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[数岛递归读取测试]更新测试数据的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "dao_data_bbb.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "dao_data_bbb.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+							CreatorDoi:    "dao_bob_by_lyl.viv.cn.",
+							ParentDoi:     "dao_data_aaa.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_bob_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,
