@@ -2,10 +2,11 @@ package dis
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"testing"
 )
 
 func TestClient_getZone(t *testing.T) {
@@ -36,7 +37,7 @@ func TestClient_getZone(t *testing.T) {
 				DisQHost: tt.fields.DisQHost,
 				DaoHost:  tt.fields.DaoHost,
 			}
-			got, err := c.getZone(tt.args.zone, tt.args.sk)
+			got, err := c.getZone(tt.args.zone)
 			if !tt.wantErr(t, err, fmt.Sprintf("getZone(%v, %v)", tt.args.zone, tt.args.sk)) {
 				return
 			}
