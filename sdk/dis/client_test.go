@@ -126,7 +126,7 @@ func Test_DOCreate2(t *testing.T) {
 }
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "14test1_data.viv.cn."
+	sign.OperatorDoi = "14test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
