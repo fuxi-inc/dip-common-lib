@@ -222,16 +222,34 @@ func TestClient_GetData(t *testing.T) {
 				ctx: &gin.Context{},
 				request: &idl.GetDataRequest{
 					DuDoi:   "ra22abf7n7.viv.cn.",
-					DataDoi: "s0mf7w2u23.viv.cn.",
+					DataDoi: "f1me52sh39.viv.cn.",
 					//SignatureData: *IDL.NewSignatureDataWithSign("ra22abf7n7.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/usera/private.hex"))),
 
-					/*
-						SignatureData: IDL.SignatureData{
-							OperatorDoi:    "ra22abf7n7.viv.cn.",
-							SignatureNonce: `jdnynogYuY\\vhiwd`,
-							Signature:      "9f7fd042fac820e16aa10961a60f6e2f4cc6d9fdcd78b1340e0d41a02f4d0e447b5f68b94c482c4f99ff21f84b1146b0d17abb55e78d8223a3f940d4b4825cbd7e0edfb6e0562787d9c788b0a97ee63337856dfb4e01096c8bf9064d3bb9869a05e5877ef3567444832f6104d00bd1623ae91f80b0920c0fbfad12f008c18496f00a6288160987cff313916cfcfe201cebd308a3036c1b11c0406a0a4eb20ab3e819735fba143f8fe394253e93c9a6a0b8ec57901b87c260ddef63cc0aaba435b58e41e46aa83f855c31a8ed0444c1e3229903a6f1c5891681b92dd35c69847f204385082318fcdb6970ccb4deedc9aca2562172dbd70f3dd94c90a8f042b002",
-						},
-					*/
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "ra22abf7n7.viv.cn.",
+						SignatureNonce: `rucxuhc806`,
+						Signature:      "077bd3f879447a36f92a63f9f07bff5b29b5cf2ca05e545d7e529470cd8080abd7f146f1176235ddc3c7855cb00aef4c89679c66230c0802b1d6cb2bf12d59cd0136ad363154c13a4c3f7162c314b8143d3c94a15ed686264c18d0345bea815df366a42f5d3a44c68e3408d3afe0c5d6cb9b31fbb8987301f6114bf7f15bf92ef107e1a0c1ad9223367bada8fe0f64ac465e8585b936aad16ad9dc2eee13f7653be45f232fd6f394c0da7a20a3b53bd19c0465cf320a320e6b5760177eac7524543e725c0777f73b877baa18eaef8b20d754591aad839934debd4c93f40871bed888f431d45d3fd6776e01259e72edcdc9d80a12a83229307e361d7b5b2580be",
+					},
+				},
+			},
+			want:    nil,
+			wantErr: false,
+		},
+
+		{
+			name: "[数岛递归读取测试] 读取数据",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.GetDataRequest{
+					DuDoi:         "dao_dale_by_lyl.viv.cn.",
+					DataDoi:       "dao_data_ccc.viv.cn.",
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_dale_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,
