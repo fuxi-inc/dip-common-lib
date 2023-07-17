@@ -17,6 +17,7 @@ import (
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"golang.org/x/net/idna"
 )
 
 /**
@@ -304,7 +305,15 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 
 	// 构建查询参数
 	queryParams := url.Values{}
-	queryParams.Set("doi", request.Doi)
+
+	// punycode编码
+	doi, err := Encode_Punycode(request.Doi)
+	if err != nil {
+		log.Println("punycode编码错误：", err)
+		return nil, err
+	}
+
+	queryParams.Set("doi", doi)
 	queryParams.Set("type", typesString)
 
 	// 将查询参数附加到URL
@@ -368,7 +377,15 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 			}
 		case "owner":
 			if str, ok := value.(string); ok {
-				response_data.Owner = str
+
+				// punycode解码
+				newstr, err := Encode_Punycode(str)
+				if err != nil {
+					log.Println("punycode解码错误：", err)
+					return nil, err
+				}
+
+				response_data.Owner = newstr
 			}
 		case "pubkey":
 			if str, ok := value.(string); ok {
@@ -443,8 +460,23 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 
 	// 构建查询参数
 	queryParams := url.Values{}
-	queryParams.Set("doi", request.Doi)
-	queryParams.Set("dudoi", request.DuDoi)
+
+	// punycode编码
+	doi, err := Encode_Punycode(request.Doi)
+	if err != nil {
+		log.Println("punycode编码错误：", err)
+		return nil, err
+	}
+	queryParams.Set("doi", doi)
+
+	// punycode编码
+	dudoi, err := Encode_Punycode(request.DuDoi)
+	if err != nil {
+		log.Println("punycode编码错误：", err)
+		return nil, err
+	}
+	queryParams.Set("dudoi", dudoi)
+
 	queryParams.Set("type", "auth")
 
 	// 将查询参数附加到URL
@@ -484,7 +516,7 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 	}
 
 	// TODO: 测试响应，后面删掉
-	log.Println("Response msg: ", m.Msg)
+	// log.Println("Response msg: ", m.Msg)
 
 	response := &idl.ApiDOQueryResponse{}
 
@@ -497,7 +529,7 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 
 	if str, ok := value.(string); ok {
 
-		log.Println("7test-split str", str)
+		// log.Println("7test-split str", str)
 
 		decodedBytes, err := base64.StdEncoding.DecodeString(str)
 		if err != nil {
@@ -512,6 +544,35 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 			return nil, err
 		}
 
+		// punycode解码
+		newdoi, err := Encode_Punycode(au.Doi)
+		if err != nil {
+			log.Println("punycode解码错误：", err)
+			return nil, err
+		}
+		au.Doi = newdoi
+
+		newcreatordoi, err := Encode_Punycode(au.Description.CreatorDoi)
+		if err != nil {
+			log.Println("punycode解码错误：", err)
+			return nil, err
+		}
+		au.Description.CreatorDoi = newcreatordoi
+
+		newparentdoi, err := Encode_Punycode(au.Description.ParentDoi)
+		if err != nil {
+			log.Println("punycode解码错误：", err)
+			return nil, err
+		}
+		au.Description.ParentDoi = newparentdoi
+
+		newpermissiondoi, err := Encode_Punycode(au.Description.PermissionDoi)
+		if err != nil {
+			log.Println("punycode解码错误：", err)
+			return nil, err
+		}
+		au.Description.PermissionDoi = newpermissiondoi
+
 		response_auth[request.DuDoi] = au
 		response_data.Auth = response_auth
 
@@ -522,4 +583,27 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 	response.Errmsg = m.Msg
 
 	return response, nil
+}
+
+func Encode_Punycode(name string) (string, error) {
+	// Punycode 编码
+	punycode, err := idna.ToASCII(name)
+	if err != nil {
+		fmt.Println("Punycode encoding error:", err)
+		return punycode, err
+	}
+
+	return punycode, err
+
+}
+
+func Decode_Punycode(name string) (string, error) {
+	// Punycode 解码
+	decodedDomain, err := idna.ToUnicode(name)
+	if err != nil {
+		fmt.Println("Punycode decoding error:", err)
+		return name, err
+	}
+	return decodedDomain, nil
+
 }
