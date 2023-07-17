@@ -379,7 +379,7 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 			if str, ok := value.(string); ok {
 
 				// punycode解码
-				newstr, err := Encode_Punycode(str)
+				newstr, err := Decode_Punycode(str)
 				if err != nil {
 					log.Println("punycode解码错误：", err)
 					return nil, err
@@ -545,28 +545,28 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 		}
 
 		// punycode解码
-		newdoi, err := Encode_Punycode(au.Doi)
+		newdoi, err := Decode_Punycode(au.Doi)
 		if err != nil {
 			log.Println("punycode解码错误：", err)
 			return nil, err
 		}
 		au.Doi = newdoi
 
-		newcreatordoi, err := Encode_Punycode(au.Description.CreatorDoi)
+		newcreatordoi, err := Decode_Punycode(au.Description.CreatorDoi)
 		if err != nil {
 			log.Println("punycode解码错误：", err)
 			return nil, err
 		}
 		au.Description.CreatorDoi = newcreatordoi
 
-		newparentdoi, err := Encode_Punycode(au.Description.ParentDoi)
+		newparentdoi, err := Decode_Punycode(au.Description.ParentDoi)
 		if err != nil {
 			log.Println("punycode解码错误：", err)
 			return nil, err
 		}
 		au.Description.ParentDoi = newparentdoi
 
-		newpermissiondoi, err := Encode_Punycode(au.Description.PermissionDoi)
+		newpermissiondoi, err := Decode_Punycode(au.Description.PermissionDoi)
 		if err != nil {
 			log.Println("punycode解码错误：", err)
 			return nil, err
