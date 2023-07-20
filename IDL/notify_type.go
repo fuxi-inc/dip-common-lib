@@ -9,6 +9,7 @@ const (
 	RequestAuthNotifyType NotifyType = 1 //请求授权消息类型
 	ConfirmAuthNotifyType NotifyType = 2 //确认并接受授权的消息类型
 	DenyAuthNotifyType    NotifyType = 3 //拒绝授权的消息类型
+	RevokeAuthNotifyType  NotifyType = 4 //撤销授权的消息类型
 )
 
 type NotifyType int64
