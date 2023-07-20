@@ -1060,6 +1060,102 @@ func TestClient_ApiAuthConf(t *testing.T) {
 	}
 }
 
+func TestClient_ApiAuthRev(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiAuthRevRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "Du撤销授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthRevRequest{
+					DataDoi: "14test1_data.viv.cn.",
+					DuDoi:   "14test2.viv.cn.",
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "14test2.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("14test2.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "Dw撤销授权测试用例",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthRevRequest{
+					DataDoi: "14test1_data.viv.cn.",
+					DuDoi:   "14test3.viv.cn.",
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "14test1.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("14test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiAuthRevoke(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name:", tt.name)
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
 func TestClient_ApiDOUpdate(t *testing.T) {
 	type fields struct {
 		Logger   *zap.Logger
