@@ -58,6 +58,31 @@ func TestClient_AuthConfirm(t *testing.T) {
 				},
 			},
 		},
+
+		{
+			name: "[数岛递归读取测试] dw 确认dale的请求授权 data—a",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "http://39.107.180.231:8053",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "dao_data_aaa.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "dao_dale_by_lyl.viv.cn.",
+						Type: idl.UserAuthType,
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_alice_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -52,7 +52,7 @@ func GetPrivKeyString() string {
 }
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "14test1.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -61,12 +61,12 @@ func Test_DOCreate(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "14test1.viv.cn.",
+		Doi:     "15test1.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "14test1.viv.cn.",
-		DwDoi:         "14test1.viv.cn.",
+		Doi:           "15test1.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -89,7 +89,7 @@ func Test_DOCreate(t *testing.T) {
 }
 func Test_DOCreate2(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "14test2.viv.cn."
+	sign.OperatorDoi = "15test2.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -98,12 +98,12 @@ func Test_DOCreate2(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "14test2.viv.cn",
+		Doi:     "15test2.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "14test2.viv.cn.",
-		DwDoi:         "14test2.viv.cn.",
+		Doi:           "15test2.viv.cn.",
+		DwDoi:         "15test2.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -124,9 +124,10 @@ func Test_DOCreate2(t *testing.T) {
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
 }
+
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "14test1.viv.cn."
+	sign.OperatorDoi = "15test3.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -135,12 +136,12 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "14test1_data.viv.cn",
+		Doi:     "15test3.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "14test1_data.viv.cn.",
-		DwDoi:         "14test1.viv.cn.",
+		Doi:           "15test3.viv.cn.",
+		DwDoi:         "15test3.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -161,21 +162,26 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
 }
-func Test_DOUpdate(t *testing.T) {
 
+func Test_DOCreate4(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
-	Signature, err := sign.CreateSignature(GetPrivKeyString())
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+	if err != nil {
+		print(err.Error())
+	}
 	assert.Nil(t, err)
 	sign.Signature = Signature
-
-	// 更新数据标识
-	request := &idl.ApiDOUpdateRequest{
-		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
-		NewDoi: "XXX.viv.cn.",
-		DwDoi:  "alice.viv.cn.",
-
+	whois := &idl.RegistrationData{
+		Doi:     "15test1_data.viv.cn.",
+		Contact: []string{"http://www.baidu.com"},
+	}
+	request := &idl.ApiDOCreateRequest{
+		Doi:           "15test1_data.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+		WhoisData:     whois,
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -185,97 +191,8 @@ func Test_DOUpdate(t *testing.T) {
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
-	response, err := client.ApiDOUpdate(ctx, request)
-
-	// 断言函数返回的错误为 nil
-	assert.Nil(t, err)
-
-	// 判断 Errno 是否为 0
-	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-	// 更新公钥
-	request = &idl.ApiDOUpdateRequest{
-		Doi:           "XXX.viv.cn",
-		PubKey:        GetPubKeyString(),
-		DwDoi:         "usera.viv.cn",
-		SignatureData: sign,
-	}
-	response, err = client.ApiDOUpdate(ctx, request)
-
-	// 断言函数返回的错误为 nil
-	assert.Nil(t, err)
-
-	// 判断 Errno 是否为 0
-	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-	// 更新数据地址及摘要
-
-	digest := &idl.DataDigest{
-		Algorithm: "SHA256",
-		Result:    "sha256",
-	}
-
-	classgrade := &idl.ClassificationAndGrading{
-		Class: 1024,
-		Grade: 2048,
-	}
-
-	auth := &idl.DataAuthorization{
-		Confirmation: "XXX",
-	}
-
-	request = &idl.ApiDOUpdateRequest{
-		Doi:                      "XXX.viv.cn",
-		Dar:                      "resource.example.com/path",
-		Digest:                   digest,
-		DwDoi:                    "usera.viv.cn",
-		Authorization:            auth, // 更新其中的Conformation确权信息
-		ClassificationAndGrading: classgrade,
-		SignatureData:            sign,
-	}
-	response, err = client.ApiDOUpdate(ctx, request)
-
-	// 断言函数返回的错误为 nil
-	assert.Nil(t, err)
-
-	// 判断 Errno 是否为 0
-	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-	// 数据所有者更新自己的权益
-
-	desc := &idl.PermissionDescription{
-		PermissionDoi: "XXX.viv.cn",
-		CreatorDoi:    "yyy.viv.cn",
-	}
-
-	auth = &idl.DataAuthorization{
-		Type:        0,
-		Description: desc,
-	}
-
-	request = &idl.ApiDOUpdateRequest{
-		Doi:           "XXX.viv.cn",
-		Authorization: auth, // 更新其中的Type和Description
-		SignatureData: sign,
-	}
-	response, err = client.ApiDOUpdate(ctx, request)
-
-	// 断言函数返回的错误为 nil
-	assert.Nil(t, err)
-
-	// 判断 Errno 是否为 0
-	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-	// 更新联系方式
-
-	whois := &idl.RegistrationData{
-		Doi:     "XXX.viv.cn",
-		Contact: []string{"xxx", "yyy"},
-	}
-
-	request = &idl.ApiDOUpdateRequest{
-		Doi:           "XXX.viv.cn",
-		WhoisData:     whois,
-		SignatureData: sign,
-	}
-	response, err = client.ApiDOUpdate(ctx, request)
-
+	response, err := client.ApiDOCreate(ctx, request)
+	print(response.Errmsg)
 	// 断言函数返回的错误为 nil
 	assert.Nil(t, err)
 
@@ -283,12 +200,135 @@ func Test_DOUpdate(t *testing.T) {
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
 }
+
+// func Test_DOUpdate(t *testing.T) {
+
+// 	sign := IDL.SignatureData{}
+// 	sign.OperatorDoi = "alice.viv.cn."
+// 	sign.SignatureNonce = "123456"
+// 	Signature, err := sign.CreateSignature(GetPrivKeyString())
+// 	assert.Nil(t, err)
+// 	sign.Signature = Signature
+
+// 	// 更新数据标识
+// 	request := &idl.ApiDOUpdateRequest{
+// 		Doi:    "2d8a2384-a705-4c16-a927-1a1b16345b67.viv.cn",
+// 		NewDoi: "XXX.viv.cn.",
+// 		DwDoi:  "alice.viv.cn.",
+
+// 		SignatureData: sign,
+// 	}
+// 	client := NewClient().
+// 		InitLogger(zap.NewExample()).
+// 		// TODO: 添加disq的host名称
+// 		InitDis("http://39.107.180.231:8991")
+
+// 	// 执行被测试的函数
+// 	ctx := &gin.Context{}
+// 	response, err := client.ApiDOUpdate(ctx, request)
+
+// 	// 断言函数返回的错误为 nil
+// 	assert.Nil(t, err)
+
+// 	// 判断 Errno 是否为 0
+// 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+// 	// 更新公钥
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:           "XXX.viv.cn",
+// 		PubKey:        GetPubKeyString(),
+// 		DwDoi:         "usera.viv.cn",
+// 		SignatureData: sign,
+// 	}
+// 	response, err = client.ApiDOUpdate(ctx, request)
+
+// 	// 断言函数返回的错误为 nil
+// 	assert.Nil(t, err)
+
+// 	// 判断 Errno 是否为 0
+// 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+// 	// 更新数据地址及摘要
+
+// 	digest := &idl.DataDigest{
+// 		Algorithm: "SHA256",
+// 		Result:    "sha256",
+// 	}
+
+// 	classgrade := &idl.ClassificationAndGrading{
+// 		Class: 1024,
+// 		Grade: 2048,
+// 	}
+
+// 	auth := &idl.DataAuthorization{
+// 		Confirmation: "XXX",
+// 	}
+
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:                      "XXX.viv.cn",
+// 		Dar:                      "resource.example.com/path",
+// 		Digest:                   digest,
+// 		DwDoi:                    "usera.viv.cn",
+// 		Authorization:            auth, // 更新其中的Conformation确权信息
+// 		ClassificationAndGrading: classgrade,
+// 		SignatureData:            sign,
+// 	}
+// 	response, err = client.ApiDOUpdate(ctx, request)
+
+// 	// 断言函数返回的错误为 nil
+// 	assert.Nil(t, err)
+
+// 	// 判断 Errno 是否为 0
+// 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+// 	// 数据所有者更新自己的权益
+
+// 	desc := &idl.PermissionDescription{
+// 		PermissionDoi: "XXX.viv.cn",
+// 		CreatorDoi:    "yyy.viv.cn",
+// 	}
+
+// 	auth = &idl.DataAuthorization{
+// 		Type:        0,
+// 		Description: desc,
+// 	}
+
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:           "XXX.viv.cn",
+// 		Authorization: auth, // 更新其中的Type和Description
+// 		SignatureData: sign,
+// 	}
+// 	response, err = client.ApiDOUpdate(ctx, request)
+
+// 	// 断言函数返回的错误为 nil
+// 	assert.Nil(t, err)
+
+// 	// 判断 Errno 是否为 0
+// 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+// 	// 更新联系方式
+
+// 	whois := &idl.RegistrationData{
+// 		Doi:     "XXX.viv.cn",
+// 		Contact: []string{"xxx", "yyy"},
+// 	}
+
+// 	request = &idl.ApiDOUpdateRequest{
+// 		Doi:           "XXX.viv.cn",
+// 		WhoisData:     whois,
+// 		SignatureData: sign,
+// 	}
+// 	response, err = client.ApiDOUpdate(ctx, request)
+
+// 	// 断言函数返回的错误为 nil
+// 	assert.Nil(t, err)
+
+// 	// 判断 Errno 是否为 0
+// 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+
+// }
 
 // 更新公钥
 func Test_DOUpdate1(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -304,9 +344,9 @@ func Test_DOUpdate1(t *testing.T) {
 	//}
 
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "example_alice.viv.cn.",
+		Doi:           "15test1_data.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/cindy/public.hex")),
-		DwDoi:         "alice.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -329,11 +369,11 @@ func Test_DOUpdate1(t *testing.T) {
 
 }
 
-// dar digest
+// dar digest confirmation
 func Test_DOUpdate2(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123457"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -343,11 +383,18 @@ func Test_DOUpdate2(t *testing.T) {
 		Algorithm: "SHA256",
 		Result:    "sha256",
 	}
+
+	auth := &idl.DataAuthorization{
+		Doi:          "15test1.viv.cn.",
+		Confirmation: "xxxx",
+	}
+
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "example_alice.viv.cn.",
+		Doi:           "15test1_data.viv.cn.",
 		Dar:           "resource.example.com/path",
 		Digest:        digest,
-		DwDoi:         "alice.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
+		Authorization: auth,
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -364,9 +411,6 @@ func Test_DOUpdate2(t *testing.T) {
 	fmt.Print(response)
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
-	// 更新公钥
-
-	// 断言函数返回的错误为 nil
 
 }
 
@@ -374,7 +418,7 @@ func Test_DOUpdate2(t *testing.T) {
 func Test_DOUpdate3(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -393,9 +437,9 @@ func Test_DOUpdate3(t *testing.T) {
 		Grade: 2048,
 	}
 	request := &idl.ApiDOUpdateRequest{
-		Doi:                      "data.viv.cn.",
+		Doi:                      "15test1_data.viv.cn.",
 		ClassificationAndGrading: classgrade,
-		DwDoi:                    "alice.viv.cn.",
+		DwDoi:                    "15test1.viv.cn.",
 		SignatureData:            sign,
 	}
 	client := NewClient().
@@ -418,11 +462,11 @@ func Test_DOUpdate3(t *testing.T) {
 
 }
 
-// 更新权属
+// 更新所有权信息
 func Test_DOUpdate4(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice3.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -438,18 +482,18 @@ func Test_DOUpdate4(t *testing.T) {
 	//}
 	desc := &idl.PermissionDescription{
 		PermissionDoi: "XXX_alice3_data3.viv.cn.",
-		CreatorDoi:    "alice3.viv.cn.",
+		CreatorDoi:    "15test1.viv.cn.",
 	}
 
 	auth := &idl.DataAuthorization{
-		Doi:         "alice3_data3.viv.cn.",
+		Doi:         "15test1.viv.cn.",
 		Type:        0,
 		Description: desc,
 	}
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "alice3_data3.viv.cn.",
+		Doi:           "15test1_data.viv.cn.",
 		Authorization: auth,
-		DwDoi:         "alice3.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -475,7 +519,7 @@ func Test_DOUpdate4(t *testing.T) {
 func Test_DOUpdate5(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "bob.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -496,12 +540,12 @@ func Test_DOUpdate5(t *testing.T) {
 
 	whois := &idl.RegistrationData{
 		Doi:     "XXXxxx.viv.cn",
-		Contact: []string{"http://bob.baidu.com", "yyy", "zzz"},
+		Contact: []string{"http://test1.baidu.com", "yyy", "zzz"},
 	}
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "bob.viv.cn.",
+		Doi:           "15test1.viv.cn.",
 		WhoisData:     whois,
-		DwDoi:         "bob.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -528,7 +572,7 @@ func Test_DOUpdate5(t *testing.T) {
 func Test_DOUpdate6(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "alice.viv.cn."
+	sign.OperatorDoi = "15test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -548,9 +592,9 @@ func Test_DOUpdate6(t *testing.T) {
 	//}
 
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "data.viv.cn.",
-		NewDoi:        "data2.viv.cn.",
-		DwDoi:         "alice.viv.cn.",
+		Doi:           "15test1.viv.cn.",
+		NewDoi:        "15test2.viv.cn.",
+		DwDoi:         "15test1.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
@@ -607,7 +651,7 @@ func Test_DOQuery(t *testing.T) {
 	// 设置测试数据
 	request := &idl.ApiDOQueryRequest{
 		// TODO: 设置测试doi
-		Doi: "data.viv.cn.",
+		Doi: "15test1_data.viv.cn.",
 		Type: []idl.SearchType{
 			idl.Dar,
 			idl.Owner,
@@ -647,12 +691,12 @@ func Test_DOQuery(t *testing.T) {
 
 func Test_DOAuthQuery(t *testing.T) {
 
-	dudoi := "alice.viv.cn."
+	dudoi := "15test2.viv.cn."
 
 	// 设置测试数据
 	request := &idl.ApiDOAuthQueryRequest{
 		// TODO: 设置测试doi
-		Doi:   "data.viv.cn.",
+		Doi:   "15test1_data.viv.cn.",
 		DuDoi: dudoi,
 		Type: []idl.SearchType{
 			idl.Auth,
@@ -748,6 +792,33 @@ func TestClient_ApiDOCreate(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+
+		{
+			name: "[数岛递归读取测试] 注册用户", //注册dao_alice,dao_bob,dao_cindy,dao_dale
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:    "dao_dale_by_lyl.viv.cn.",
+					DwDoi:  "dao_dale_by_lyl.viv.cn.",
+					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					WhoisData: &idl.RegistrationData{
+						Doi: "dao_dale_by_lyl.viv.cn.",
+						Contact: []string{
+							"https://segmentfault.com/q/1010000043984824",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_dale_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -795,9 +866,9 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthInitRequest{
-					DataDoi: "example_alice.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
 					Authorization: idl.DataAuthorization{
-						Doi:  "bob.viv.cn.",
+						Doi:  "15test2.viv.cn.",
 						Type: idl.UserAuthType,
 						Confirmation: func() string {
 							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
@@ -805,8 +876,8 @@ func TestClient_ApiAuthInit(t *testing.T) {
 							return sign
 						}(),
 						Description: &idl.PermissionDescription{
-							PermissionDoi: "data.viv.cn",
-							CreatorDoi:    "bob.viv.cn",
+							PermissionDoi: "data.viv.cn.",
+							CreatorDoi:    "15test2.viv.cn.",
 							Key:           "",
 						},
 					},
@@ -815,10 +886,10 @@ func TestClient_ApiAuthInit(t *testing.T) {
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "bob.viv.cn.",
+						OperatorDoi:    "15test2.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test2.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -838,13 +909,13 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthInitRequest{
-					DataDoi: "example_alice.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
 					Authorization: idl.DataAuthorization{
-						Doi:  "bob.viv.cn.",
+						Doi:  "15test3.viv.cn.",
 						Type: idl.UserAuthType,
 						Description: &idl.PermissionDescription{
-							PermissionDoi: "data.viv.cn",
-							CreatorDoi:    "alice.viv.cn",
+							PermissionDoi: "data.viv.cn.",
+							CreatorDoi:    "15test1.viv.cn.",
 							Key:           "",
 						},
 					},
@@ -853,10 +924,10 @@ func TestClient_ApiAuthInit(t *testing.T) {
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "alice.viv.cn.",
+						OperatorDoi:    "15test1.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -912,19 +983,19 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthConfRequest{
-					DataDoi: "example_alice.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
 					Authorization: idl.DataAuthorization{
-						Doi: "bob.viv.cn.",
+						Doi: "15test2.viv.cn.",
 					},
 					Fields: map[string]string{
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "alice.viv.cn.",
+						OperatorDoi:    "15test1.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("alice.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -944,9 +1015,9 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthConfRequest{
-					DataDoi: "example_alice.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
 					Authorization: idl.DataAuthorization{
-						Doi:  "bob.viv.cn.",
+						Doi:  "15test3.viv.cn.",
 						Type: idl.UserAuthType,
 						Confirmation: func() string {
 							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
@@ -959,10 +1030,10 @@ func TestClient_ApiAuthConf(t *testing.T) {
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "bob.viv.cn.",
+						OperatorDoi:    "15test3.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("bob.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test3.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -1150,6 +1221,34 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 						},
 					},
 					SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[数岛递归读取测试]更新测试数据的匿名权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi: "dao_data_bbb.viv.cn.",
+					Authorization: &idl.DataAuthorization{
+						Doi:  "dao_data_bbb.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "alice_create_by_lyl_default_subject_article_permission.viv.cn.",
+							CreatorDoi:    "dao_bob_by_lyl.viv.cn.",
+							ParentDoi:     "dao_data_aaa.viv.cn.",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("dao_bob_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,

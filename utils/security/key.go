@@ -2,12 +2,17 @@ package security
 
 import (
 	"crypto"
+	"crypto/hmac"
+	"crypto/md5"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
+	"strings"
 )
 
 func ImportPrivateKey(pkstr string) (*rsa.PrivateKey, error) {
@@ -70,4 +75,17 @@ func Sha256Hash(msg []byte) []byte {
 	}
 
 	return hash.Sum(nil)
+}
+
+func MD5(v string) string {
+	d := []byte(v)
+	m := md5.New()
+	m.Write(d)
+	return strings.ToUpper(hex.EncodeToString(m.Sum(nil)))
+}
+
+func HmacSHA1(data, key string) string {
+	mac := hmac.New(sha1.New, []byte(key))
+	mac.Write([]byte(data))
+	return strings.ToUpper(hex.EncodeToString(mac.Sum(nil)))
 }
