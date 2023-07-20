@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c *Client) Delete(ctx *gin.Context, request *idl.DeleteDataContentRequest) error {
+func (c *Client) Delete(ctx *gin.Context, request *idl.DeleteDataRequest) error {
 	url := c.DaoHost + "/dip/data/delete"
 	method := "DELETE"
 
