@@ -6,8 +6,7 @@ import (
 )
 
 type DeleteDataContentRequest struct {
-	Doi   string `json:"doi,omitempty" binding:"required"`
-	DwDoi string `json:"dw_doi" binding:"required"` //数据所有者身份标识
+	Doi string `json:"doi,omitempty" binding:"required"`
 
 	IDL.SignatureData
 }
