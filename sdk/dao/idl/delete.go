@@ -5,13 +5,13 @@ import (
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 
-type DeleteDataContentRequest struct {
+type DeleteDataRequest struct {
 	Doi string `json:"doi,omitempty" binding:"required"`
 
 	IDL.SignatureData
 }
 
-func (s *DeleteDataContentRequest) ToString() string {
+func (s *DeleteDataRequest) ToString() string {
 	return converter.ToString(s)
 }
 
