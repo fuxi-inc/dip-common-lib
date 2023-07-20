@@ -3,6 +3,7 @@ package dao
 import (
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -36,7 +37,7 @@ func (c *Client) Delete(ctx *gin.Context, request *idl.DeleteDataRequest) error 
 	if err != nil {
 		return err
 	}
-
+	log.Println(string(body))
 	response := &IDL.CommonResponse{}
 	err = response.Unmarshal(body)
 	if err != nil {

@@ -165,7 +165,7 @@ func Test_DOCreate3(t *testing.T) {
 
 func Test_DOCreate4(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "15test1.viv.cn."
+	sign.OperatorDoi = "0720test2.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -174,12 +174,12 @@ func Test_DOCreate4(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "15test1_data.viv.cn.",
+		Doi:     "0720test2.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "15test1_data.viv.cn.",
-		DwDoi:         "15test1.viv.cn.",
+		Doi:           "0720test2.viv.cn.",
+		DwDoi:         "0720test2.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
