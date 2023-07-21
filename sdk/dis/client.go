@@ -358,6 +358,11 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 	queryParams.Set("doi", doi)
 	queryParams.Set("type", typesString)
 
+	// 设置直接查询
+	if request.DirectQuery {
+		queryParams.Set("direct_query", "true")
+	}
+
 	// 将查询参数附加到URL
 	url := baseurl + "?" + queryParams.Encode()
 
@@ -520,6 +525,11 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 	queryParams.Set("dudoi", dudoi)
 
 	queryParams.Set("type", "auth")
+
+	// 设置直接查询
+	if request.DirectQuery {
+		queryParams.Set("direct_query", "true")
+	}
 
 	// 将查询参数附加到URL
 	url := baseurl + "?" + queryParams.Encode()
