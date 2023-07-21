@@ -61,6 +61,40 @@ func (c *Client) InitDao(daoHost string) *Client {
 
 // 数据对象属性注册
 func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) (*idl.ApiDisResponse, error) {
+	// punycode编码
+	doi, err := Encode_Punycode(request.Doi)
+	if err != nil {
+		log.Println("doi punycode编码错误：", err)
+		return nil, err
+	}
+	request.Doi = doi
+
+	// punycode编码
+	dwdoi, err := Encode_Punycode(request.DwDoi)
+	if err != nil {
+		log.Println("dwdoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DwDoi = dwdoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
+	if request.WhoisData != nil {
+		// punycode编码
+		whoisdoi, err := Encode_Punycode(request.WhoisData.Doi)
+		if err != nil {
+			log.Println("whoisdoi punycode编码错误：", err)
+			return nil, err
+		}
+		request.WhoisData.Doi = whoisdoi
+	}
+
 	disurl := c.DisHost + "/dip/dis-r/doi/register"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
@@ -106,6 +140,60 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 
 // 数据对象属性更新
 func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) (*idl.ApiDisResponse, error) {
+	// punycode编码
+	doi, err := Encode_Punycode(request.Doi)
+	if err != nil {
+		log.Println("doi punycode编码错误：", err)
+		return nil, err
+	}
+	request.Doi = doi
+
+	// punycode编码
+	if request.NewDoi != "" {
+		newdoi, err := Encode_Punycode(request.NewDoi)
+		if err != nil {
+			log.Println("newdoi punycode编码错误：", err)
+			return nil, err
+		}
+		request.NewDoi = newdoi
+	}
+
+	// punycode编码
+	dwdoi, err := Encode_Punycode(request.DwDoi)
+	if err != nil {
+		log.Println("dwdoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DwDoi = dwdoi
+
+	if request.Authorization != nil {
+		// punycode编码
+		authdoi, err := Encode_Punycode(request.Authorization.Doi)
+		if err != nil {
+			log.Println("authdoi punycode编码错误：", err)
+			return nil, err
+		}
+		request.Authorization.Doi = authdoi
+	}
+
+	if request.WhoisData != nil {
+		// punycode编码
+		whoisdoi, err := Encode_Punycode(request.WhoisData.Doi)
+		if err != nil {
+			log.Println("whoisdoi punycode编码错误：", err)
+			return nil, err
+		}
+		request.WhoisData.Doi = whoisdoi
+	}
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
 	disurl := c.DisHost + "/dip/dis-r/doi/update"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
@@ -150,6 +238,22 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 
 // 数据对象属性删除
 func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) (*idl.ApiDisResponse, error) {
+	// punycode编码
+	doi, err := Encode_Punycode(request.Doi)
+	if err != nil {
+		log.Println("doi punycode编码错误：", err)
+		return nil, err
+	}
+	request.Doi = doi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
 	disurl := c.DisHost + "/dip/dis-r/doi/delete"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
@@ -194,6 +298,30 @@ func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) 
 
 // 授权发起
 func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	datadoi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		log.Println("datadoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DataDoi = datadoi
+
+	// punycode编码
+	authdoi, err := Encode_Punycode(request.Authorization.Doi)
+	if err != nil {
+		log.Println("authdoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.Authorization.Doi = authdoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
 	disurl := c.DisHost + "/dip/dis-x/auth/init"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
@@ -237,6 +365,30 @@ func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) 
 
 // 授权确认
 func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	datadoi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		log.Println("datadoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DataDoi = datadoi
+
+	// punycode编码
+	authdoi, err := Encode_Punycode(request.Authorization.Doi)
+	if err != nil {
+		log.Println("authdoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.Authorization.Doi = authdoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
 	disurl := c.DisHost + "/dip/dis-x/auth/confirm"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
@@ -279,6 +431,30 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 }
 
 func (c *Client) ApiAuthRevoke(ctx *gin.Context, request *idl.ApiAuthRevRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	datadoi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		log.Println("datadoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DataDoi = datadoi
+
+	// punycode编码
+	dudoi, err := Encode_Punycode(request.DuDoi)
+	if err != nil {
+		log.Println("dudoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DuDoi = dudoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
 	disurl := c.DisHost + "/dip/dis-x/auth/revoke"
 	method := constants.POST
 	payload := strings.NewReader(converter.ToString(request))
