@@ -77,6 +77,12 @@ type ApiRegDataQueryResponse struct {
 	Data   *RegistrationData `json:"data,omitempty"`
 }
 
+// 数据对象TX ID查询
+type ApiTransactionInfoRequest struct {
+	DataDoi           string `json:"data_doi"`
+	IDL.SignatureData        //统一共用的加签验签结构，字段均为必填项
+}
+
 // 数据对象属性查询
 type SearchType string
 
