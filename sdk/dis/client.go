@@ -236,6 +236,66 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 	return response, nil
 }
 
+//查询transaction
+func (c *Client) ApiTranscationGet(ctx *gin.Context, request *idl.ApiTransactionInfoRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	doi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		log.Println("doi punycode编码错误：", err)
+		return nil, err
+	}
+	request.DataDoi = doi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
+	disurl := c.DisHost + "/transcationinfo/get"
+	method := constants.GET
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Code != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("update response", response)
+	return response, nil
+}
+
 // 数据对象属性删除
 func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) (*idl.ApiDisResponse, error) {
 	// punycode编码
