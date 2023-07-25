@@ -1089,17 +1089,17 @@ func TestClient_ApiAuthRev(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthRevRequest{
-					DataDoi: "14test1_data.viv.cn.",
-					DuDoi:   "14test2.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
+					DuDoi:   "15test2.viv.cn.",
 					Fields: map[string]string{
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "14test2.viv.cn.",
+						OperatorDoi:    "15test2.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("14test2.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test2.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -1119,17 +1119,17 @@ func TestClient_ApiAuthRev(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiAuthRevRequest{
-					DataDoi: "14test1_data.viv.cn.",
-					DuDoi:   "14test3.viv.cn.",
+					DataDoi: "15test1_data.viv.cn.",
+					DuDoi:   "15test3.viv.cn.",
 					Fields: map[string]string{
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
 					SignatureData: IDL.SignatureData{
-						OperatorDoi:    "14test1.viv.cn.",
+						OperatorDoi:    "15test1.viv.cn.",
 						SignatureNonce: "123456",
 						Signature: func() string {
-							sign, _ := IDL.NewSignatureData().SetOperator("14test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							sign, _ := IDL.NewSignatureData().SetOperator("15test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
