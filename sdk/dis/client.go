@@ -254,7 +254,7 @@ func (c *Client) ApiTranscationGet(ctx *gin.Context, request *idl.ApiTransaction
 	}
 	request.SignatureData.OperatorDoi = operatordoi
 
-	disurl := c.DisHost + "/transcationinfo/get"
+	disurl := c.DisHost + "/dip/dis-r/transcationinfo/get"
 	method := constants.GET
 	payload := strings.NewReader(converter.ToString(request))
 
