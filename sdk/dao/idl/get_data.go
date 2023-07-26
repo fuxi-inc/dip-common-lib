@@ -3,6 +3,7 @@ package idl
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
@@ -30,9 +31,11 @@ type GetDataResponse struct {
 }
 
 type GetDataResponseData struct {
-	IsAccessible bool   `json:"is_accessible"`
-	DataContent  string `json:"data_content"`
-	EncryptedKey string `json:"encrypted_key"`
+	IsAccessible    bool            `json:"is_accessible"`
+	DataContent     string          `json:"data_content"`
+	EncryptedKey    string          `json:"encrypted_key"`
+	TransactionInfo interface{}     `json:"transaction_info"`
+	Digest          *idl.DataDigest `json:"digest"`
 }
 
 func (r *GetDataResponse) ToString() string {
