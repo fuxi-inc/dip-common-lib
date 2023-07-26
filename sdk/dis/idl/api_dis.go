@@ -13,24 +13,30 @@ type ApiDisResponse struct {
 
 // 数据对象属性注册
 type ApiDOCreateRequest struct {
-	Doi               string            `json:"doi,omitempty"`
-	DwDoi             string            `json:"dw_doi,omitempty"`
-	PubKey            string            `json:"pub_key,omitempty"`
-	WhoisData         *RegistrationData `json:"whois_data,omitempty"` // 类WHOIS注册数据
-	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+	CreateRequestData
+	IDL.SignatureData //统一共用的加签验签结构，字段均为必填项
+}
+
+type CreateRequestData struct {
+	Doi       string            `json:"doi,omitempty"`
+	DwDoi     string            `json:"dw_doi,omitempty"`
+	PubKey    string            `json:"pub_key,omitempty"`
+	WhoisData *RegistrationData `json:"whois_data,omitempty"` // 类WHOIS注册数据
 }
 
 // 数据对象属性批量注册
 type ApiDOCreateBatchRequest struct {
-	Doi               []string            `json:"doi,omitempty"`
-	DwDoi             []string            `json:"dw_doi,omitempty"`
-	PubKey            []string            `json:"pub_key,omitempty"`
-	WhoisData         []*RegistrationData `json:"whois_data,omitempty"` // 类WHOIS注册数据
-	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+	BatchData         []*CreateRequestData `json:"batch_data,omitempty"`
+	IDL.SignatureData                      //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象属性更新
 type ApiDOUpdateRequest struct {
+	UpdateRequestData
+	IDL.SignatureData //统一共用的加签验签结构，字段均为必填项
+}
+
+type UpdateRequestData struct {
 	Doi                      string                    `json:"doi,omitempty"`
 	NewDoi                   string                    `json:"new_doi,omitempty"` // 更新后的DO标识
 	DwDoi                    string                    `json:"dw_doi,omitempty"`  //更新所有者
@@ -40,21 +46,12 @@ type ApiDOUpdateRequest struct {
 	Authorization            *DataAuthorization        `json:"authorization,omitempty"`          // 授权信息数组
 	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *RegistrationData         `json:"whois_data,omitempty"`             // WHOIS注册数据
-	IDL.SignatureData                                  //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象属性批量更新
 type ApiDOUpdateBatchRequest struct {
-	Doi                      []string                    `json:"doi,omitempty"`
-	NewDoi                   []string                    `json:"new_doi,omitempty"` // 更新后的DO标识
-	DwDoi                    []string                    `json:"dw_doi,omitempty"`  //更新所有者
-	PubKey                   []string                    `json:"pub_key,omitempty"`
-	Dar                      []string                    `json:"dar,omitempty"`                    // DOI地址
-	Digest                   []*DataDigest               `json:"digest,omitempty"`                 // 数据内容摘要
-	Authorization            []*DataAuthorization        `json:"authorization,omitempty"`          // 授权信息数组
-	ClassificationAndGrading []*ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
-	WhoisData                []*RegistrationData         `json:"whois_data,omitempty"`             // WHOIS注册数据
-	IDL.SignatureData                                  //统一共用的加签验签结构，字段均为必填项
+	BatchData         []*UpdateRequestData `json:"batch_data,omitempty"`
+	IDL.SignatureData                      //统一共用的加签验签结构，字段均为必填项
 }
 
 // 数据对象属性删除
@@ -68,7 +65,7 @@ type ApiAuthInitRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
-	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+	IDL.SignatureData                                                    //统一共用的加签验签结构，字段均为必填项
 }
 
 // 授权确认
@@ -76,7 +73,7 @@ type ApiAuthConfRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	Fields            map[string]string `json:"fields,omitempty"`        //扩展字段，用于发送通知
-	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+	IDL.SignatureData                                                    //统一共用的加签验签结构，字段均为必填项
 }
 
 // 授权撤销
@@ -84,7 +81,7 @@ type ApiAuthRevRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
 	DuDoi             string            `json:"du_doi,omitempty"` // 数据使用者DOI
 	Fields            map[string]string `json:"fields,omitempty"` //扩展字段，用于发送通知
-	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+	IDL.SignatureData                                             //统一共用的加签验签结构，字段均为必填项
 }
 
 type ApiRegDataRequest struct {
