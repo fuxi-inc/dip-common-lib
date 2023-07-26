@@ -241,7 +241,7 @@ func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransaction
 	// punycode编码
 	doi, err := Encode_Punycode(request.DataDoi)
 	if err != nil {
-		log.Println("doi punycode编码错误：", err)
+		c.Logger.Error(fmt.Sprintf("doi punycode编码错误:%s", err.Error()))
 		return nil, err
 	}
 	request.DataDoi = doi
@@ -249,7 +249,7 @@ func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransaction
 	// punycode编码
 	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
 	if err != nil {
-		log.Println("operatordoi punycode编码错误：", err)
+		c.Logger.Error(fmt.Sprintf("operatordoi punycode编码错误:%s", err.Error()))
 		return nil, err
 	}
 	request.SignatureData.OperatorDoi = operatordoi
@@ -283,7 +283,6 @@ func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransaction
 
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
-
 	if err != nil {
 		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
 		return nil, err
@@ -293,6 +292,7 @@ func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransaction
 		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
 	}
 	fmt.Println("update response", response)
+	c.Logger.Info(fmt.Sprintf("update response, %s", converter.ToString(response)))
 	return response, nil
 }
 
