@@ -140,7 +140,82 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 
 // TODO：数据对象属性批量注册
 func (c *Client) ApiDOCreateBatch(ctx *gin.Context, request *idl.ApiDOCreateBatchRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+	for _, value := range request.BatchData {
+		// punycode编码
+		doi, err := Encode_Punycode(value.Doi)
+		if err != nil {
+			log.Println("doi punycode编码错误：", err)
+			return nil, err
+		}
+		value.Doi = doi
+
+		// punycode编码
+		dwdoi, err := Encode_Punycode(value.DwDoi)
+		if err != nil {
+			log.Println("dwdoi punycode编码错误：", err)
+			return nil, err
+		}
+		value.DwDoi = dwdoi
+		if value.WhoisData != nil {
+			// punycode编码
+			whoisdoi, err := Encode_Punycode(value.WhoisData.Doi)
+			if err != nil {
+				log.Println("whoisdoi punycode编码错误：", err)
+				return nil, err
+			}
+			value.WhoisData.Doi = whoisdoi
+		}
+	}
+
+	disurl := c.DisHost + "/dip/dis-r/doi/batchregister"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+	fmt.Println("body", string(body), res.StatusCode)
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", response.Errmsg)
+	}
+	fmt.Println("reponse", response)
+	return response, nil
+
 }
 
 // 数据对象属性更新
@@ -243,7 +318,101 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 
 // TODO：数据对象属性批量更新
 func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatchRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		log.Println("operatordoi punycode编码错误：", err)
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+	for _, value := range request.BatchData {
+		// punycode编码
+		doi, err := Encode_Punycode(value.Doi)
+		if err != nil {
+			log.Println("doi punycode编码错误：", err)
+			return nil, err
+		}
+		value.Doi = doi
+
+		// punycode编码
+		if value.NewDoi != "" {
+			newdoi, err := Encode_Punycode(value.NewDoi)
+			if err != nil {
+				log.Println("newdoi punycode编码错误：", err)
+				return nil, err
+			}
+			value.NewDoi = newdoi
+		}
+
+		// punycode编码
+		dwdoi, err := Encode_Punycode(value.DwDoi)
+		if err != nil {
+			log.Println("dwdoi punycode编码错误：", err)
+			return nil, err
+		}
+		value.DwDoi = dwdoi
+
+		if value.Authorization != nil {
+			// punycode编码
+			authdoi, err := Encode_Punycode(value.Authorization.Doi)
+			if err != nil {
+				log.Println("authdoi punycode编码错误：", err)
+				return nil, err
+			}
+			value.Authorization.Doi = authdoi
+		}
+
+		if value.WhoisData != nil {
+			// punycode编码
+			whoisdoi, err := Encode_Punycode(value.WhoisData.Doi)
+			if err != nil {
+				log.Println("whoisdoi punycode编码错误：", err)
+				return nil, err
+			}
+			value.WhoisData.Doi = whoisdoi
+		}
+	}
+	disurl := c.DisHost + "/dip/dis-r/doi/batchupdate"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	//req.Header.Add(constants.HeaderAuthorization, "<Authorization>")
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("update response", response)
+	return response, nil
 }
 
 //查询transaction
