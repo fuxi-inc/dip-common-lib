@@ -138,6 +138,11 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 
 }
 
+// TODO：数据对象属性批量注册
+func (c *Client) ApiDOCreateBatch(ctx *gin.Context, request *idl.ApiDOCreateBatchRequest) (*idl.ApiDisResponse, error) {
+	return response, nil
+}
+
 // 数据对象属性更新
 func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) (*idl.ApiDisResponse, error) {
 	// punycode编码
@@ -233,6 +238,11 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
 	}
 	fmt.Println("update response", response)
+	return response, nil
+}
+
+// TODO：数据对象属性批量更新
+func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatchRequest) (*idl.ApiDisResponse, error) {
 	return response, nil
 }
 
