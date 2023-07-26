@@ -8,7 +8,9 @@ import (
 	"crypto/x509"
 	"encoding/hex"
 	"fmt"
+
 	"github.com/google/uuid"
+	"golang.org/x/net/idna"
 )
 
 type SignatureData struct {
@@ -63,7 +65,10 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 		return "", err
 	}
 	h := sha256.New()
-	originData := s.genSignOriginData()
+	originData, err := s.genSignOriginData()
+	if err != nil {
+		return "", err
+	}
 	h.Write([]byte(originData))
 	hash := h.Sum(nil)
 	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey.(*rsa.PrivateKey), crypto.SHA256, hash)
@@ -95,10 +100,19 @@ func (s *SignatureData) VerifySignature(pubKey string) error {
 		return err
 	}
 	hash := sha256.New()
-	hash.Write([]byte(s.genSignOriginData()))
+	originData, err := s.genSignOriginData()
+	if err != nil {
+		return err
+	}
+	hash.Write([]byte(originData))
 	return rsa.VerifyPKCS1v15(pub.(*rsa.PublicKey), crypto.SHA256, hash.Sum(nil), sign)
 }
 
-func (s *SignatureData) genSignOriginData() string {
-	return s.OperatorDoi + s.SignatureNonce
+func (s *SignatureData) genSignOriginData() (string, error) {
+	operatorDoi, err := idna.ToASCII(s.OperatorDoi)
+	if err != nil {
+		fmt.Println("Punycode encoding error:", err)
+		return "", err
+	}
+	return operatorDoi + s.SignatureNonce, nil
 }
