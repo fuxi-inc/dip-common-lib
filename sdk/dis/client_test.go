@@ -1209,7 +1209,7 @@ func TestClient_ApiTxGet(t *testing.T) {
 				DisQHost: tt.fields.DisQHost,
 				DaoHost:  tt.fields.DaoHost,
 			}
-			got, err := c.ApiTranscationGet(tt.args.ctx, tt.args.request)
+			got, err := c.ApiTransactionGet(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name:", tt.name)
 			log.Println("-->response:", converter.ToString(got))
 			log.Println("-->request:", converter.ToString(tt.args.request))

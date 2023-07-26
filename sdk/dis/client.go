@@ -237,7 +237,7 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 }
 
 //查询transaction
-func (c *Client) ApiTranscationGet(ctx *gin.Context, request *idl.ApiTransactionInfoRequest) (*IDL.CommonResponse, error) {
+func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransactionInfoRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
 	doi, err := Encode_Punycode(request.DataDoi)
 	if err != nil {
