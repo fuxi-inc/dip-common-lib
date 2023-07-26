@@ -128,7 +128,7 @@ func Test_DOCreate2(t *testing.T) {
 
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test3.viv.cn."
+	sign.OperatorDoi = "张三二.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -137,12 +137,12 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "25test3.viv.cn.",
+		Doi:     "张三二.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "25test3.viv.cn.",
-		DwDoi:         "25test3.viv.cn.",
+		Doi:           "张三二.viv.cn.",
+		DwDoi:         "张三二.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -166,7 +166,7 @@ func Test_DOCreate3(t *testing.T) {
 
 func Test_DOCreate4(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test1.viv.cn."
+	sign.OperatorDoi = "125test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -175,12 +175,12 @@ func Test_DOCreate4(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "25test1_data.viv.cn.",
+		Doi:     "125test1.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "25test1_data.viv.cn.",
-		DwDoi:         "25test1.viv.cn.",
+		Doi:           "125test1.viv.cn.",
+		DwDoi:         "125test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
