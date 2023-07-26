@@ -44,6 +44,7 @@ type ApiDOUpdateRequest struct {
 	Authorization            *DataAuthorization        `json:"authorization,omitempty"`          // 授权信息数组
 	ClassificationAndGrading *ClassificationAndGrading `json:"classification_grading,omitempty"` // 数据分类分级信息
 	WhoisData                *RegistrationData         `json:"whois_data,omitempty"`             // WHOIS注册数据	IDL.SignatureData //统一共用的加签验签结构，字段均为必填项
+	IDL.SignatureData                                                                            //统一共用的加签验签结构，字段均为必填项
 }
 
 type UpdateRequestData struct {
