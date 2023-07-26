@@ -13,10 +13,11 @@ type ApiDisResponse struct {
 
 // 数据对象属性注册
 type ApiDOCreateRequest struct {
-	Doi       string            `json:"doi,omitempty"`
-	DwDoi     string            `json:"dw_doi,omitempty"`
-	PubKey    string            `json:"pub_key,omitempty"`
-	WhoisData *RegistrationData `json:"whois_data,omitempty"` // 类WHOIS注册数据	IDL.SignatureData //统一共用的加签验签结构，字段均为必填项
+	Doi               string            `json:"doi,omitempty"`
+	DwDoi             string            `json:"dw_doi,omitempty"`
+	PubKey            string            `json:"pub_key,omitempty"`
+	WhoisData         *RegistrationData `json:"whois_data,omitempty"` // 类WHOIS注册数据
+	IDL.SignatureData                                                 //统一共用的加签验签结构，字段均为必填项
 }
 
 type CreateRequestData struct {
