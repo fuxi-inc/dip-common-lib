@@ -138,7 +138,7 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 
 }
 
-// TODO：数据对象属性批量注册
+// 数据对象属性批量注册
 func (c *Client) ApiDOCreateBatch(ctx *gin.Context, request *idl.ApiDOCreateBatchRequest) (*idl.ApiDisResponse, error) {
 
 	// punycode编码
@@ -316,7 +316,7 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 	return response, nil
 }
 
-// TODO：数据对象属性批量更新
+// 数据对象属性批量更新
 func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatchRequest) (*idl.ApiDisResponse, error) {
 
 	// punycode编码
@@ -415,7 +415,12 @@ func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatc
 	return response, nil
 }
 
-//查询transaction
+// TODO: WHOIS数据更新
+func (c *Client) ApiRegistrationDataUpdate(ctx *gin.Context, request *idl.ApiRegistrationDataUpdateRequest) (*idl.ApiDisResponse, error) {
+	return nil, nil
+}
+
+// 查询transaction
 func (c *Client) ApiTransactionGet(ctx *gin.Context, request *idl.ApiTransactionInfoRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
 	doi, err := Encode_Punycode(request.DataDoi)
