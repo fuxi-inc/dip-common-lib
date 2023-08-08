@@ -166,7 +166,6 @@ func (s *ApiDOQueryRequest) ToString() string {
 
 // ADD:WHOIS数据更新
 type ApiWhoisUpdateRequest struct {
-	Doi               string            `json:"doi,omitempty"`
 	WhoisData         *RegistrationData `json:"whois_data,omitempty"` // WHOIS注册数据
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
