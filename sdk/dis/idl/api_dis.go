@@ -71,9 +71,9 @@ type ApiDODeleteRequest struct {
 	IDL.SignatureData        //统一共用的加签验签结构，字段均为必填项
 }
 
-// TODO: WHOIS数据更新
-type ApiRegistrationDataUpdateRequest struct {
-}
+// // TODO: WHOIS数据更新
+// type ApiRegistrationDataUpdateRequest struct {
+// }
 
 // 授权发起
 type ApiAuthInitRequest struct {

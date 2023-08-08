@@ -416,8 +416,54 @@ func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatc
 }
 
 // TODO: WHOIS数据更新
-func (c *Client) ApiRegistrationDataUpdate(ctx *gin.Context, request *idl.ApiRegistrationDataUpdateRequest) (*idl.ApiDisResponse, error) {
-	return nil, nil
+func (c *Client) ApiRegistrationDataUpdate(ctx *gin.Context, request *idl.ApiWhoisUpdateRequest) (*idl.ApiDisResponse, error) {
+	// punycode编码
+	doi, err := Encode_Punycode(request.WhoisData.Doi)
+	if err != nil {
+		log.Println("doi punycode编码错误：", err)
+		return nil, err
+	}
+	request.WhoisData.Doi = doi
+
+	disurl := c.DisHost + "/dip/dis-w/whois/update"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprint("Error creating request, error:%s", err.Error()))
+		return nil, err
+	}
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do, error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll, error:%s", err.Error()))
+		return nil, err
+	}
+
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("update response", response)
+	return response, nil
 }
 
 // 查询transaction
