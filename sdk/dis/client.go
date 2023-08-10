@@ -433,7 +433,7 @@ func (c *Client) ApiRegistrationDataUpdate(ctx *gin.Context, request *idl.ApiWho
 	req, err := http.NewRequest(method, disurl, payload)
 
 	if err != nil {
-		c.Logger.Error(fmt.Sprint("Error creating request, error:%s", err.Error()))
+		c.Logger.Error(fmt.Sprintf("Error creating request, error:%s", err.Error()))
 		return nil, err
 	}
 	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
