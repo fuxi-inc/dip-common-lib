@@ -1532,7 +1532,7 @@ func TestClient_ApiRegistrationDataUpdate(t *testing.T) {
 			name: "[应用测试用户] 更新whois信息",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://192.168.10.246:8991",
+				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -1593,7 +1593,7 @@ func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 			name: "[应用测试用户] 注册用户",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://192.168.10.246:8991",
+				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
