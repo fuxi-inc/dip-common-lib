@@ -416,7 +416,7 @@ func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatc
 }
 
 // 注册数据查询
-func (c *Client) ApiRegDataQuery(ctx *gin.Context, request *idl.ApiRegDataRequest) (*IDL.CommonResponse, error) {
+func (c *Client) ApiGetRegistrationData(ctx *gin.Context, request *idl.ApiRegDataRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
 	doi, err := Encode_Punycode(request.DataDoi)
 	if err != nil {
