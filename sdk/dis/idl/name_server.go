@@ -17,7 +17,3 @@ type ZoneData struct {
 	Identifier      string            `json:"identifier"`
 	ResourceRecords []*ResourceRecord `json:"resource_records"`
 }
-
-type SOAIncreKeyResponse struct {
-	Keys []string `json:"keys"`
-}
