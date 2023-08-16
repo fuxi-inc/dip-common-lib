@@ -1571,6 +1571,60 @@ func TestClient_ApiRegistrationDataUpdate(t *testing.T) {
 	}
 }
 
+func TestClient_ApiGetRegistrationData(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiRegDataRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 获取whois信息",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://localhost:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiRegDataRequest{
+					DataDoi: "whois.viv.cn.",
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiGetRegistrationData(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+
+	}
+}
+
 func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 	type fields struct {
 		Logger   *zap.Logger
@@ -1593,7 +1647,7 @@ func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 			name: "[应用测试用户] 注册用户",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://localhost:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
