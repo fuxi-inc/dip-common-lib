@@ -1481,7 +1481,7 @@ func TestClient_ApiDOQuery(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOQueryRequest{
-					Doi: "alice_create_by_lyl_dao.viv.cn.",
+					Doi: "iscdtd2023080885624.iscdtd.viv.cn.",
 					Type: []idl.SearchType{
 						idl.ClassGrade,
 						idl.Owner,
