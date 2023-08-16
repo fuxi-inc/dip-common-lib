@@ -904,7 +904,7 @@ func (c *Client) ApiDOQuery(ctx *gin.Context, request *idl.ApiDOQueryRequest) (*
 		log.Println("读取响应内容失败:", err)
 		return nil, err
 	}
-
+	c.Logger.Info(fmt.Sprintf("[dis-ApiDOQuery] request=%s, response=%s", url, string(body)))
 	// log.Println("7test-return body", string(body))
 
 	// TODO: 需要测试返回是否在成功
