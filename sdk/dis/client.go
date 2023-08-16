@@ -757,6 +757,7 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 		return nil, err
 	}
 
+	c.Logger.Info(fmt.Sprintf("[dis-ApiAuthConf] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
 
@@ -822,6 +823,7 @@ func (c *Client) ApiAuthRevoke(ctx *gin.Context, request *idl.ApiAuthRevRequest)
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[dis-ApiAuthRevoke] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
