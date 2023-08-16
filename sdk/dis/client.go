@@ -121,6 +121,8 @@ func (c *Client) ApiDOCreate(ctx *gin.Context, request *idl.ApiDOCreateRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[dis-ApiDOCreate] request=%s, response=%s", converter.ToString(request), string(body)))
+
 	fmt.Println("body", string(body), res.StatusCode)
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
@@ -300,6 +302,7 @@ func (c *Client) ApiDOUpdate(ctx *gin.Context, request *idl.ApiDOUpdateRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[dis-ApiDOUpdate] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
