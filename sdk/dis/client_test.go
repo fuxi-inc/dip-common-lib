@@ -632,6 +632,7 @@ func Test_DODelete(t *testing.T) {
 
 		SignatureData: sign,
 	}
+	log.Println("request:", converter.ToString(request))
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称

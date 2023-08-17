@@ -203,7 +203,8 @@ func (c *Client) ApiDOCreateBatch(ctx *gin.Context, request *idl.ApiDOCreateBatc
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
-	fmt.Println("body", string(body), res.StatusCode)
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiDOCreateBatch] request=%s, response=%s", converter.ToString(request), string(body)))
+
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
 
@@ -402,6 +403,7 @@ func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatc
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiDOUpdateBatch] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
@@ -453,6 +455,7 @@ func (c *Client) ApiGetRegistrationData(ctx *gin.Context, request *idl.ApiRegDat
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll, error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiGetRegistrationData] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
@@ -505,6 +508,7 @@ func (c *Client) ApiRegistrationDataUpdate(ctx *gin.Context, request *idl.ApiWho
 		return nil, err
 	}
 
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiRegistrationDataUpdate] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
 
@@ -624,6 +628,7 @@ func (c *Client) ApiDODelete(ctx *gin.Context, request *idl.ApiDODeleteRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiDODelete] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
@@ -692,6 +697,7 @@ func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiAuthInit] request=%s, response=%s", converter.ToString(request), string(body)))
 
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
@@ -759,7 +765,6 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
 		return nil, err
 	}
-
 	c.Logger.Info(fmt.Sprintf("[dis-ApiAuthConf] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
@@ -1075,6 +1080,7 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 		log.Println("读取响应内容失败:", err)
 		return nil, err
 	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiDOAuthQuery] request=%s, response=%s", url, string(body)))
 
 	// TODO: 需要测试返回是否在成功
 	var m doqueryresponse
