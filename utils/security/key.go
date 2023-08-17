@@ -89,3 +89,21 @@ func HmacSHA1(data, key string) string {
 	mac.Write([]byte(data))
 	return strings.ToUpper(hex.EncodeToString(mac.Sum(nil)))
 }
+
+// RSAEncrypt 使用 RSA 公钥对数据进行加密
+func RSAEncrypt(bytes []byte, publicKey *rsa.PublicKey) (string, error) {
+	encryptData, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, bytes)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(encryptData), nil
+}
+
+// RSADecrypt 使用 RSA 私钥对数据进行解密
+func RSADecrypt(ciphertext string, privateKey *rsa.PrivateKey) ([]byte, error) {
+	decoded, err := base64.StdEncoding.DecodeString(ciphertext)
+	if err != nil {
+		return nil, err
+	}
+	return rsa.DecryptPKCS1v15(rand.Reader, privateKey, decoded)
+}
