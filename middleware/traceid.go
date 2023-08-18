@@ -3,8 +3,10 @@ package middleware
 import (
 	"crypto/md5"
 	"fmt"
+	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"net/http"
 )
 
 const (
@@ -58,4 +60,11 @@ func AddParentSpanId() gin.HandlerFunc {
 		context.Header(ParentSpanIDKeyName, spanId)
 		context.Next()
 	}
+}
+
+func InitRequestHeaders(ctx *gin.Context, req *http.Request) {
+	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
+	req.Header.Add(ParentSpanIDKeyName, ctx.Request.Header.Get(ParentSpanIDKeyName))
+	req.Header.Add(SpanIDKeyName, ctx.Request.Header.Get(SpanIDKeyName))
+	req.Header.Add(TraceIDKeyName, ctx.Request.Header.Get(TraceIDKeyName))
 }
