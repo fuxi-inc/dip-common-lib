@@ -1,10 +1,12 @@
 package dip_dns
 
 import (
+	"strings"
+	"time"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
-	"strings"
 )
 
 /**
@@ -42,11 +44,14 @@ func (c *Client) GetPublicKey(identifier string) string {
 
 	c.Logger.Info("[GetPublicKey] receive query user key", zap.String("identifier", identifier))
 
+	dnsClient := new(dns.Client)
+	dnsClient.Timeout = 15000 * time.Millisecond
+
 	qtype := dns.TypeCERT
 	req := new(dns.Msg)
 	req.SetQuestion(identifier, qtype)
 	req.SetEdns0(4096, false)
-	msg, err := dns.Exchange(req, c.DnsHost)
+	msg, _, err := dnsClient.Exchange(req, c.DnsHost)
 	if err != nil {
 		c.Logger.Error("[GetPublicKey] dns.Exchange error", zap.String("error", err.Error()))
 		return ""
