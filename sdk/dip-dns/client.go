@@ -49,6 +49,7 @@ func (c *Client) GetPublicKey(identifier string) string {
 
 	qtype := dns.TypeCERT
 	req := new(dns.Msg)
+	req.Zero = true
 	req.SetQuestion(identifier, qtype)
 	req.SetEdns0(4096, false)
 	msg, _, err := dnsClient.Exchange(req, c.DnsHost)
