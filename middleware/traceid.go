@@ -64,7 +64,9 @@ func AddParentSpanId() gin.HandlerFunc {
 
 func InitRequestHeaders(ctx *gin.Context, req *http.Request) {
 	req.Header.Add(constants.HeaderContentType, constants.MIMEApplicationJSON)
-	req.Header.Add(ParentSpanIDKeyName, ctx.Request.Header.Get(ParentSpanIDKeyName))
-	req.Header.Add(SpanIDKeyName, ctx.Request.Header.Get(SpanIDKeyName))
-	req.Header.Add(TraceIDKeyName, ctx.Request.Header.Get(TraceIDKeyName))
+	if ctx.Request != nil {
+		req.Header.Add(ParentSpanIDKeyName, ctx.Request.Header.Get(ParentSpanIDKeyName))
+		req.Header.Add(SpanIDKeyName, ctx.Request.Header.Get(SpanIDKeyName))
+		req.Header.Add(TraceIDKeyName, ctx.Request.Header.Get(TraceIDKeyName))
+	}
 }
