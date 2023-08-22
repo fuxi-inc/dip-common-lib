@@ -27,9 +27,9 @@ func (s AuthorizationType) IsUser() bool {
 
 func (s AuthorizationType) IsController() bool {
 	var op uint8
-	biu.ReadBinaryString("11000000", &op)
+	biu.ReadBinaryString("01000000", &op)
 	num := s.ToUInt8() & op
-	return num <= 0
+	return num > 0
 }
 
 type AuthorizationType uint8
