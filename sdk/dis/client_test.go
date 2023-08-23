@@ -74,7 +74,7 @@ func Test_DOCreate(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -112,7 +112,7 @@ func Test_DOCreate2(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -128,7 +128,7 @@ func Test_DOCreate2(t *testing.T) {
 
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "张三二.viv.cn."
+	sign.OperatorDoi = "25test3.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -137,12 +137,12 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "张三二.viv.cn.",
+		Doi:     "25test3.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "张三二.viv.cn.",
-		DwDoi:         "张三二.viv.cn.",
+		Doi:           "25test3.viv.cn.",
+		DwDoi:         "25test3.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -150,7 +150,7 @@ func Test_DOCreate3(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -166,7 +166,7 @@ func Test_DOCreate3(t *testing.T) {
 
 func Test_DOCreate4(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "125test1.viv.cn."
+	sign.OperatorDoi = "25test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -175,12 +175,12 @@ func Test_DOCreate4(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "125test1.viv.cn.",
+		Doi:     "25test1_data.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "125test1.viv.cn.",
-		DwDoi:         "125test1.viv.cn.",
+		Doi:           "25test1_data.viv.cn.",
+		DwDoi:         "25test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -188,7 +188,45 @@ func Test_DOCreate4(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.232:8991")
+
+	// 执行被测试的函数
+	ctx := &gin.Context{}
+	response, err := client.ApiDOCreate(ctx, request)
+	print(response.Errmsg)
+	// 断言函数返回的错误为 nil
+	assert.Nil(t, err)
+
+	// 判断 Errno 是否为 0
+	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+
+}
+
+func Test_DOCreate5(t *testing.T) {
+	sign := IDL.SignatureData{}
+	sign.OperatorDoi = "25test1.viv.cn."
+	sign.SignatureNonce = "123456"
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+	if err != nil {
+		print(err.Error())
+	}
+	assert.Nil(t, err)
+	sign.Signature = Signature
+	whois := &idl.RegistrationData{
+		Doi:     "data.viv.cn.",
+		Contact: []string{"http://www.baidu.com"},
+	}
+	request := &idl.ApiDOCreateRequest{
+		Doi:           "data.viv.cn.",
+		DwDoi:         "25test1.viv.cn.",
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+		WhoisData:     whois,
+		SignatureData: sign,
+	}
+	client := NewClient().
+		InitLogger(zap.NewExample()).
+		// TODO: 添加disq的host名称
+		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -861,7 +899,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			name: "Du授权测试用例",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -904,7 +942,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			name: "Dw授权测试用例",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -978,7 +1016,7 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			name: "TestClient_DwApiAuthConf",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -1010,7 +1048,7 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			name: "TestClient_DuApiAuthConf",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
