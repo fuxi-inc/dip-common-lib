@@ -104,23 +104,32 @@ func (c *Client) GetDataOwner(identifier string) string {
 		c.Logger.Error("[GetDataOwner] failed to find the ownerID", zap.String("identity_identifier", identifier))
 		return ""
 	}
-	a := msg.Answer[0]
+	// a := msg.Answer[0]
+	var owners string
+	for index, a := range msg.Answer {
+		if index == 0 {
+			owners = ""
+		} else {
+			owners += ","
+		}
 
-	tmp := strings.TrimPrefix(a.String(), a.Header().String())
-	slice := strings.Split(tmp, " ")
-	if len(slice) != 2 {
-		c.Logger.Error("[GetDataOwner] failed to split the ownerID from the answer RR", zap.String("answer", tmp))
-		return ""
+		tmp := strings.TrimPrefix(a.String(), a.Header().String())
+		slice := strings.Split(tmp, " ")
+		if len(slice) != 2 {
+			c.Logger.Error("[GetDataOwner] failed to split the ownerID from the answer RR", zap.String("answer", tmp))
+			return ""
+		}
+
+		tmp = strings.Trim(slice[0], "\"")
+
+		tmp2 := strings.Split(tmp, "data")
+		if len(tmp2) > 2 {
+			c.Logger.Error("[GetDataOwner] failed to split the ownerID from the whole name", zap.String("answer", tmp))
+			return ""
+		}
+		c.Logger.Info("[GetDataOwner] receive query user key response", zap.String("identifier", identifier), zap.String("response", tmp2[0]))
+		owners += tmp2[0]
 	}
 
-	tmp = strings.Trim(slice[0], "\"")
-
-	tmp2 := strings.Split(tmp, "data")
-	if len(tmp2) > 2 {
-		c.Logger.Error("[GetDataOwner] failed to split the ownerID from the whole name", zap.String("answer", tmp))
-		return ""
-	}
-	c.Logger.Info("[GetDataOwner] receive query user key response", zap.String("identifier", identifier), zap.String("response", tmp2[0]))
-
-	return tmp2[0]
+	return owners
 }
