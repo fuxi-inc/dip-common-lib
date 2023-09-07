@@ -1,6 +1,7 @@
 package testpkg
 
 import (
+	"encoding/base64"
 	"io/ioutil"
 	"path"
 	"runtime"
@@ -17,4 +18,11 @@ func GetMockDataContent(fp string) []byte {
 
 	data, _ := ioutil.ReadFile(dir + fp)
 	return data
+}
+
+func Base64DecodeFile(sourceFile, destFile string) error {
+	fileContent, _ := ioutil.ReadFile(sourceFile)
+	destContent := make([]byte, base64.StdEncoding.DecodedLen(len(string(fileContent))))
+	base64.StdEncoding.Decode(destContent, fileContent)
+	return ioutil.WriteFile(destFile, destContent, 0644)
 }

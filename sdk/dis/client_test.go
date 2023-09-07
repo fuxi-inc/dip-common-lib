@@ -1532,6 +1532,28 @@ func TestClient_ApiDOQuery(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+		{
+			name: "[Online] 查询数岛",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://registryservice-api.dis.fuxizhiku.org.cn",
+				DisQHost: "http://resolverservice-api.dis.fuxizhiku.org.cn",
+				DaoHost:  "http://127.0.0.1:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "ISCDTD20230906402800_image.viv.cn.",
+					Type: []idl.SearchType{
+						idl.Dar,
+						idl.ClassGrade,
+						idl.Owner,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1712,7 +1734,7 @@ func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 			name: "[应用测试用户] 注册知库用户",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://39.107.177.1:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -1725,7 +1747,7 @@ func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 					WhoisData: &idl.RegistrationData{
 						Doi: "zhiku.viv.cn.",
 						Contact: []string{
-							"http://fxkb.fuxiinstitution.org.cn/fxkb/platform/dis-agency/callback",
+							"http://adminapi.fuxizhiku.org.cn/fxkb/platform/dis-agency/callback",
 						},
 					},
 					SignatureData: *IDL.NewSignatureDataWithSign("zhiku.viv.cn.", "308204bf020100300d06092a864886f70d0101010500048204a9308204a5020100028201010099c15ef5017c2c3ee8f9c278f6107e03755b2dc85eeff54e3f5d08cf53a26fe61c05a3dc8b71d7f2929d5c60699e8f9a4f30b12322617eb0682db2658216f1246e3babf70263f457205edbb42f43519cba5ae6e1fff8c4e667538577306a18e1340978dba673efed8f2224f7b9d5310e9aaef3f5095d613c0f42dcfcd7dfb8642b9d5674b0c0e8c0ce33fdfd744e5d593b0ba29ab2d69cd0c2e7ec76746223492755d57c1b3829f4cb5e5f86963f11939ae973c22eacfc193199110ee72345548bf3ce2b92ff9e6396f9b060a8b8c66e9559a64f6066c2f5594a722ca3b4c2205c1f14fef731ef142e1897741abb23308fc733cc966170a68edee435476b712902030100010282010100869db1e8aae32fcde8a67ba8f22f205520d3b2b2e2c40eaef2751ef87e8e1290926a31bc2f6e7e16485d73fa899ea4b602ad6bf989e9784535010557305dabc52caa1bf688e6409063ac0989a973b42997536d1fe3bfc78cbe5c76d712d1617512dd542e637ed04ada6d979638e2ba2fc22879394978b36025307251012443c83c9055a9dc023da6c926c01c74064b884610d4e30b7324979f6aa1be6c82540e930de013bfaced48a00fb90a9ee8fc7ba31f617f7ccb4c5be1f67a7e9d503559bd46948e1cda624cc53e071f3b5f943c31a438a56a5c6a6a36b6f43a0d1d2ba65a4f192ba3329f4d0a97c0bbbc9a72a31b67ac54c7523a57070be39058bd83fd02818100cb5798dc3ba7abc5e87840116e2207caafd948f7ad085987a9f91bd4d93e446d4c069fe842ee0c5d0caba33f219352aae0528b54d0538aa1754ab239d4573709af3a361efc0e18f954cad9f17b6b3be977abc9737598e7eacdd9986177f66aa1713dcef1d9fc0660c29982c4df8c046ec2a7433b9e087553f8e11844e26ab80f02818100c19274c70ac4061c95444600d07bde351d0ede179c58cfdff834c7cd352e5edb658a3d58c65f924973ae0f2d89eb291f6ba33938e5125a1d769d6b19e842e788fa4dbff34700df69bbee54ab27efbd0d7acc8d73069d21c47d189d5c9b7ca0e3fe8ff7ebe8d5cbb85522cf4cf103a4220a9c4c4b43a2ecba49eaebe7b3ba4b4702818069fb7812a18d1cbc8413d8e0bcd443d7629c0fa9f7a7b8723b27395850fa6153ce224dca12c85bed4ba351ec9fa5579af45c517e9d2e4dbd25930f1d910cfc04b22dd6f383501db82677abec6ef54f3eba3ef13a9a7a5db646203989e3aaad9d0396c17bd0afc8eb39c22524539778dff9d88ff44cc3ffd30a8ed7c55f755c05028181008cca6c3b753e1c3fdfe577911212760d65a431af349d781cabd81fd6c6ae8279cb01e01ad8b61c9d66111ca2ffa45615af6159b6630e9512c6fa3a32eeb6f2d6b34fa7a457697015e485b57983a3a07ad46d41187f9ffc3680d24d6a550131b882a7ce27fd02bb98c7fb7891badeee1b80622c2fb5f323815f5009e34ddadaf302818100ad1748dc78df1ede04e23c5ae03cf219b6d105454193c28e25c918e2949fe684adbeab4479a82f445b5c6621d89c475b3f49d004192d1ccd202ca295f4dea30f065d7ee48b449aa3676fdcbff11efa240a81c8693e1e2479dd95d876463635f17f1457436cbf94e7445860f2710d3c7395f46aefd3be2f8aab20ef673f0a438f"),
