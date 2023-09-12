@@ -15,8 +15,8 @@ func TestBase64DecodeFile(t *testing.T) {
 		{
 			name: "Test Case 1",
 			args: args{
-				sourceFile: "./mock_data/data/ISCDTD20230906402800.dipx",
-				destFile:   "./mock_data/data/ISCDTD20230906402800.png",
+				sourceFile: "./mock_data/data/ISCDTD20230906402800_image.viv.cn.dipx",
+				destFile:   "./mock_data/data/ISCDTD20230906402800_image.viv.cn.dipx.png",
 			},
 			wantErr: false,
 		},
