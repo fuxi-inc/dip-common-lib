@@ -10,6 +10,7 @@ import (
 
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
+	"github.com/go-resty/resty/v2"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
@@ -50,9 +51,23 @@ func GetPrivKeyString() string {
 	return keybase64
 
 }
+
+func Test_ZoneUpdate(t *testing.T) {
+	ori := "viv.cn."
+	dis_hub_address := "http://192.168.10.246:8991"
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		Get(dis_hub_address + "/dip/dis-r/name_server/zone_redis/" + ori)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("resp: %v\n", resp)
+
+}
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test1.viv.cn."
+	sign.OperatorDoi = "25test111.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -61,12 +76,12 @@ func Test_DOCreate(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "25test1.viv.cn.",
+		Doi:     "25test111.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "25test1.viv.cn.",
-		DwDoi:         "25test1.viv.cn.",
+		Doi:           "25test111.viv.cn.",
+		DwDoi:         "25test111.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -74,7 +89,7 @@ func Test_DOCreate(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://localhost:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -112,7 +127,7 @@ func Test_DOCreate2(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://localhost:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -188,7 +203,7 @@ func Test_DOCreate4(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.246:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
