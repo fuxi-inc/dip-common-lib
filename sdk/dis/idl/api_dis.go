@@ -171,8 +171,6 @@ type ApiWhoisUpdateRequest struct {
 }
 
 type ApiHashManageRequest struct {
-	/* Doi    string      `json:"doi,omitempty"`
-	Digest *DataDigest `json:"digest,omitempty"` */
 }
 
 type ApiWhoisManageRequest struct {

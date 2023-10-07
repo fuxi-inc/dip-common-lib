@@ -4,13 +4,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/middleware"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/fuxi-inc/dip-common-lib/middleware"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
@@ -1132,6 +1133,48 @@ func (c *Client) ApiDOAuthQuery(ctx *gin.Context, request *idl.ApiDOAuthQueryReq
 	response.Errno = IDL.RespCodeType(m.Code)
 	response.Errmsg = m.Msg
 
+	return response, nil
+}
+
+func (c *Client) ApiHashManagement(ctx *gin.Context, request *idl.ApiHashManageRequest) (*idl.ApiDisResponse, error) {
+	disurl := c.DisHost + "/dip/dis-r/hash/manage"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request, error:%s", err.Error()))
+		return nil, err
+	}
+	middleware.InitRequestHeaders(ctx, req)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do, error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll, error:%s", err.Error()))
+		return nil, err
+	}
+
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiRegistrationDataUpdate] request=%s, response=%s", converter.ToString(request), string(body)))
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("update response", response)
 	return response, nil
 }
 
