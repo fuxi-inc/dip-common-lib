@@ -89,7 +89,11 @@ func Test_DOCreate(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
+<<<<<<< HEAD
 		InitDis("http://localhost:8991")
+=======
+		InitDis("http://192.168.10.232:8991")
+>>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -127,7 +131,11 @@ func Test_DOCreate2(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
+<<<<<<< HEAD
 		InitDis("http://localhost:8991")
+=======
+		InitDis("http://192.168.10.232:8991")
+>>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -143,7 +151,7 @@ func Test_DOCreate2(t *testing.T) {
 
 func Test_DOCreate3(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "张三二.viv.cn."
+	sign.OperatorDoi = "25test3.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -152,12 +160,12 @@ func Test_DOCreate3(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "张三二.viv.cn.",
+		Doi:     "25test3.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "张三二.viv.cn.",
-		DwDoi:         "张三二.viv.cn.",
+		Doi:           "25test3.viv.cn.",
+		DwDoi:         "25test3.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -165,7 +173,7 @@ func Test_DOCreate3(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -181,7 +189,7 @@ func Test_DOCreate3(t *testing.T) {
 
 func Test_DOCreate4(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "125test1.viv.cn."
+	sign.OperatorDoi = "25test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -190,12 +198,12 @@ func Test_DOCreate4(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "125test1.viv.cn.",
+		Doi:     "25test1_data.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "125test1.viv.cn.",
-		DwDoi:         "125test1.viv.cn.",
+		Doi:           "25test1_data.viv.cn.",
+		DwDoi:         "25test1.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -203,7 +211,49 @@ func Test_DOCreate4(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
+<<<<<<< HEAD
 		InitDis("http://192.168.10.246:8991")
+=======
+		InitDis("http://192.168.10.232:8991")
+
+	// 执行被测试的函数
+	ctx := &gin.Context{}
+	response, err := client.ApiDOCreate(ctx, request)
+	print(response.Errmsg)
+	// 断言函数返回的错误为 nil
+	assert.Nil(t, err)
+
+	// 判断 Errno 是否为 0
+	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
+
+}
+
+func Test_DOCreate5(t *testing.T) {
+	sign := IDL.SignatureData{}
+	sign.OperatorDoi = "25test1.viv.cn."
+	sign.SignatureNonce = "123456"
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+	if err != nil {
+		print(err.Error())
+	}
+	assert.Nil(t, err)
+	sign.Signature = Signature
+	whois := &idl.RegistrationData{
+		Doi:     "data.viv.cn.",
+		Contact: []string{"http://www.baidu.com"},
+	}
+	request := &idl.ApiDOCreateRequest{
+		Doi:           "data.viv.cn.",
+		DwDoi:         "25test1.viv.cn.",
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+		WhoisData:     whois,
+		SignatureData: sign,
+	}
+	client := NewClient().
+		InitLogger(zap.NewExample()).
+		// TODO: 添加disq的host名称
+		InitDis("http://192.168.10.232:8991")
+>>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -876,7 +926,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			name: "Du授权测试用例",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -919,7 +969,7 @@ func TestClient_ApiAuthInit(t *testing.T) {
 			name: "Dw授权测试用例",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -945,6 +995,45 @@ func TestClient_ApiAuthInit(t *testing.T) {
 						SignatureNonce: "123456",
 						Signature: func() string {
 							sign, _ := IDL.NewSignatureData().SetOperator("25test1.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户-代理修改权限] 授权",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthInitRequest{
+					DataDoi: "update_user_a_file_aa.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "update_user_b.viv.cn.",
+						Type: idl.UserAuthType,
+						Description: &idl.PermissionDescription{
+							PermissionDoi: "update_user_a_permission_aa.viv.cn.",
+							CreatorDoi:    "update_user_a.viv.cn.",
+							Key:           "",
+						},
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "update_user_a.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("update_user_a.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -993,7 +1082,7 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			name: "TestClient_DwApiAuthConf",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -1025,7 +1114,7 @@ func TestClient_ApiAuthConf(t *testing.T) {
 			name: "TestClient_DuApiAuthConf",
 			fields: fields{
 				Logger:   zap.NewExample(),
-				DisHost:  "http://39.107.180.231:8991",
+				DisHost:  "http://192.168.10.232:8991",
 				DisQHost: "",
 				DaoHost:  "",
 			},
@@ -1051,6 +1140,45 @@ func TestClient_ApiAuthConf(t *testing.T) {
 						SignatureNonce: "123456",
 						Signature: func() string {
 							sign, _ := IDL.NewSignatureData().SetOperator("25test3.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							return sign
+						}(),
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户-代理修改权限]确认授权",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiAuthConfRequest{
+					DataDoi: "update_user_a_file_aa.viv.cn.",
+					Authorization: idl.DataAuthorization{
+						Doi:  "update_user_b.viv.cn.",
+						Type: idl.UserAuthType,
+						Confirmation: func() string {
+							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+							fmt.Println("SignByPK-->:", sign, err)
+							return sign
+						}(),
+					},
+					Fields: map[string]string{
+						"testkey1": "testkeya",
+						"testkey2": "testkeyb",
+					},
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "update_user_b.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("update_user_b.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 							return sign
 						}(),
 					},
@@ -1428,6 +1556,26 @@ func TestClient_ApiDOUpdate(t *testing.T) {
 			want:    nil,
 			wantErr: nil,
 		},
+
+		{
+			name: "[应用测试用户-代理修改权限]更新测试数据的dar",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOUpdateRequest{
+					Doi:           "update_user_a_file_aa.viv.cn.",
+					Dar:           "http://www.google.com",
+					SignatureData: *IDL.NewSignatureDataWithSign("update_user_c.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1492,17 +1640,40 @@ func TestClient_ApiDOQuery(t *testing.T) {
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "http://39.107.180.231:8053",
-				DaoHost:  "http://127.0.0.1:8990",
+				DaoHost:  "http://39.107.180.231:8990",
 			},
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiDOQueryRequest{
-					Doi: "iscdtd2023080885624.iscdtd.viv.cn.",
+					Doi: "update_user_a_file.viv.cn.",
 					Type: []idl.SearchType{
+						//idl.ClassGrade,
+						//idl.Owner,
+						//idl.PubKey,
+						idl.Dar,
+					},
+					DirectQuery: true,
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[Online] 查询数岛",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://registryservice-api.dis.fuxizhiku.org.cn",
+				DisQHost: "http://resolverservice-api.dis.fuxizhiku.org.cn",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOQueryRequest{
+					Doi: "update_user_a_file.viv.cn.",
+					Type: []idl.SearchType{
+						idl.Dar,
 						idl.ClassGrade,
 						idl.Owner,
-						idl.PubKey,
-						idl.Dar,
 					},
 				},
 			},
@@ -1680,6 +1851,59 @@ func TestClient_ApiDOCreateforWhoisTest(t *testing.T) {
 						},
 					},
 					SignatureData: *IDL.NewSignatureDataWithSign("whois.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "[应用测试用户] 注册知库用户",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.177.1:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:    "zhiku.viv.cn.",
+					DwDoi:  "zhiku.viv.cn.",
+					PubKey: "30820122300d06092a864886f70d01010105000382010f003082010a028201010099c15ef5017c2c3ee8f9c278f6107e03755b2dc85eeff54e3f5d08cf53a26fe61c05a3dc8b71d7f2929d5c60699e8f9a4f30b12322617eb0682db2658216f1246e3babf70263f457205edbb42f43519cba5ae6e1fff8c4e667538577306a18e1340978dba673efed8f2224f7b9d5310e9aaef3f5095d613c0f42dcfcd7dfb8642b9d5674b0c0e8c0ce33fdfd744e5d593b0ba29ab2d69cd0c2e7ec76746223492755d57c1b3829f4cb5e5f86963f11939ae973c22eacfc193199110ee72345548bf3ce2b92ff9e6396f9b060a8b8c66e9559a64f6066c2f5594a722ca3b4c2205c1f14fef731ef142e1897741abb23308fc733cc966170a68edee435476b71290203010001",
+					WhoisData: &idl.RegistrationData{
+						Doi: "zhiku.viv.cn.",
+						Contact: []string{
+							"http://adminapi.fuxizhiku.org.cn/fxkb/platform/dis-agency/callback",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("zhiku.viv.cn.", "308204bf020100300d06092a864886f70d0101010500048204a9308204a5020100028201010099c15ef5017c2c3ee8f9c278f6107e03755b2dc85eeff54e3f5d08cf53a26fe61c05a3dc8b71d7f2929d5c60699e8f9a4f30b12322617eb0682db2658216f1246e3babf70263f457205edbb42f43519cba5ae6e1fff8c4e667538577306a18e1340978dba673efed8f2224f7b9d5310e9aaef3f5095d613c0f42dcfcd7dfb8642b9d5674b0c0e8c0ce33fdfd744e5d593b0ba29ab2d69cd0c2e7ec76746223492755d57c1b3829f4cb5e5f86963f11939ae973c22eacfc193199110ee72345548bf3ce2b92ff9e6396f9b060a8b8c66e9559a64f6066c2f5594a722ca3b4c2205c1f14fef731ef142e1897741abb23308fc733cc966170a68edee435476b712902030100010282010100869db1e8aae32fcde8a67ba8f22f205520d3b2b2e2c40eaef2751ef87e8e1290926a31bc2f6e7e16485d73fa899ea4b602ad6bf989e9784535010557305dabc52caa1bf688e6409063ac0989a973b42997536d1fe3bfc78cbe5c76d712d1617512dd542e637ed04ada6d979638e2ba2fc22879394978b36025307251012443c83c9055a9dc023da6c926c01c74064b884610d4e30b7324979f6aa1be6c82540e930de013bfaced48a00fb90a9ee8fc7ba31f617f7ccb4c5be1f67a7e9d503559bd46948e1cda624cc53e071f3b5f943c31a438a56a5c6a6a36b6f43a0d1d2ba65a4f192ba3329f4d0a97c0bbbc9a72a31b67ac54c7523a57070be39058bd83fd02818100cb5798dc3ba7abc5e87840116e2207caafd948f7ad085987a9f91bd4d93e446d4c069fe842ee0c5d0caba33f219352aae0528b54d0538aa1754ab239d4573709af3a361efc0e18f954cad9f17b6b3be977abc9737598e7eacdd9986177f66aa1713dcef1d9fc0660c29982c4df8c046ec2a7433b9e087553f8e11844e26ab80f02818100c19274c70ac4061c95444600d07bde351d0ede179c58cfdff834c7cd352e5edb658a3d58c65f924973ae0f2d89eb291f6ba33938e5125a1d769d6b19e842e788fa4dbff34700df69bbee54ab27efbd0d7acc8d73069d21c47d189d5c9b7ca0e3fe8ff7ebe8d5cbb85522cf4cf103a4220a9c4c4b43a2ecba49eaebe7b3ba4b4702818069fb7812a18d1cbc8413d8e0bcd443d7629c0fa9f7a7b8723b27395850fa6153ce224dca12c85bed4ba351ec9fa5579af45c517e9d2e4dbd25930f1d910cfc04b22dd6f383501db82677abec6ef54f3eba3ef13a9a7a5db646203989e3aaad9d0396c17bd0afc8eb39c22524539778dff9d88ff44cc3ffd30a8ed7c55f755c05028181008cca6c3b753e1c3fdfe577911212760d65a431af349d781cabd81fd6c6ae8279cb01e01ad8b61c9d66111ca2ffa45615af6159b6630e9512c6fa3a32eeb6f2d6b34fa7a457697015e485b57983a3a07ad46d41187f9ffc3680d24d6a550131b882a7ce27fd02bb98c7fb7891badeee1b80622c2fb5f323815f5009e34ddadaf302818100ad1748dc78df1ede04e23c5ae03cf219b6d105454193c28e25c918e2949fe684adbeab4479a82f445b5c6621d89c475b3f49d004192d1ccd202ca295f4dea30f065d7ee48b449aa3676fdcbff11efa240a81c8693e1e2479dd95d876463635f17f1457436cbf94e7445860f2710d3c7395f46aefd3be2f8aab20ef673f0a438f"),
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+
+		{
+			name: "[应用测试用户-代理修改权限] 注册用户",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDOCreateRequest{
+					Doi:    "update_user_c.viv.cn.",
+					DwDoi:  "update_user_c.viv.cn.",
+					PubKey: string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					WhoisData: &idl.RegistrationData{
+						Doi: "update_user_c.viv.cn.",
+						Contact: []string{
+							"https://segmentfault.com/q/1010000043984824",
+						},
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("update_user_c.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
 			want:    nil,

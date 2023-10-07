@@ -59,6 +59,7 @@ func (s *SignatureData) CreateSignature(prvKey string) (string, error) {
 		fmt.Println(err)
 		return "", err
 	}
+
 	privateKey, err := x509.ParsePKCS8PrivateKey(keyBytes)
 	if err != nil {
 		fmt.Println("ParsePKCS8PrivateKey err", err)

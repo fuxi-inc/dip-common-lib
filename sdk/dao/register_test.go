@@ -34,6 +34,14 @@ func TestClient_Register(t *testing.T) {
 		ExpiredAt:    IDL.NewTime(IDL.NowTime().Add(time.Hour * 24 * 365 * 10)),
 	}
 
+	updatePermission := &idl.Permission{
+		Operations:   34, //0000100010
+		AlgorithmDOI: "",
+		Weight:       100,
+		StartAt:      IDL.NowTime(),
+		ExpiredAt:    IDL.NewTime(IDL.NowTime().Add(time.Hour * 24 * 365 * 10)),
+	}
+
 	//defaultSubjectArticlePermission := &idl.Permission{
 	//	Operations:   256,
 	//	AlgorithmDOI: "",
@@ -388,41 +396,78 @@ func TestClient_Register(t *testing.T) {
 		//	wantErr: false,
 		//},
 		//
-		//{
-		//	name: "创建空文件",
-		//	fields: fields{
-		//		Logger:   zap.NewExample(),
-		//		DisHost:  "http://39.107.180.231:8991",
-		//		DisQHost: "",
-		//		DaoHost:  "http://127.0.0.1:8990",
-		//	},
-		//	args: args{
-		//		ctx: &gin.Context{},
-		//		request: &idl.RegisterDataRequest{
-		//			Doi:      "encryption_file_empty.viv.cn.",
-		//			DwDoi:    "alice_create_by_lyl.viv.cn.",
-		//			PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
-		//			Content:  "",
-		//			FilePath: "/file/encryption_file_empty.dipx",
-		//			Digest: &idl2.DataDigest{
-		//				Algorithm: "SHA256",
-		//				Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(encryptionContent))),
-		//			},
-		//			Confirmation: func() string {
-		//				sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(encryptionContent)))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
-		//				fmt.Println("SignByPK-->:", sign, err)
-		//				return sign
-		//			}(),
-		//			SecretKey: "",
-		//			ClassificationAndGrading: &idl2.ClassificationAndGrading{
-		//				Class: 0,
-		//				Grade: 0,
-		//			},
-		//			SignatureData: *IDL.NewSignatureDataWithSign("alice_create_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
-		//		},
-		//	},
-		//	wantErr: false,
-		//},
+		{
+			name: "[应用测试用户-代理修改权限]创建文件",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.RegisterDataRequest{
+					Doi:      "update_user_a_file_aa.viv.cn.",
+					DwDoi:    "update_user_a.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  "abcdefghijklmn",
+					FilePath: "/file/update_user_a_file_aa.dipx",
+					Digest: &idl2.DataDigest{
+						Algorithm: "SHA256",
+						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte("abcdefghijklmn"))),
+					},
+					Confirmation: func() string {
+						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte("abcdefghijklmn")))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+						fmt.Println("SignByPK-->:", sign, err)
+						return sign
+					}(),
+					SecretKey: "",
+					ClassificationAndGrading: &idl2.ClassificationAndGrading{
+						Class: 0,
+						Grade: 0,
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("update_user_a.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			wantErr: false,
+		},
+
+		{
+			name: "[应用测试用户-代理修改权限] 构建默认专题文章的读取权限",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://39.107.180.231:8991",
+				DisQHost: "",
+				DaoHost:  "http://39.107.180.231:8990",
+			},
+			args: args{
+				ctx:     &gin.Context{},
+				permObj: updatePermission,
+				request: &idl.RegisterDataRequest{
+					Doi:      "update_user_a_permission_aa.viv.cn.",
+					DwDoi:    "update_user_a.viv.cn.",
+					PubKey:   string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+					Content:  (updatePermission.ToString()),
+					FilePath: "/permission/update_user_a_permission_aa.data",
+					Digest: &idl2.DataDigest{
+						Algorithm: "SHA256",
+						Result:    base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(updatePermission.ToString()))),
+					},
+					Confirmation: func() string {
+						sign, err := IDL.NewSignatureData().SetOperator("").SetNonce(base64.StdEncoding.EncodeToString(security.Sha256Hash([]byte(updatePermission.ToString())))).CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+						fmt.Println("SignByPK-->:", sign, err)
+						return sign
+					}(),
+					SecretKey: "",
+					ClassificationAndGrading: &idl2.ClassificationAndGrading{
+						Class: 0,
+						Grade: 0,
+					},
+					SignatureData: *IDL.NewSignatureDataWithSign("update_user_a.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

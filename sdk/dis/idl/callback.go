@@ -37,10 +37,7 @@ func (r *CallbackData) Send(ctx *gin.Context, url string) (*ApiDisResponse, erro
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add(middleware.TraceIDKeyName, ctx.GetHeader(middleware.TraceIDKeyName))
-	req.Header.Add(middleware.SpanIDKeyName, ctx.GetHeader(middleware.SpanIDKeyName))
-	req.Header.Add(middleware.ParentSpanIDKeyName, ctx.GetHeader(middleware.ParentSpanIDKeyName))
+	middleware.InitRequestHeaders(ctx, req)
 
 	res, err := client.Do(req)
 	if err != nil {
