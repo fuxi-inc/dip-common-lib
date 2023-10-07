@@ -169,3 +169,8 @@ type ApiWhoisUpdateRequest struct {
 	WhoisData         *RegistrationData `json:"whois_data,omitempty"` // WHOIS注册数据
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
+
+type ApiHashManageRequest struct {
+	/* Doi    string      `json:"doi,omitempty"`
+	Digest *DataDigest `json:"digest,omitempty"` */
+}

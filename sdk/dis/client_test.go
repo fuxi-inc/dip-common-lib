@@ -89,11 +89,7 @@ func Test_DOCreate(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-<<<<<<< HEAD
 		InitDis("http://localhost:8991")
-=======
-		InitDis("http://192.168.10.232:8991")
->>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -131,11 +127,7 @@ func Test_DOCreate2(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-<<<<<<< HEAD
 		InitDis("http://localhost:8991")
-=======
-		InitDis("http://192.168.10.232:8991")
->>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -211,9 +203,6 @@ func Test_DOCreate4(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-<<<<<<< HEAD
-		InitDis("http://192.168.10.246:8991")
-=======
 		InitDis("http://192.168.10.232:8991")
 
 	// 执行被测试的函数
@@ -253,7 +242,6 @@ func Test_DOCreate5(t *testing.T) {
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
 		InitDis("http://192.168.10.232:8991")
->>>>>>> b8fcd4ae1bb8c3bb607444cc64dcabbbb67ed3b4
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
