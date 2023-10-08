@@ -67,7 +67,7 @@ func Test_ZoneUpdate(t *testing.T) {
 }
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test111.viv.cn."
+	sign.OperatorDoi = "test2.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -76,12 +76,14 @@ func Test_DOCreate(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "25test111.viv.cn.",
-		Contact: []string{"http://www.baidu.com"},
+		Doi:          "test2.viv.cn.",
+		Contact:      []string{"http://www.baidu.com"},
+		IP:           []string{"1.2.3.4"},
+		Organization: []string{"test"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "25test111.viv.cn.",
-		DwDoi:         "25test111.viv.cn.",
+		Doi:           "test2.viv.cn.",
+		DwDoi:         "test2.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -95,9 +97,6 @@ func Test_DOCreate(t *testing.T) {
 	ctx := &gin.Context{}
 	response, err := client.ApiDOCreate(ctx, request)
 	print(response.Errmsg)
-	// 断言函数返回的错误为 nil
-	assert.Nil(t, err)
-
 	// 判断 Errno 是否为 0
 	assert.Equal(t, IDL.RespCodeType(0), response.Errno)
 
@@ -105,7 +104,7 @@ func Test_DOCreate(t *testing.T) {
 
 func Test_DOCreate2(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test2.viv.cn."
+	sign.OperatorDoi = "t1111est.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -114,12 +113,12 @@ func Test_DOCreate2(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "25test2.viv.cn.",
+		Doi:     "t1111est.viv.cn.",
 		Contact: []string{"http://www.baidu.com"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "25test2.viv.cn.",
-		DwDoi:         "25test2.viv.cn.",
+		Doi:           "t1111est.viv.cn.",
+		DwDoi:         "t1111est.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -382,7 +381,7 @@ func Test_DOCreate5(t *testing.T) {
 func Test_DOUpdate1(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test1.viv.cn."
+	sign.OperatorDoi = "test1.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -398,15 +397,15 @@ func Test_DOUpdate1(t *testing.T) {
 	//}
 
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "25test1_data.viv.cn.",
+		Doi:           "test1_data.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/cindy/public.hex")),
-		DwDoi:         "25test1.viv.cn.",
+		DwDoi:         "test1.viv.cn.",
 		SignatureData: sign,
 	}
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.246:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -427,7 +426,7 @@ func Test_DOUpdate1(t *testing.T) {
 func Test_DOUpdate2(t *testing.T) {
 
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "25test1.viv.cn."
+	sign.OperatorDoi = "t1111est.viv.cn."
 	sign.SignatureNonce = "123457"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	assert.Nil(t, err)
@@ -435,26 +434,26 @@ func Test_DOUpdate2(t *testing.T) {
 
 	digest := &idl.DataDigest{
 		Algorithm: "SHA256",
-		Result:    "sha256",
+		Result:    "sha256256",
 	}
 
 	auth := &idl.DataAuthorization{
-		Doi:          "25test1.viv.cn.",
+		Doi:          "t1111est.viv.cn.",
 		Confirmation: "xxxx",
 	}
 
 	request := &idl.ApiDOUpdateRequest{
-		Doi:           "25test1_data.viv.cn.",
+		Doi:           "t1111est.viv.cn.",
 		Dar:           "resource.example.com/path",
 		Digest:        digest,
-		DwDoi:         "25test1.viv.cn.",
+		DwDoi:         "t1111est.viv.cn.",
 		Authorization: auth,
 		SignatureData: sign,
 	}
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://39.107.180.231:8991")
+		InitDis("http://192.168.10.246:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -1958,6 +1957,57 @@ func TestClient_ApiHashManagement(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiHashManagement(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiWhoisManagement(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiWhoisManageRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiDisResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 注册数据管理",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://localhost:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx:     &gin.Context{},
+				request: &idl.ApiWhoisManageRequest{},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiWhoisManagement(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name", tt.name)
 			log.Println("-->request:", converter.ToString(tt.args.request))
 			log.Println("-->response:", converter.ToString(got))

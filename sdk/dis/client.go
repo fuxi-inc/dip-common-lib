@@ -1162,7 +1162,7 @@ func (c *Client) ApiHashManagement(ctx *gin.Context, request *idl.ApiHashManageR
 		return nil, err
 	}
 
-	c.Logger.Info(fmt.Sprintf("[Dis-ApiRegistrationDataUpdate] request=%s, response=%s", converter.ToString(request), string(body)))
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiHashManagement] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &idl.ApiDisResponse{}
 	err = json.Unmarshal(body, response)
 
@@ -1174,8 +1174,51 @@ func (c *Client) ApiHashManagement(ctx *gin.Context, request *idl.ApiHashManageR
 		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
 		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
 	}
-	fmt.Println("update response", response)
+	fmt.Println("hash manage response", response)
 	return response, nil
+}
+
+func (c *Client) ApiWhoisManagement(ctx *gin.Context, request *idl.ApiWhoisManageRequest) (*idl.ApiDisResponse, error) {
+	disurl := c.DisHost + "/dip/dis-w/whois/manage"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request, error:%s", err.Error()))
+		return nil, err
+	}
+	middleware.InitRequestHeaders(ctx, req)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do, error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll, error:%s", err.Error()))
+		return nil, err
+	}
+
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiWhoisManagement] request=%s, response=%s", converter.ToString(request), string(body)))
+	response := &idl.ApiDisResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Errno != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Errmsg))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("whois manage response", response)
+	return response, nil
+
 }
 
 func Encode_Punycode(name string) (string, error) {
