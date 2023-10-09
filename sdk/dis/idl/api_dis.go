@@ -170,9 +170,13 @@ type ApiWhoisUpdateRequest struct {
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
 
+type ApiWhoisQueryResponse struct {
+	Results []*RegistrationData
+}
+
 // Whois数据查询接口（by org）
 type ApiWhoisByOrgRequest struct {
-	Organization string
+	Organization string `json:"organization,omitempty"`
 }
 
 type ApiHashManageRequest struct {
