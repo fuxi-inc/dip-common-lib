@@ -85,6 +85,15 @@ type ApiExchangeOwnershipRequest struct {
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
 
+// 交换所有权确认
+type ApiConfExchangeOwnershipRequest struct {
+	DataDoi           string            `json:"data_doi,omitempty"`
+	DuKey             string            `json:"du_key,omitempty"`        // du的public_key加密
+	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
+	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
+	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
+}
+
 // 授权发起
 type ApiAuthInitRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
