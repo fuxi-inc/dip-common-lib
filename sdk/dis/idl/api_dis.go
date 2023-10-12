@@ -86,11 +86,10 @@ type ApiExchangeOwnershipRequest struct {
 }
 
 // 交换所有权确认
-type ApiExchangeOwnershipResponse struct {
+type ApiConfExchangeOwnershipRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
 	DuKey             string            `json:"du_key,omitempty"`        // du的public_key加密
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
-	Dar               string            `json:"dar,omitempty"`           // 数据在DAO中的存储地址
 	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
 	IDL.SignatureData                   //统一共用的加签验签结构，字段均为必填项
 }
