@@ -838,7 +838,7 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 }
 
 // 交换所有权确认
-func (c *Client) ApiExchangeOwnershipConf(ctx *gin.Context, request *idl.ApiConfExchangeOwnershipRequest) (*IDL.CommonResponse, error) {
+func (c *Client) ApiExchangeOwnershipConf(ctx *gin.Context, request *idl.ApiExchangeOwnershipRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
 	datadoi, err := Encode_Punycode(request.DataDoi)
 	if err != nil {
