@@ -79,6 +79,7 @@ type ApiDODeleteRequest struct {
 type ApiExchangeOwnershipRequest struct {
 	DataDoi           string            `json:"data_doi,omitempty"`
 	DuDoi             string            `json:"du_doi,omitempty"`
+	DwDoi             string            `json:"dw_doi,omitempty"`
 	Authorization     DataAuthorization `json:"authorization,omitempty"` // 授权信息数组
 	DuDar             string            `json:"du_dar,omitempty"`        // 数据在DAO中的存储地址
 	Fields            map[string]string `json:"fields,omitempty"`        // 扩展字段，用于发送通知
