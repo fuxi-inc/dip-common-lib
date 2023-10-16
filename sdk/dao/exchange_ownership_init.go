@@ -13,7 +13,7 @@ import (
 )
 
 func (c *Client) ExchangeOwnershipInit(ctx *gin.Context, request *idl2.ApiExchangeOwnershipRequest) error {
-	url := c.DaoHost + "/dip/data/confirm_exchange_ownership"
+	url := c.DaoHost + "/dip/data/initiate_exchange_ownership"
 	method := "POST"
 	payload := strings.NewReader(converter.ToString(request))
 

@@ -47,6 +47,14 @@ func TestClient_ExchangeOwnershipConfirm(t *testing.T) {
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
+					Authorization: idl.DataAuthorization{
+						Doi:          "lob22xqwup.viv.cn.",
+						Type:         idl.OwnerAuthType,
+						Confirmation: "xxxx",
+						Description: &idl.PermissionDescription{
+							Key: "",
+						},
+					},
 					SignatureData: *IDL.NewSignatureDataWithSign("lob22xqwup.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex"))),
 				},
 			},

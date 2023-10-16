@@ -47,6 +47,13 @@ func TestClient_ExchangeOwnershipInit(t *testing.T) {
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
+					Authorization: idl.DataAuthorization{
+						Doi:  "lob22xqwup.viv.cn.",
+						Type: idl.OwnerAuthType,
+						Description: &idl.PermissionDescription{
+							Key: "",
+						},
+					},
 					SignatureData: *IDL.NewSignatureDataWithSign("et6vbyylo2.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
