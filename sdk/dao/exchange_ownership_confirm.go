@@ -42,7 +42,7 @@ func (c *Client) ExchangeOwnershipConfirm(ctx *gin.Context, request *idl2.ApiExc
 		return err
 	}
 	if response.Code != 0 {
-		return errors.New("AuthInit return not success," + string(body))
+		return errors.New("ExchangeOwnership confirm return not success," + string(body))
 	}
 	return nil
 }

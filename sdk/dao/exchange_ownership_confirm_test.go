@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"fmt"
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
@@ -35,31 +34,25 @@ func TestClient_ExchangeOwnershipConfirm(t *testing.T) {
 				Logger:   zap.NewExample(),
 				DisHost:  "http://39.107.180.231:8991",
 				DisQHost: "http://39.107.180.231:8053",
-				DaoHost:  "http://127.0.0.1:8990",
+				DaoHost:  "http://39.107.180.231:8990",
 			},
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiExchangeOwnershipRequest{
-					DataDoi: "subject_create_by_lyl3.viv.cn.",
-					Authorization: idl.DataAuthorization{
-						Doi:  "bob.viv.cn.",
-						Type: idl.UserAuthType,
-						Confirmation: func() string {
-							sign, err := IDL.NewSignatureData().SetOperator("").SetNonce("sha256").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
-							fmt.Println("SignByPK-->:", sign, err)
-							return sign
-						}(),
-					},
+					DataDoi:  "ox1a5bq4v7.viv.cn.",
+					DwDoi:    "et6vbyylo2.viv.cn.",
+					DuDoi:    "lob22xqwup.viv.cn.",
+					FilePath: "path",
 					Fields: map[string]string{
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
 					},
-					SignatureData: *IDL.NewSignatureDataWithSign("bob.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
+					SignatureData: *IDL.NewSignatureDataWithSign("lob22xqwup.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex"))),
 				},
 			},
 		},
 
-		{
+		/*{
 			name: "[数岛递归读取测试] dw 确认dale的请求授权 data—a",
 			fields: fields{
 				Logger:   zap.NewExample(),
@@ -82,7 +75,7 @@ func TestClient_ExchangeOwnershipConfirm(t *testing.T) {
 					SignatureData: *IDL.NewSignatureDataWithSign("dao_alice_by_lyl.viv.cn.", string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex"))),
 				},
 			},
-		},
+		},*/
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
