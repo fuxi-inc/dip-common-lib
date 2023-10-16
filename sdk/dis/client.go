@@ -414,7 +414,7 @@ func (c *Client) ApiDOUpdateBatch(ctx *gin.Context, request *idl.ApiDOUpdateBatc
 	return response, nil
 }
 
-// 注册数据查询
+// 注册数据查询（链查询）
 func (c *Client) ApiGetRegistrationData(ctx *gin.Context, request *idl.ApiRegDataRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
 	doi, err := Encode_Punycode(request.DataDoi)
@@ -450,6 +450,59 @@ func (c *Client) ApiGetRegistrationData(ctx *gin.Context, request *idl.ApiRegDat
 	}
 	c.Logger.Info(fmt.Sprintf("[Dis-ApiGetRegistrationData] request=%s, response=%s", converter.ToString(request), string(body)))
 
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if response.Code != 0 {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return nil, fmt.Errorf("Error response.Errno,error:%s", converter.ToString(response))
+	}
+	fmt.Println("update response", response)
+	return response, nil
+}
+
+// WHOIS数据局部查询1：根据org进行查询（mongoDB）
+func (c *Client) ApiGetRegistrationDataByOrg(ctx *gin.Context, request *idl.ApiWhoisByOrgRequest) (*IDL.CommonResponse, error) {
+	org, err := Encode_Punycode(request.Organization)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("org punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.Organization = org
+
+	disurl := c.DisHost + "/dip/dis-w/whois/getwhois_by_org"
+	method := constants.GET
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request, error:%s", err.Error()))
+		return nil, err
+	}
+	middleware.InitRequestHeaders(ctx, req)
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error Client.Do, error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll, error:%s", err.Error()))
+		return nil, err
+	}
+
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiGetRegistrationDataByOrg] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
 

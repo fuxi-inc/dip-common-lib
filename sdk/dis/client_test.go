@@ -104,7 +104,7 @@ func Test_DOCreate(t *testing.T) {
 
 func Test_DOCreate2(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "t1111est.viv.cn."
+	sign.OperatorDoi = "11111112test.viv.cn."
 	sign.SignatureNonce = "123456"
 	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
 	if err != nil {
@@ -113,12 +113,13 @@ func Test_DOCreate2(t *testing.T) {
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:     "t1111est.viv.cn.",
-		Contact: []string{"http://www.baidu.com"},
+		Doi:          "11111112test.viv.cn.",
+		Contact:      []string{"http://www.baidu.com"},
+		Organization: []string{"org1", "org2"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "t1111est.viv.cn.",
-		DwDoi:         "t1111est.viv.cn.",
+		Doi:           "11111112test.viv.cn.",
+		DwDoi:         "11111112test.viv.cn.",
 		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
@@ -1790,6 +1791,60 @@ func TestClient_ApiGetRegistrationData(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiGetRegistrationData(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+
+	}
+}
+
+func TestClient_ApiGetRegistrationDataByOrg(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiWhoisByOrgRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *idl.ApiRegDataQueryResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 根据org获取whois信息",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://localhost:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiWhoisByOrgRequest{
+					Organization: "org2",
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.ApiGetRegistrationDataByOrg(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name", tt.name)
 			log.Println("-->request:", converter.ToString(tt.args.request))
 			log.Println("-->response:", converter.ToString(got))
