@@ -39,10 +39,10 @@ func TestClient_ExchangeOwnershipConfirm(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiExchangeOwnershipRequest{
-					DataDoi:  "ox1a5bq4v7.viv.cn.",
+					DataDoi:  "avueum6yeu.viv.cn.",
 					DwDoi:    "et6vbyylo2.viv.cn.",
 					DuDoi:    "lob22xqwup.viv.cn.",
-					FilePath: "path",
+					FilePath: "path2",
 					Fields: map[string]string{
 						"testkey1": "testkeya",
 						"testkey2": "testkeyb",
