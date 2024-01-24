@@ -12,10 +12,11 @@ import (
 	"strings"
 
 	"github.com/fuxi-inc/dip-common-lib/middleware"
+	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
-	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
