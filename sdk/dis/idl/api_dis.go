@@ -194,3 +194,7 @@ type ApiHashManageRequest struct {
 type ApiWhoisManageRequest struct {
 	/* nothing */
 }
+
+type ApiPublicKeyRequest struct {
+	doi string
+}
