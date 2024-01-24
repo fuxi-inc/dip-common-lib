@@ -753,6 +753,79 @@ func (c *Client) ApiAuthInit(ctx *gin.Context, request *idl.ApiAuthInitRequest) 
 	return response, nil
 }
 
+// 授权发起
+func (c *Client) ApiExchangeOwnershipInit(ctx *gin.Context, request *idl.ApiExchangeOwnershipRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	datadoi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("datadoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.DataDoi = datadoi
+
+	dudoi, err := Encode_Punycode(request.DuDoi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("dudoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.DuDoi = dudoi
+
+	// punycode编码
+	authdoi, err := Encode_Punycode(request.Authorization.Doi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("authdoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.Authorization.Doi = authdoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("operatordoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
+	disurl := c.DisHost + "/dip/dis-x/exchange_ownership/init"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	middleware.InitRequestHeaders(ctx, req)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiAuthInit] request=%s, response=%s", converter.ToString(request), string(body)))
+
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if !response.Code.IsSuccess() {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
+	}
+	return response, nil
+}
+
 // 授权确认
 func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) (*IDL.CommonResponse, error) {
 	// punycode编码
@@ -804,6 +877,71 @@ func (c *Client) ApiAuthConf(ctx *gin.Context, request *idl.ApiAuthConfRequest) 
 		return nil, err
 	}
 	c.Logger.Info(fmt.Sprintf("[dis-ApiAuthConf] request=%s, response=%s", converter.ToString(request), string(body)))
+	response := &IDL.CommonResponse{}
+	err = json.Unmarshal(body, response)
+
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error response.Unmarshal,error:%s", err.Error()))
+		return nil, err
+	}
+	if !response.Code.IsSuccess() {
+		c.Logger.Error(fmt.Sprintf("Error response.Errno,error:%s", response.Message))
+		return response, fmt.Errorf("Error response.Errno,error:%s", response.Message)
+	}
+	return response, nil
+}
+
+// 交换所有权确认
+func (c *Client) ApiExchangeOwnershipConf(ctx *gin.Context, request *idl.ApiExchangeOwnershipRequest) (*IDL.CommonResponse, error) {
+	// punycode编码
+	datadoi, err := Encode_Punycode(request.DataDoi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("datadoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.DataDoi = datadoi
+
+	// punycode编码
+	authdoi, err := Encode_Punycode(request.Authorization.Doi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("authdoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.Authorization.Doi = authdoi
+
+	// punycode编码
+	operatordoi, err := Encode_Punycode(request.SignatureData.OperatorDoi)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("operatordoi punycode编码错误：%s", err.Error()))
+		return nil, err
+	}
+	request.SignatureData.OperatorDoi = operatordoi
+
+	disurl := c.DisHost + "/dip/dis-x/exchangeownership/confirm"
+	method := constants.POST
+	payload := strings.NewReader(converter.ToString(request))
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, disurl, payload)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error creating request,error:%s", err.Error()))
+		return nil, err
+	}
+	middleware.InitRequestHeaders(ctx, req)
+
+	res, err := client.Do(req)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error client.Do,error:%s", err.Error()))
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Error ioutil.ReadAll,error:%s", err.Error()))
+		return nil, err
+	}
+	c.Logger.Info(fmt.Sprintf("[dis-ApiExchangeOwnershipConf] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
 
