@@ -2,7 +2,9 @@ package dip_dns
 
 import (
 	"strings"
+	"time"
 
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 )
@@ -35,50 +37,50 @@ func (c *Client) InitDnsHost(host string) *Client {
 }
 
 // DNS版本
-// func (c *Client) GetPublicKey(identifier string) string {
-// 	if identifier == "" {
-// 		return ""
-// 	}
-// 	identifier = dns.Fqdn(identifier)
+func (c *Client) GetPublicKey(identifier string) string {
+	if identifier == "" {
+		return ""
+	}
+	identifier = dns.Fqdn(identifier)
 
-// 	c.Logger.Info("[GetPublicKey] receive query user key", zap.String("identifier", identifier))
+	c.Logger.Info("[GetPublicKey] receive query user key", zap.String("identifier", identifier))
 
-// 	dnsClient := new(dns.Client)
-// 	dnsClient.Timeout = 15000 * time.Millisecond
+	dnsClient := new(dns.Client)
+	dnsClient.Timeout = 15000 * time.Millisecond
 
-// 	qtype := dns.TypeCERT
-// 	req := new(dns.Msg)
-// 	req.Zero = true
-// 	req.SetQuestion(identifier, qtype)
-// 	req.SetEdns0(4096, false)
-// 	msg, _, err := dnsClient.Exchange(req, c.DnsHost)
-// 	if err != nil {
-// 		c.Logger.Error("[GetPublicKey] dns.Exchange error", zap.String("error", err.Error()))
-// 		return ""
-// 	}
-// 	if msg == nil {
-// 		// 失败：DNS解析无结果
-// 		c.Logger.Error("[GetPublicKey] failed to handle the request", zap.String("req", converter.ToString(req)))
-// 		return ""
-// 	}
+	qtype := dns.TypeCERT
+	req := new(dns.Msg)
+	req.Zero = true
+	req.SetQuestion(identifier, qtype)
+	req.SetEdns0(4096, false)
+	msg, _, err := dnsClient.Exchange(req, c.DnsHost)
+	if err != nil {
+		c.Logger.Error("[GetPublicKey] dns.Exchange error", zap.String("error", err.Error()))
+		return ""
+	}
+	if msg == nil {
+		// 失败：DNS解析无结果
+		c.Logger.Error("[GetPublicKey] failed to handle the request", zap.String("req", converter.ToString(req)))
+		return ""
+	}
 
-// 	if len(msg.Answer) == 0 {
-// 		c.Logger.Error("[GetPublicKey] failed to find the public-key", zap.String("identity_identifier", identifier))
-// 		return ""
-// 	}
-// 	a := msg.Answer[0]
+	if len(msg.Answer) == 0 {
+		c.Logger.Error("[GetPublicKey] failed to find the public-key", zap.String("identity_identifier", identifier))
+		return ""
+	}
+	a := msg.Answer[0]
 
-// 	tmp := strings.TrimPrefix(a.String(), a.Header().String())
-// 	slice := strings.Split(tmp, " ")
-// 	if len(slice) != 4 {
-// 		// 失败：无法从结果RR中获取用户公钥
-// 		c.Logger.Error("[GetPublicKey] failed to split the public-key from the answer RR", zap.String("answer", tmp))
-// 		return ""
-// 	}
+	tmp := strings.TrimPrefix(a.String(), a.Header().String())
+	slice := strings.Split(tmp, " ")
+	if len(slice) != 4 {
+		// 失败：无法从结果RR中获取用户公钥
+		c.Logger.Error("[GetPublicKey] failed to split the public-key from the answer RR", zap.String("answer", tmp))
+		return ""
+	}
 
-// 	c.Logger.Info("[GetPublicKey] receive query user key response", zap.String("identifier", identifier), zap.String("response", slice[3]))
-// 	return slice[3]
-// }
+	c.Logger.Info("[GetPublicKey] receive query user key response", zap.String("identifier", identifier), zap.String("response", slice[3]))
+	return slice[3]
+}
 
 func (c *Client) GetDataOwner(identifier string) string {
 	if identifier == "" {

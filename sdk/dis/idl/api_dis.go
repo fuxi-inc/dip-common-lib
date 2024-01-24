@@ -201,5 +201,9 @@ type ApiWhoisManageRequest struct {
 }
 
 type ApiPublicKeyRequest struct {
-	doi string
+	Doi string `json:"data_doi,omitempty"`
+}
+
+type ApiDataOwnerRequest struct {
+	Doi string `json:"data_doi,omitempty"`
 }
