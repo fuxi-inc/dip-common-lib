@@ -67,24 +67,24 @@ func Test_ZoneUpdate(t *testing.T) {
 }
 func Test_DOCreate(t *testing.T) {
 	sign := IDL.SignatureData{}
-	sign.OperatorDoi = "test2.viv.cn."
+	sign.OperatorDoi = "test.viv.cn."
 	sign.SignatureNonce = "123456"
-	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex")))
 	if err != nil {
 		print(err.Error())
 	}
 	assert.Nil(t, err)
 	sign.Signature = Signature
 	whois := &idl.RegistrationData{
-		Doi:          "test2.viv.cn.",
+		Doi:          "test.viv.cn.",
 		Contact:      []string{"http://www.baidu.com"},
 		IP:           []string{"1.2.3.4"},
 		Organization: []string{"test"},
 	}
 	request := &idl.ApiDOCreateRequest{
-		Doi:           "test2.viv.cn.",
-		DwDoi:         "test2.viv.cn.",
-		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+		Doi:           "test.viv.cn.",
+		DwDoi:         "test.viv.cn.",
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/bob/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
 	}
@@ -106,7 +106,7 @@ func Test_DOCreate2(t *testing.T) {
 	sign := IDL.SignatureData{}
 	sign.OperatorDoi = "11111112test.viv.cn."
 	sign.SignatureNonce = "123456"
-	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/alice/private.hex")))
+	Signature, err := sign.CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex")))
 	if err != nil {
 		print(err.Error())
 	}
@@ -120,7 +120,7 @@ func Test_DOCreate2(t *testing.T) {
 	request := &idl.ApiDOCreateRequest{
 		Doi:           "11111112test.viv.cn.",
 		DwDoi:         "11111112test.viv.cn.",
-		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/alice/public.hex")),
+		PubKey:        string(testpkg.GetMockDataContent("/mock_data/user/bob/public.hex")),
 		WhoisData:     whois,
 		SignatureData: sign,
 	}
@@ -165,7 +165,7 @@ func Test_DOCreate3(t *testing.T) {
 	client := NewClient().
 		InitLogger(zap.NewExample()).
 		// TODO: 添加disq的host名称
-		InitDis("http://192.168.10.232:8991")
+		InitDis("http://192.168.10.246:8991")
 
 	// 执行被测试的函数
 	ctx := &gin.Context{}
@@ -706,7 +706,7 @@ func Test_DOQuery(t *testing.T) {
 	// 设置测试数据
 	request := &idl.ApiDOQueryRequest{
 		// TODO: 设置测试doi
-		Doi: "25test1_data.viv.cn.",
+		Doi: "test235.viv.cn.",
 		Type: []idl.SearchType{
 			idl.Dar,
 			idl.Owner,
@@ -1761,7 +1761,7 @@ func TestClient_ApiGetRegistrationData(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *idl.ApiDisResponse
+		want    *IDL.CommonResponse
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -1775,7 +1775,15 @@ func TestClient_ApiGetRegistrationData(t *testing.T) {
 			args: args{
 				ctx: &gin.Context{},
 				request: &idl.ApiRegDataRequest{
-					DataDoi: "whois.viv.cn.",
+					DataDoi: "test235.viv.cn.",
+					SignatureData: IDL.SignatureData{
+						OperatorDoi:    "test235.viv.cn.",
+						SignatureNonce: "123456",
+						Signature: func() string {
+							sign, _ := IDL.NewSignatureData().SetOperator("test235.viv.cn.").SetNonce("123456").CreateSignature(string(testpkg.GetMockDataContent("/mock_data/user/bob/private.hex")))
+							return sign
+						}(),
+					},
 				},
 			},
 			want:    nil,
@@ -2063,6 +2071,112 @@ func TestClient_ApiWhoisManagement(t *testing.T) {
 				DaoHost:  tt.fields.DaoHost,
 			}
 			got, err := c.ApiWhoisManagement(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiGetPublicKey(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiPublicKeyRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *IDL.CommonResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 获取public Key信息",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://localhost:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiPublicKeyRequest{
+					Doi: "test235.viv.cn.",
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.GetPublicKey(tt.args.ctx, tt.args.request)
+			log.Println("--->test_name", tt.name)
+			log.Println("-->request:", converter.ToString(tt.args.request))
+			log.Println("-->response:", converter.ToString(got))
+			log.Println("-->err:", err)
+		})
+	}
+}
+
+func TestClient_ApiGetDataOwner(t *testing.T) {
+	type fields struct {
+		Logger   *zap.Logger
+		DisHost  string
+		DisQHost string
+		DaoHost  string
+	}
+	type args struct {
+		ctx     *gin.Context
+		request *idl.ApiDataOwnerRequest
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *IDL.CommonResponse
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "[应用测试用户] 获取Data Owner信息",
+			fields: fields{
+				Logger:   zap.NewExample(),
+				DisHost:  "http://localhost:8991",
+				DisQHost: "",
+				DaoHost:  "",
+			},
+			args: args{
+				ctx: &gin.Context{},
+				request: &idl.ApiDataOwnerRequest{
+					Doi: "test.viv.cn.",
+				},
+			},
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{
+				Logger:   tt.fields.Logger,
+				DisHost:  tt.fields.DisHost,
+				DisQHost: tt.fields.DisQHost,
+				DaoHost:  tt.fields.DaoHost,
+			}
+			got, err := c.GetDataOwner(tt.args.ctx, tt.args.request)
 			log.Println("--->test_name", tt.name)
 			log.Println("-->request:", converter.ToString(tt.args.request))
 			log.Println("-->response:", converter.ToString(got))

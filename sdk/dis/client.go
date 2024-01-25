@@ -1504,7 +1504,7 @@ func (c *Client) GetDataOwner(ctx *gin.Context, request *idl.ApiDataOwnerRequest
 		return nil, err
 	}
 
-	c.Logger.Info(fmt.Sprintf("[Dis-ApiGetPublicKey] request=%s, response=%s", converter.ToString(request), string(body)))
+	c.Logger.Info(fmt.Sprintf("[Dis-ApiGetDataOwner] request=%s, response=%s", converter.ToString(request), string(body)))
 	response := &IDL.CommonResponse{}
 	err = json.Unmarshal(body, response)
 
