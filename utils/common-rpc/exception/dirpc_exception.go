@@ -3,12 +3,11 @@ package exception
 import (
 	"errors"
 	"fmt"
+	"github.com/apache/thrift/lib/go/thrift"
 	"io"
 	"net"
 	"os"
 	"syscall"
-
-	"github.com/apache/thrift/lib/go/thrift"
 )
 
 const (
@@ -134,7 +133,8 @@ type tDirpcException struct {
 }
 
 func (e *tDirpcException) TExceptionType() thrift.TExceptionType {
-	return thrift.TExceptionTypeUnknown
+	//TODO implement me
+	panic("implement me")
 }
 
 func (e *tDirpcException) TypeId() int {
@@ -203,12 +203,6 @@ func WithMessage(err error, message string) error {
 	switch v := err.(type) {
 	case TDirpcException:
 		return NewDirpcException(v.TypeId(), message)
-	case thrift.TTransportException:
-		return thrift.NewTTransportException(v.TypeId(), message)
-	case thrift.TProtocolException:
-		return thrift.NewTProtocolExceptionWithType(v.TypeId(), errors.New(message))
-	case thrift.TApplicationException:
-		return thrift.NewTApplicationException(v.TypeId(), message)
 	case timeoutable:
 		if v.Timeout() {
 			return NewDirpcException(DIRPC_SOCKET_TIME_OUT, message)

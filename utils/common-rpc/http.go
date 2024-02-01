@@ -2,6 +2,7 @@ package dirpc
 
 import (
 	"bytes"
+	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/context"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/service"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/utils"
@@ -12,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"runtime"
-	"time"
 )
 
 // NewHttpClient 创建HttpClient,name "http://baidu.com"
@@ -163,34 +163,33 @@ func (c *HttpClient) do(ctx *gin.Context, bodyByte []byte, r *http.Request) (ret
 		return nil, nil, retErr
 	}
 
+	callInfo := &context.CallInfo{}
 	// 获取body
 	if bodyByte != nil {
-		rpcContext.CallInfo.Body = utils.Bytes2str(bodyByte)
+		callInfo.Body = utils.Bytes2str(bodyByte)
 	}
 
-	rpcContext.CallInfo.Path = itfcName
-	rpcContext.CallInfo.Url = r.URL.RequestURI()
+	callInfo.Path = r.URL.Path
+	callInfo.Url = r.URL.RequestURI()
 
+	retryNum := 3
 	for i := 0; i < retryNum+1; i++ {
 		retErr = nil
 		// 第几次重试
-		rpcContext.CallInfo.RetryFlag = i
+		callInfo.RetryFlag = i
 
-		beginTime := time.Now()
-		rpcContext.CallInfo.Ip = addr.Ip
-		urlPath.Host = addr.Addr
-		dialAddr := addr.Addr
+		//beginTime := time.Now()
 
 		var (
-			body    io.ReadCloser
-			latency time.Duration
+			body io.ReadCloser
+			//latency time.Duration
 		)
 		if bodyByte != nil {
 			body = ioutil.NopCloser(bytes.NewReader(bodyByte))
 		}
-		retResp, err := c.doOnceWithHttpResponse(ctx, r.Method, urlPath, body, r.Header, r.ContentLength, callOpts)
+		retResp, err := c.doOnceWithHttpResponse(ctx, r.Method, *r.URL, body, r.Header)
 
-		latency = time.Since(beginTime)
+		//latency = time.Since(beginTime)
 
 		if retResp.StatusCode < 200 || retResp.StatusCode >= 300 {
 			retErr = exception.NewDirpcExceptionf(retResp.StatusCode, "non-2xx response, StatusCode=%d", retResp.StatusCode)
@@ -216,6 +215,22 @@ func (c *HttpClient) doOnceWithHttpResponse(rpcContext *gin.Context, method stri
 		retErr = exception.NewDirpcException(exception.DIRPC_HTTP_CREATE_REQUEST_ERROR, "NewRequest fail")
 		return nil, retErr
 	}
-
+	req.Header = utils.CopyHttpHeader(header)
+	if req.Header.Get("Host") != "" {
+		req.Host = req.Header.Get("Host")
+	}
+	cli := &http.Client{}
+	response, err := cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	return response, nil
+}
+
+func (c *HttpClient) flushLog(msg string) {
+	c.Logger.Info(msg)
+}
+
+func (c *HttpClient) flushErrLog(msg string) {
+	c.Logger.Error(msg)
 }
