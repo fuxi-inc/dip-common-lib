@@ -39,9 +39,7 @@ func TestHttpClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &HttpClient{
-				Logger: tt.fields.Logger,
-			}
+			c := NewHttpClient(tt.fields.Logger)
 			got, err := c.Get(tt.args.ctx, tt.args.uri, tt.args.queryString)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
