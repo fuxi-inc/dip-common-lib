@@ -3,8 +3,9 @@ package converter
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 func MapFieldFormatToString(value map[string]interface{}) map[string]interface{} {
@@ -30,28 +31,27 @@ func MapFieldFormatToString(value map[string]interface{}) map[string]interface{}
 }
 
 // MapStringToStruct 将map[string]string转换为结构体
-//注意result传递的必须是指针，数据将直接解析到result里，请确保result的json tag配置正确
+// 注意result传递的必须是指针，数据将直接解析到result里，请确保result的json tag配置正确
 //
 // Example :
-//   //原始数据
-//   originalData:= map[string]string{
-//      "name" : "bob",
-//      "age" : "100"
-//   }
-//  //所需结构体
-//  type Person struct{
-//     Name string `json:"name"`
-//     Age  int `json:"age,string"`
-//  }
 //
-//  //调用本方法进行解析
-//  bob := &Person{}
-//  MapStringToStruct(originalData,bob)
+//	 //原始数据
+//	 originalData:= map[string]string{
+//	    "name" : "bob",
+//	    "age" : "100"
+//	 }
+//	//所需结构体
+//	type Person struct{
+//	   Name string `json:"name"`
+//	   Age  int `json:"age,string"`
+//	}
 //
-//  //output ,bob解析完毕：
-//  Bob(Person) { Name: "bob", Age : 100}
+//	//调用本方法进行解析
+//	bob := &Person{}
+//	MapStringToStruct(originalData,bob)
 //
-//
+//	//output ,bob解析完毕：
+//	Bob(Person) { Name: "bob", Age : 100}
 func MapStringToStruct(originalData map[string]string, result interface{}) error {
 	v := reflect.ValueOf(result)
 	if v.Kind() != reflect.Struct && v.Kind() != reflect.Ptr {

@@ -2,9 +2,10 @@ package context
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/common"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/config"
-	"net/http"
 )
 
 type Context struct {

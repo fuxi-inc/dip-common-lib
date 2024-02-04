@@ -2,10 +2,11 @@ package metric
 
 import (
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
-	"go.uber.org/zap"
 	"testing"
 	"time"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"go.uber.org/zap"
 )
 
 func TestClient_Push(t *testing.T) {

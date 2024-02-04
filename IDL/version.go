@@ -5,10 +5,12 @@ import (
 )
 
 // VersionString 用于表示一个代表版本号的字符串,支持json tag，可以直接从入参里解析
-//type Request struct{
-//   AppVersion VersionString `json:"app_version"`
-//}
-//注意：初始化不合法的版本号字符串，会报错。比如传递：空字符串:"",错误字符串:"2.s.3xx"
+//
+//	type Request struct{
+//	  AppVersion VersionString `json:"app_version"`
+//	}
+//
+// 注意：初始化不合法的版本号字符串，会报错。比如传递：空字符串:"",错误字符串:"2.s.3xx"
 type VersionString string
 
 // GreaterThan 当前版本号是否"大于"输入版本号

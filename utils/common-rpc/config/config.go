@@ -2,10 +2,11 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
 )
 
 const recvTimeoutMsecMagicNum int = 188

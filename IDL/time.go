@@ -24,20 +24,24 @@ const (
 // Time 时间格式
 //
 // 时区：
-// 		1.当使用Time解析时间字符串:"Y-m-d H:i:s"的时候，都会自动转换为北京时间!
-// 		2.统一使用CST时区,以便和上下游统一
+//
+//	1.当使用Time解析时间字符串:"Y-m-d H:i:s"的时候，都会自动转换为北京时间!
+//	2.统一使用CST时区,以便和上下游统一
 //
 // json解析:
-//       1.在json结构体中使用 Time 会自动进行格式转换，生成对应的时间；比如mysql、rpc、redis的返回值
-// 		 2.默认支持：Y-m-d H:i:s格式，更多格式参考 UnmarshalJSON 以及对应的单测
+//
+//	      1.在json结构体中使用 Time 会自动进行格式转换，生成对应的时间；比如mysql、rpc、redis的返回值
+//			 2.默认支持：Y-m-d H:i:s格式，更多格式参考 UnmarshalJSON 以及对应的单测
 //
 // json编码：
-//       1.Time的数据在进行marshal的时候会自动调用 Format 格式进行设置
+//
+//	1.Time的数据在进行marshal的时候会自动调用 Format 格式进行设置
 //
 // 空时间 EmptyTime:
-//       1.golang的time包不支持解析和编码 EmptyTime 格式的数据，当解析的时候会生成 0001-01-01 00:00:00的时间
-//         但是我们的业务系统明显不期望有这种转换，所以 Time 包会将空时间数据，继续特殊处理为 EmptyTime
-//       2.如果需要判断空时间，使用 IsZero()
+//
+//	1.golang的time包不支持解析和编码 EmptyTime 格式的数据，当解析的时候会生成 0001-01-01 00:00:00的时间
+//	  但是我们的业务系统明显不期望有这种转换，所以 Time 包会将空时间数据，继续特殊处理为 EmptyTime
+//	2.如果需要判断空时间，使用 IsZero()
 type Time struct {
 	innerTime time.Time
 }
@@ -74,14 +78,15 @@ func NewTimeFromString(t string) (*Time, error) {
 }
 
 // UnmarshalJSON
-//支持格式如下：
-//   1. Y-m-d H:i:s 格式的时间字符串,将会按照北京时区解析
-//   2. 秒级别时间戳,字符串/数字："1650445202" / 1650445202
-//   3. 毫秒级时间戳,字符串/数字： "1655976744820" / 1655976744820
-//   4. 毫秒级时间戳,字符串： "1655976744820"
-//   5. 科学计数法格式,字符串/数字： "1.657886194E9",1.657886194E9
-//   6. Y-m-d 格式， 将会按照北京时区解析
-//所以在底层做兼容
+// 支持格式如下：
+//  1. Y-m-d H:i:s 格式的时间字符串,将会按照北京时区解析
+//  2. 秒级别时间戳,字符串/数字："1650445202" / 1650445202
+//  3. 毫秒级时间戳,字符串/数字： "1655976744820" / 1655976744820
+//  4. 毫秒级时间戳,字符串： "1655976744820"
+//  5. 科学计数法格式,字符串/数字： "1.657886194E9",1.657886194E9
+//  6. Y-m-d 格式， 将会按照北京时区解析
+//
+// 所以在底层做兼容
 func (t *Time) UnmarshalJSON(data []byte) (err error) {
 	s := strings.Trim(string(data), "\"")
 	//时间空值情况，有些时间的默认值是"{}"，会导致解码失败
@@ -134,7 +139,7 @@ func (t Time) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(`"%s"`, t.String())), nil
 }
 
-//转换格式，生成的时间格式为: Y-m-d H:i:s
+// 转换格式，生成的时间格式为: Y-m-d H:i:s
 func (t Time) String() string {
 	if t.IsZero() {
 		return EmptyTime
@@ -156,8 +161,8 @@ func (t Time) Timestamp() int64 {
 }
 
 // FormatYmd 按照Ymd格式格式化
-//withSeparator 是否带有分割线，如果为true，则格式为2022-03-18
-//如果为false，不带分割线，比如20220318
+// withSeparator 是否带有分割线，如果为true，则格式为2022-03-18
+// 如果为false，不带分割线，比如20220318
 func (t Time) FormatYmd(withSeparator bool) string {
 	//兼容EmptyTime
 	if t.IsZero() {

@@ -1,10 +1,11 @@
 package dirpc
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"log"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func TestHttpClient_Get(t *testing.T) {

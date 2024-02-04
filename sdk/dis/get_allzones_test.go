@@ -2,9 +2,10 @@ package dis
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"testing"
 )
 
 func TestClient_getAllZones(t *testing.T) {
