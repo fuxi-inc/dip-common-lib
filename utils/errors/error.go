@@ -27,5 +27,8 @@ func (z DErr) ErrMsg() string {
 }
 
 func NewError(err error) *DErr {
+	if err == nil {
+		return NewZError().SetErrmsg(string(debug.Stack()))
+	}
 	return NewZError().SetErrmsg(err.Error() + " " + string(debug.Stack()))
 }
