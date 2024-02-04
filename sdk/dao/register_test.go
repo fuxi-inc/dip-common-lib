@@ -3,6 +3,10 @@ package dao
 import (
 	"encoding/base64"
 	"fmt"
+	"log"
+	"testing"
+	"time"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
 	idl2 "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
@@ -11,9 +15,6 @@ import (
 	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"log"
-	"testing"
-	"time"
 )
 
 func TestClient_Register(t *testing.T) {

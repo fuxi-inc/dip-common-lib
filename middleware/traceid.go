@@ -3,10 +3,11 @@ package middleware
 import (
 	"crypto/md5"
 	"fmt"
+	"net/http"
+
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"net/http"
 )
 
 const (

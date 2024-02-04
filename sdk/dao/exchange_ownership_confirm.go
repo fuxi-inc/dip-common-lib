@@ -2,14 +2,15 @@ package dao
 
 import (
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	idl2 "github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func (c *Client) ExchangeOwnershipConfirm(ctx *gin.Context, request *idl2.ApiExchangeOwnershipRequest) error {

@@ -219,28 +219,28 @@ func fieldToDefaultValue(field reflect.Type) interface{} {
 }
 
 // StructToPHPTransform
-//主要用途：按照php格式的结构体转换函数,主要用于json格式转换的兼容。
-//如果传入的是**结构体指针**不为空，那么返回结构体
-//如果传入的**结构体指针**是nil，那么返回空数组，用于json encode的时候，变成 "[]"
+// 主要用途：按照php格式的结构体转换函数,主要用于json格式转换的兼容。
+// 如果传入的是**结构体指针**不为空，那么返回结构体
+// 如果传入的**结构体指针**是nil，那么返回空数组，用于json encode的时候，变成 "[]"
 //
-//  注意!! 入参必须是结构体指针，其他类型目前不支持，都将返回原本数据
+//	注意!! 入参必须是结构体指针，其他类型目前不支持，都将返回原本数据
 //
-//  Example:
+//	Example:
 //
-//  //创建一个结构体
-//  testData = person{name: "bob", age: 20 }
+//	//创建一个结构体
+//	testData = person{name: "bob", age: 20 }
 //
-//  //传入结构体指针
-//  result := StructToPHPTransform(&testData)
+//	//传入结构体指针
+//	result := StructToPHPTransform(&testData)
 //
-//  //输出结果还是这个结构体指针
-//  //output result = *person{name: "bob", age: 20}
+//	//输出结果还是这个结构体指针
+//	//output result = *person{name: "bob", age: 20}
 //
-//  //但是如果传入一个空指针
-//  result := StructToPHPTransform(nil)
+//	//但是如果传入一个空指针
+//	result := StructToPHPTransform(nil)
 //
-//  //返回值是一个空结构体数组,此时进行json encode，会变成[]
-//  //result = []struct{}
+//	//返回值是一个空结构体数组,此时进行json encode，会变成[]
+//	//result = []struct{}
 func StructToPHPTransform(obj interface{}) interface{} {
 	t := reflect.ValueOf(obj)
 

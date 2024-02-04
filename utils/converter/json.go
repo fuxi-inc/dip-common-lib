@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"strconv"
+
+	"github.com/pkg/errors"
 )
 
 // SafeUnmarshal 如果是数字，则会转化为jsonNumber
@@ -22,20 +23,20 @@ func SafeUnmarshal(str []byte, ret interface{}) error {
 // Unescape 去除json字符串中的转义字符，尤其用于端上传来的某一个参数，是一个json字符串
 // Example:
 //
-//  //1.转义json,不带双引号,无法直接进行 json.Unmarshal, 所以需要进行反转义，返回值为：
-//  input := `{\"name\":\"suitingwei\",\"age\":13}`
-//  //进行反转义, output = {"name":"suitingwei","age":13}
-//  output,_ :=converter.Unescape(input)
+//	//1.转义json,不带双引号,无法直接进行 json.Unmarshal, 所以需要进行反转义，返回值为：
+//	input := `{\"name\":\"suitingwei\",\"age\":13}`
+//	//进行反转义, output = {"name":"suitingwei","age":13}
+//	output,_ :=converter.Unescape(input)
 //
-//  //2.转义json,带双引号
-//  input := `"{\"name\":\"suitingwei\",\"age\":13}"`
-//  //进行反转义, output = {"name":"suitingwei","age":13}
-//  output,_ :=converter.Unescape(input)
+//	//2.转义json,带双引号
+//	input := `"{\"name\":\"suitingwei\",\"age\":13}"`
+//	//进行反转义, output = {"name":"suitingwei","age":13}
+//	output,_ :=converter.Unescape(input)
 //
-//  //3.不是转义的json，直接返回，主要是给一些IDL的 UnmarshalJSON方法提供便利，避免合法的json在这个函数调用后包凑
-//  input := `{"name":"suitingwei","age":13}"`
-//  //进行反转义, output = {"name":"suitingwei","age":13}
-//  output,_ :=converter.Unescape(input)
+//	//3.不是转义的json，直接返回，主要是给一些IDL的 UnmarshalJSON方法提供便利，避免合法的json在这个函数调用后包凑
+//	input := `{"name":"suitingwei","age":13}"`
+//	//进行反转义, output = {"name":"suitingwei","age":13}
+//	output,_ :=converter.Unescape(input)
 //
 // 注意：如果传入的不是转义后的字符串，会返回空
 func Unescape(str string) (string, error) {

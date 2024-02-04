@@ -2,10 +2,11 @@ package dis
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"testing"
 )
 
 func TestClient_getSOA(t *testing.T) {

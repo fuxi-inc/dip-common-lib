@@ -1,13 +1,14 @@
 package dao
 
 import (
+	"log"
+	"testing"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"log"
-	"testing"
 )
 
 func TestClient_ExchangeOwnershipInit(t *testing.T) {

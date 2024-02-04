@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-//Deprecated: Use Context.context instead
+// Deprecated: Use Context.context instead
 type callOptions struct {
 	header             http.Header
 	connectTimeoutMsec *int
@@ -18,17 +18,17 @@ type callOptions struct {
 	fusingProperties   map[string]string
 }
 
-//Deprecated: Use context.Context instead
+// Deprecated: Use context.Context instead
 type CallOption func(*callOptions)
 
-//Deprecated: Use SetFusingProperties instead
+// Deprecated: Use SetFusingProperties instead
 func WithFusingProperties(properties map[string]string) CallOption {
 	return func(opt *callOptions) {
 		opt.fusingProperties = properties
 	}
 }
 
-//Deprecated: Use SetConnectTimeoutMsec instead
+// Deprecated: Use SetConnectTimeoutMsec instead
 func WithConnectTimeoutMsec(tm int) CallOption {
 	return func(opt *callOptions) {
 		localtm := tm
@@ -36,7 +36,7 @@ func WithConnectTimeoutMsec(tm int) CallOption {
 	}
 }
 
-//Deprecated: Use SetTimeoutMsec instead
+// Deprecated: Use SetTimeoutMsec instead
 func WithTimeoutMsec(tm int) CallOption {
 	return func(opt *callOptions) {
 		localtm := tm
@@ -44,7 +44,7 @@ func WithTimeoutMsec(tm int) CallOption {
 	}
 }
 
-//Deprecated: Use SetRetryNum instead
+// Deprecated: Use SetRetryNum instead
 func WithRetry(retry int) CallOption {
 	return func(opt *callOptions) {
 		localRetry := retry
@@ -52,7 +52,7 @@ func WithRetry(retry int) CallOption {
 	}
 }
 
-//Deprecated: Use SetKeepAlive instead
+// Deprecated: Use SetKeepAlive instead
 func WithKeepAlive(keepalive bool) CallOption {
 	return func(opt *callOptions) {
 		localKA := keepalive
@@ -60,7 +60,7 @@ func WithKeepAlive(keepalive bool) CallOption {
 	}
 }
 
-//Deprecated: Use SetRpcCluster instead
+// Deprecated: Use SetRpcCluster instead
 func WithRpcCluster(cluster string) CallOption {
 	return func(opt *callOptions) {
 		localCluster := cluster
@@ -68,7 +68,7 @@ func WithRpcCluster(cluster string) CallOption {
 	}
 }
 
-//Deprecated: Use SetScheme instead
+// Deprecated: Use SetScheme instead
 func WithScheme(scheme string) CallOption {
 	return func(opt *callOptions) {
 		localScheme := scheme
@@ -76,7 +76,7 @@ func WithScheme(scheme string) CallOption {
 	}
 }
 
-//Deprecated: Use SetCACert instead
+// Deprecated: Use SetCACert instead
 func WithCACert(cacert string) CallOption {
 	return func(opt *callOptions) {
 		localCACert := cacert

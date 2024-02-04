@@ -2,6 +2,7 @@ package IDL
 
 import (
 	"encoding/json"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 )
 

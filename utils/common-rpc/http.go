@@ -2,17 +2,18 @@ package dirpc
 
 import (
 	"bytes"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"runtime"
+
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/context"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/service"
 	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"runtime"
 )
 
 // NewHttpClient 创建HttpClient,name "http://baidu.com"
@@ -28,7 +29,8 @@ type HttpClient struct {
 }
 
 // (t *HttpClient) PostForm
-//  发送POST请求，ContentType为application/x-www-form-urlencoded
+//
+//	发送POST请求，ContentType为application/x-www-form-urlencoded
 func (c *HttpClient) PostForm(ctx *gin.Context, uri string, body []byte) ([]byte, error) {
 	return c.Post(ctx, uri, "application/x-www-form-urlencoded", body)
 }
@@ -38,7 +40,8 @@ func (c *HttpClient) PostFormWithResp(ctx *gin.Context, uri string, body []byte)
 }
 
 // (t *HttpClient) PostJson
-//  发送POST请求，ContentType为application/json
+//
+//	发送POST请求，ContentType为application/json
 func (c *HttpClient) PostJson(ctx *gin.Context, uri string, body []byte) ([]byte, error) {
 	return c.Post(ctx, uri, "application/json", body)
 }
@@ -48,8 +51,9 @@ func (c *HttpClient) PostJsonWithResp(ctx *gin.Context, uri string, body []byte)
 }
 
 // (t *HttpClient) Get
-//  发送GET请求
-//  queryString: 不要带?前缀
+//
+//	发送GET请求
+//	queryString: 不要带?前缀
 func (c *HttpClient) Get(ctx *gin.Context, uri string, queryString []byte) ([]byte, error) {
 	urlReq, err := url.Parse(uri)
 	if err != nil {
@@ -85,7 +89,8 @@ func (c *HttpClient) GetWithResp(ctx *gin.Context, uri string, queryString []byt
 }
 
 // (t *HttpClient) Post
-//  发送POST请求
+//
+//	发送POST请求
 func (c *HttpClient) Post(ctx *gin.Context, url string, contentType string, body []byte) ([]byte, error) {
 	r, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
@@ -104,7 +109,7 @@ func (c *HttpClient) PostWithResp(ctx *gin.Context, url string, contentType stri
 	return c.do(ctx, body, r)
 }
 
-func (c *HttpClient) Do(ctx *gin.Context, r *http.Request, ) (retData []byte, retErr error) {
+func (c *HttpClient) Do(ctx *gin.Context, r *http.Request) (retData []byte, retErr error) {
 	// 获取body
 	var bodyByte []byte
 	if r.Body != nil {

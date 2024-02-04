@@ -1,8 +1,9 @@
 package IDL
 
 import (
-	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 	"testing"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/testpkg"
 )
 
 func TestSignatureData_CreateSignature(t *testing.T) {

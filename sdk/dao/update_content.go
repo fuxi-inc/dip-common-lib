@@ -2,13 +2,14 @@ package dao
 
 import (
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func (c *Client) UpdateContent(ctx *gin.Context, request *idl.UpdateDataContentRequest) error {

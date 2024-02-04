@@ -3,17 +3,18 @@ package metric
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/constants"
-	"github.com/fuxi-inc/dip-common-lib/utils/converter"
-	"github.com/fuxi-inc/dip-common-lib/utils/security"
-	"github.com/zeromicro/go-zero/core/netx"
-	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/fuxi-inc/dip-common-lib/constants"
+	"github.com/fuxi-inc/dip-common-lib/utils/converter"
+	"github.com/fuxi-inc/dip-common-lib/utils/security"
+	"github.com/zeromicro/go-zero/core/netx"
+	"go.uber.org/zap"
 )
 
 type MValue struct {

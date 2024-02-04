@@ -3,14 +3,15 @@ package context
 import (
 	"bytes"
 	"fmt"
-	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/config"
-	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/config"
+	"github.com/fuxi-inc/dip-common-lib/utils/common-rpc/exception"
+	"github.com/gin-gonic/gin"
 )
 
 type contextHttpHeadersKey struct{}

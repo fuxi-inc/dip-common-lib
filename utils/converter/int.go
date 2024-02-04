@@ -44,7 +44,7 @@ func IntToBool(i int) bool {
 }
 
 // IntMeanToString 特殊处理了0值的转换，主要是为了兼容某些下游的特殊需要，0值会转换为空字符串
-//其他逻辑，参考 IntToString
+// 其他逻辑，参考 IntToString
 func IntMeanToString(i int) string {
 	if i > 0 {
 		return IntToString(i)

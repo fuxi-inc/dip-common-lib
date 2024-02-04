@@ -1,14 +1,15 @@
 package dao
 
 import (
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/fuxi-inc/dip-common-lib/IDL"
 	"github.com/fuxi-inc/dip-common-lib/constants"
 	"github.com/fuxi-inc/dip-common-lib/sdk/dao/idl"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func (c *Client) Register(ctx *gin.Context, request *idl.RegisterDataRequest) error {

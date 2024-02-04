@@ -3,6 +3,7 @@ package idl
 import (
 	"bytes"
 	"encoding/json"
+
 	"github.com/fuxi-inc/dip-common-lib/sdk/dis/idl"
 	"github.com/fuxi-inc/dip-common-lib/utils/converter"
 

@@ -3,11 +3,12 @@ package exception
 import (
 	"errors"
 	"fmt"
-	"github.com/apache/thrift/lib/go/thrift"
 	"io"
 	"net"
 	"os"
 	"syscall"
+
+	"github.com/apache/thrift/lib/go/thrift"
 )
 
 const (
@@ -192,7 +193,7 @@ func WithMessagef(err error, format string, args ...interface{}) error {
 }
 
 // WithMessage 累加错误信息, 并返回新的error对象. 如果err的类型不是TTransportException, TProtocolException, TApplicationException
-//, 则创建对应的TDirpcException对象
+// , 则创建对应的TDirpcException对象
 func WithMessage(err error, message string) error {
 	if err == nil {
 		return nil

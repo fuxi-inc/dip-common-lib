@@ -54,39 +54,39 @@ type Match struct {
 //
 // The syntax for paths looks something like the following:
 //
-//  /shelves/:shelf/books/:book
+//	/shelves/:shelf/books/:book
 //
 // This would match inputs like:
 //
-//  /shelves/foo/books/bar
-//  /shelves/123/books/456
-//  /shelves/123/books/
-//  /shelves//books/456
-//  /shelves//books/
+//	/shelves/foo/books/bar
+//	/shelves/123/books/456
+//	/shelves/123/books/
+//	/shelves//books/456
+//	/shelves//books/
 //
 // But not any of the following:
 //
-//  /shelves/foo/books
-//  /shelves/foo/books/bar/
-//  /shelves/foo/books/bar/pages/baz
-//  /SHELVES/foo/books/bar
-//  shelves/foo/books/bar
+//	/shelves/foo/books
+//	/shelves/foo/books/bar/
+//	/shelves/foo/books/bar/pages/baz
+//	/SHELVES/foo/books/bar
+//	shelves/foo/books/bar
 //
 // Optionally, a path can allow for "trailing" segments in the input. This is
 // done using a segment simply named "*". For example, this path:
 //
-//  /users/:user/files/*
+//	/users/:user/files/*
 //
 // Would match inputs like:
 //
-//  /users/foo/files/
-//  /users/foo/files/foo/bar/baz.txt
-//  /users/foo/files////
+//	/users/foo/files/
+//	/users/foo/files/foo/bar/baz.txt
+//	/users/foo/files////
 //
 // But not:
 //
-//  /users/foo
-//  /users/foo/files
+//	/users/foo
+//	/users/foo/files
 //
 // The asterisk syntax for trailing segments only takes effect on the last
 // segment. If an asterisk appears in any other segment, it carries no special

@@ -12,7 +12,7 @@ const RPC_END = "end"
 const FUSING_AUTO = "auto"
 const FUSING_MANUAL = "manual"
 
-//降级原因
+// 降级原因
 const CONNECT_ERR = "connect"
 const RESPFLAG_ERR = "respFlag"
 const STATISTIC_ERR = "errRatio"
