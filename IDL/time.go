@@ -1,6 +1,7 @@
 package IDL
 
 import (
+	"database/sql/driver"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,9 +10,11 @@ import (
 
 // Format 标准格式
 const Format = "2006-01-02 15:04:05"
+const Format1 = "2006-01-02 15:04"
 
 // SimpleFormat 添加简易格式，比如 Y-m-d
 const SimpleFormat = "2006-01-02"
+const SimpleFormat2 = "2006.01.02"
 
 // EmptyTime 空时间，各种数据库，以及下游可能会返回该时间
 const EmptyTime = "0000-00-00 00:00:00"
@@ -46,6 +49,15 @@ type Time struct {
 	innerTime time.Time
 }
 
+func (t Time) Value() (driver.Value, error) {
+	return t.String(), nil
+}
+
+func (t *Time) Scan(v interface{}) error {
+	t.innerTime = v.(time.Time)
+	return nil
+}
+
 // NowTime 获取当前时间的格式
 func NowTime() *Time {
 	return &Time{innerTime: time.Now()}
@@ -71,6 +83,32 @@ func NewTimeFromString(t string) (*Time, error) {
 	}
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	tm, err := time.ParseInLocation(Format, t, loc)
+	if err != nil {
+		return nil, err
+	}
+	return &Time{innerTime: tm}, nil
+}
+
+// NewTimeFromSimpleString 基于字符串格式构建，必须是： Y-m-d
+func NewTimeFromSimpleString(t string) (*Time, error) {
+	if t == EmptyTime {
+		return &Time{}, nil
+	}
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	tm, err := time.ParseInLocation(SimpleFormat, t, loc)
+	if err != nil {
+		return nil, err
+	}
+	return &Time{innerTime: tm}, nil
+}
+
+// NewTimeFromSimpleString2 基于字符串格式构建，必须是： Y.m.d
+func NewTimeFromSimpleString2(t string) (*Time, error) {
+	if t == EmptyTime {
+		return &Time{}, nil
+	}
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	tm, err := time.ParseInLocation(SimpleFormat2, t, loc)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +163,7 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 
 	//毫秒级时间戳改为秒级
 	//bugfix:不能用字符串长度判断是秒级别，还是毫秒级别，不然如果是秒级字符串，但是是科学计数法，就会判断错误。
-	//case: "1.657886194E9"
+	//tcase: "1.657886194E9"
 	if timestamp > maxTimestampSeconds {
 		timestamp /= 1000
 	}
@@ -200,4 +238,74 @@ func (t Time) GetRawTime() time.Time {
 // 如果在json解析的时候，时间格式是 EmptyTime ，那么可能需要判断这种情况
 func (t Time) IsZero() bool {
 	return t.innerTime.IsZero()
+}
+
+func (t Time) GetDateScope(scope string) time.Time {
+
+	dateTime := time.Now()
+	switch scope {
+	case "1": //1天
+		dateTime = dateTime.AddDate(0, 0, 1)
+		break
+	case "2": //3天
+		dateTime = dateTime.AddDate(0, 0, 2)
+		break
+	case "3": //七天
+		dateTime = dateTime.AddDate(0, 0, 7)
+		break
+	case "4": //半个月(14天)
+		dateTime = dateTime.AddDate(0, 0, 14)
+		break
+	case "5": //一个月(30)
+		dateTime = dateTime.AddDate(0, 0, 30)
+		break
+	case "6": //三个月
+		dateTime = dateTime.AddDate(0, 3, 0)
+		break
+	case "7": //半年
+		dateTime = dateTime.AddDate(0, 6, 0)
+		break
+	case "8": //一年
+		dateTime = dateTime.AddDate(1, 0, 0)
+		break
+	case "9": //永久
+		dateTime, _ = time.Parse("2006-01-02", "2222-12-25")
+		break
+	}
+	return dateTime
+}
+
+func (t Time) ScopeName(scope string) string {
+	name := ""
+	switch scope {
+
+	case "1": //1天
+		name = "1天"
+		break
+	case "2": //3天
+		name = "3天"
+		break
+	case "3": //七天
+		name = "七天"
+		break
+	case "4": //半个月(14天)
+		name = "半个月"
+		break
+	case "5": //一个月(30)
+		name = "一个月"
+		break
+	case "6": //三个月
+		name = "三个月"
+		break
+	case "7": //半年
+		name = "半年"
+		break
+	case "8": //一年
+		name = "一年"
+		break
+	case "9": //永久
+		name = "永久"
+		break
+	}
+	return name
 }
