@@ -211,3 +211,9 @@ type ApiDataOwnerRequest struct {
 type ApiAuthDOOfDURequest struct {
 	DuDoi string `json:"du_doi,omitempty"`
 }
+
+// 数据对象全量权属信息查询（所有权+使用权）
+type ApiTotalAuthRequest struct {
+	Doi               string `json:"doi"`
+	IDL.SignatureData        //统一共用的加签验签结构，字段均为必填项
+}
