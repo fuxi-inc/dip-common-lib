@@ -207,3 +207,7 @@ type ApiPublicKeyRequest struct {
 type ApiDataOwnerRequest struct {
 	Doi string `json:"data_doi,omitempty"`
 }
+
+type ApiAuthDOOfDURequest struct {
+	DuDoi string `json:"du_doi,omitempty"`
+}
