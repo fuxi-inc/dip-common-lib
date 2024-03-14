@@ -13,6 +13,7 @@ const (
 	ErrnoPermissionError           int64 = 40005 //权限错误
 	ErrnoRepeatedError             int64 = 40006 //重复错误
 	ErrnoHashExistsError           int64 = 40007 //hash已存在
+	ErrnoDUAuthExistsError         int64 = 40008 //该DO已作为DU授权给其它DO
 
 	ErrnoDomainResolutionError    int64 = 30000 // DNS权威解析失败
 	ErrnoDOAttributeNotFoundError int64 = 30001 // DO属性不存在
