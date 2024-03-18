@@ -15,7 +15,7 @@ require (
 	go.uber.org/zap v1.24.0
 )
 
-require github.com/apache/thrift v0.19.0 // indirect
+require github.com/apache/thrift v0.19.0
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
