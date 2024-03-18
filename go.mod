@@ -1,6 +1,6 @@
 module github.com/fuxi-inc/dip-common-lib
 
-go 1.18
+go 1.19
 
 require (
 	github.com/gin-contrib/i18n v0.0.1
