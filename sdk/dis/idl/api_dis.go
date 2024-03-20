@@ -210,6 +210,11 @@ type ApiDataOwnerRequest struct {
 
 // 数据对象全量权属信息查询（所有权+使用权）
 type ApiTotalAuthRequest struct {
-	Doi               string `json:"doi"`
+	Doi               string `json:"doi"` //权属所有者的DOI
 	IDL.SignatureData        //统一共用的加签验签结构，字段均为必填项
+}
+
+type ApiTotalAuthResponse struct {
+	Doi   string              `json:"doi"` //权属所有者的DOI
+	Certs map[string]AuthCert //权属证书列表, key:data_doi
 }
