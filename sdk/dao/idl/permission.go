@@ -27,12 +27,13 @@ func (p *Permission) ToString() string {
 /*
 *
 PermissionOperation, 基本的操作权限
-目前已经在定义中的有效作用位由低位到高位共有10位：
+目前已经在定义中的有效作用位由低位到高位共有11位：
 
 	4-1位，分别代表对数据内容的CRUD权限;
 	8-5位，分别代表对数据属性的CRUD权限；
 	9位, 代表是否复用数据owner的权限，当此位置为1时，其他低位均失效，即 100000000和111111111 代表的权限相同
 	10位，代表是否仅具有权属信息的管理权限
+	11位，代表是否仅具有数据的复制权限（基于该数据衍生出新数据的权限）
 */
 type PermissionOperation uint16
 
@@ -43,6 +44,20 @@ func NewPermissionOperation(num uint16) *PermissionOperation {
 func (p *PermissionOperation) ToUInt16() uint16 { return uint16(*p) }
 func (p *PermissionOperation) ToBinaryString() string {
 	return biu.ToBinaryString(p.ToUInt16())
+}
+
+func (p *PermissionOperation) AddCopyAbility() *PermissionOperation {
+	var op uint16
+	biu.ReadBinaryString("10000000000", &op)
+	num := p.ToUInt16() | op
+	return NewPermissionOperation(num)
+}
+
+func (p *PermissionOperation) RemoveCopyAbility() *PermissionOperation {
+	var op uint16
+	biu.ReadBinaryString("01111111111", &op)
+	num := p.ToUInt16() & op
+	return NewPermissionOperation(num)
 }
 
 func (p *PermissionOperation) AddAuthOnlyAbility() *PermissionOperation {
@@ -239,6 +254,12 @@ func (p *PermissionOperation) HasParentAbility() bool {
 func (p *PermissionOperation) HasAuthOnlyAbility() bool {
 	var op uint16
 	biu.ReadBinaryString("1000000000", &op)
+	num := p.ToUInt16() & op
+	return num > 0
+}
+func (p *PermissionOperation) HasCopyAbility() bool {
+	var op uint16
+	biu.ReadBinaryString("10000000000", &op)
 	num := p.ToUInt16() & op
 	return num > 0
 }
