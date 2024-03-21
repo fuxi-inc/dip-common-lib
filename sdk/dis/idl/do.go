@@ -8,6 +8,7 @@ type DO struct {
 	Digest                   *DataDigest                  `json:"digest,omitempty"`                 // 数据内容摘要
 	Authorization            map[string]DataAuthorization `json:"authorization,omitempty"`          // 权属信息
 	ClassificationAndGrading *ClassificationAndGrading    `json:"classification_grading,omitempty"` // 数据分类分级信息
+	Status                   int8                         `json:"status"`                           // 数据状态（例如，可读写状态0，只读状态1）
 }
 
 // 数据摘要
