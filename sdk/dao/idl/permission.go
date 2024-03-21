@@ -267,14 +267,28 @@ func (p *PermissionOperation) HasCopyAbility() bool {
 /*
 定义角色
 */
+
+// 所有者权限：10011111111
 func (p *PermissionOperation) SetOwnerAbility() *PermissionOperation {
-	return p.AddAttributeCreateAbility().AddAttributeReadAbility().AddAttributeUpdateAbility().AddAttributeDeleteAbility().AddContentReadAbility().AddContentUpdateAbility().AddContentDeleteAbility()
+
+	return p.AddAttributeCreateAbility().AddAttributeReadAbility().AddAttributeUpdateAbility().AddAttributeDeleteAbility().AddContentCreateAbility().AddContentReadAbility().AddContentUpdateAbility().AddContentDeleteAbility().AddCopyAbility()
+}
+func (p *PermissionOperation) UnsetOwnerAbility() *PermissionOperation {
+	return p.RemoveAttributeCreateAbility().RemoveAttributeReadAbility().RemoveAttributeUpdateAbility().RemoveAttributeDeleteAbility().RemoveContentCreateAbility().RemoveContentReadAbility().RemoveContentUpdateAbility().RemoveContentDeleteAbility().RemoveCopyAbility()
 }
 
+// 持有者（被委托人，数据的实际控制者）或经营者权限：01011110000
 func (p *PermissionOperation) SetHolderOrSellerAbility() *PermissionOperation {
 	return p.AddAttributeCreateAbility().AddAttributeReadAbility().AddAttributeUpdateAbility().AddAttributeDeleteAbility().AddAuthOnlyAbility()
 }
+func (p *PermissionOperation) UnsetHolderOrSellerAbility() *PermissionOperation {
+	return p.RemoveAttributeCreateAbility().RemoveAttributeReadAbility().RemoveAttributeUpdateAbility().RemoveAttributeDeleteAbility().RemoveAuthOnlyAbility()
+}
 
+// 使用者权限：00000000100
 func (p *PermissionOperation) SetUserAbility() *PermissionOperation {
 	return p.AddContentReadAbility()
+}
+func (p *PermissionOperation) UnsetUserAbility() *PermissionOperation {
+	return p.RemoveContentReadAbility()
 }
