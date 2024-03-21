@@ -263,3 +263,18 @@ func (p *PermissionOperation) HasCopyAbility() bool {
 	num := p.ToUInt16() & op
 	return num > 0
 }
+
+/*
+定义角色
+*/
+func (p *PermissionOperation) SetOwnerAbility() *PermissionOperation {
+	return p.AddAttributeCreateAbility().AddAttributeReadAbility().AddAttributeUpdateAbility().AddAttributeDeleteAbility().AddContentReadAbility().AddContentUpdateAbility().AddContentDeleteAbility()
+}
+
+func (p *PermissionOperation) SetHolderOrSellerAbility() *PermissionOperation {
+	return p.AddAttributeCreateAbility().AddAttributeReadAbility().AddAttributeUpdateAbility().AddAttributeDeleteAbility().AddAuthOnlyAbility()
+}
+
+func (p *PermissionOperation) SetUserAbility() *PermissionOperation {
+	return p.AddContentReadAbility()
+}
