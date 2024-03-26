@@ -32,11 +32,12 @@ type GetDataResponse struct {
 }
 
 type GetDataResponseData struct {
-	IsAccessible    bool            `json:"is_accessible"`
-	DataContent     string          `json:"data_content"`
-	EncryptedKey    string          `json:"encrypted_key"`
-	TransactionInfo interface{}     `json:"transaction_info"`
-	Digest          *idl.DataDigest `json:"digest"`
+	IsAccessible             bool                          `json:"is_accessible"`
+	DataContent              string                        `json:"data_content"`
+	EncryptedKey             string                        `json:"encrypted_key"`
+	TransactionInfo          interface{}                   `json:"transaction_info"`
+	Digest                   *idl.DataDigest               `json:"digest"`
+	ClassificationAndGrading *idl.ClassificationAndGrading `json:"classification_and_grading"`
 }
 
 func (r *GetDataResponse) ToString() string {
